@@ -21,7 +21,10 @@
     "ejs": "^2.5.7",
     "eslint": "^4.7.2",
     "express": "^4.15.5",
-    "express-partials": "^0.3.0"
+    "express-partials": "^0.3.0",
+    "mysql": "^2.15.0",
+    "mysql2": "^1.4.2",
+    "sequelize": "^4.17.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
