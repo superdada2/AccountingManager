@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Default from '@/components/Default'
 import Add from '@/components/Add'
 import Invoice from '@/components/Invoice'
-import Search from '@/components/Search'
+import Report from '@/components/Report'
 
 Vue.use(Router)
 
@@ -20,9 +20,9 @@ export default new Router({
       component: Invoice
     },
     {
-      path: '/search',
-      name: 'Search',
-      component: Search
+      path: '/report',
+      name: 'Report',
+      component: Report
     },
     {
       path: '/add',

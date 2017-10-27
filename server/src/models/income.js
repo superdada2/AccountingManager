@@ -17,9 +17,8 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     amount: {
-      type: DataTypes.INTEGER(11),
+      type: DataTypes.DECIMAL,
       allowNull: false,
-      unique: true
     },
     year:{
       type:DataTypes.INTEGER(11),

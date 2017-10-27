@@ -30,7 +30,7 @@ VALUES('Open'), ('Implemented'), ("Cancelled")
 
 CREATE TABLE IF NOT EXISTS currency_enum(
     id INT PRIMARY KEY AUTO_INCREMENT,
-    data VARCHAR(255) NOT NULL UNIQUE
+    data VARCHAR(255) NOT NULL UNIQUE,
     )
 INSERT INTO currency_enum(data) 
 VALUES('USD'), ('CAD'), ('AUD'), ('GBP')
@@ -64,6 +64,8 @@ CREATE TABLE invoice(
     invoiceNumber INT NOT NULL,
     invoiceAmount DECIMAL NOT NULL,
     invoiceDate DATE NOT NULL,
+    comments VARCHAR(255),
+    description VARCHAR(255),
     subscriptionType INT NOT NULL,
     billingMonth INT NOT NULL,
     status INT NOT NULL,
@@ -73,7 +75,9 @@ CREATE TABLE invoice(
     FXRate DECIMAL NOT NULL DEFAULT 1,
     revenueType INT NOT NULL,
     cancellationDate DATETIME,
-    AnnualIncreaseEli BIT NOT NULL DEFAULT 0,
+    annualIncreaseEli BIT NOT NULL DEFAULT 0,
+    dateLastIncrease DATE,
+    increasePercentage DECIMAL DEFAULT 0,
     invoiceAmountUSD DECIMAL NOT NULL,
     MonthlyRecoginitionAmountUSD DECIMAL NOT NULL,
     FOREIGN KEY (revenueType)
@@ -96,11 +100,3 @@ CREATE TABLE invoice(
     	REFERENCES type_enum(id)
     )
 
-    CREATE TABLE increase_history(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    entryId INT NOT NULL,
-    increasePercentage DECIMAL NOT NULL,
-    date DATETIME NOT NULL,
-    FOREIGN KEY (entryId)
-    	REFERENCES invoice(id)
-    )

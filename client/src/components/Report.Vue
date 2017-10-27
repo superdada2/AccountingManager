@@ -1,6 +1,10 @@
 <template>
-  <div class="hello">
-    search
+  <div class="Report">
+    <el-row>
+      <div class="header">
+        <h1> Reports</h1>
+      </div>
+    </el-row>
   </div>
 </template>
 

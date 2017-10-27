@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <el-row>
-      <el-col :span="24" >
+      <el-col :span="21" >
         <div id="header">
           <h1 id="title">INVOICES</h1>
           <img src="./assets/viz_logo.png">
@@ -10,11 +10,11 @@
     </el-row>
         
     <el-row id="content">    
-      <el-col :span="4" >
-        <el-menu id="sideBar" default-active="1" router="true" >
+      <el-col :span="3" >
+        <el-menu id="sideBar" default-active="Default" router="true" >
           <el-menu-item index="Default"><i class="el-icon-menu"></i>Main</el-menu-item>
           <el-menu-item index="Invoice"><i class="el-icon-document"></i>Invoices</el-menu-item>
-          <el-menu-item index="Search"><i class="el-icon-search"></i>Invoices by Number</el-menu-item>
+          <el-menu-item index="Report"><i class="el-icon-search"></i>Reports</el-menu-item>
           <el-menu-item index="Add"><i class="el-icon-circle-check"></i>Add Invoice</el-menu-item>
         </el-menu>
       </el-col>    

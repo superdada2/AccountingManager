@@ -20,6 +20,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: false
     },
+    comments:{
+      type:DataTypes.STRING(255),
+      allowNull:true,
+    },
+    description:{
+      type:DataTypes.STRING(255),
+      allowNull:true,
+    },
     product: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -109,14 +117,23 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true
     },
-    AnnualIncreaseEli: {
+    annualIncreaseEli: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: '0'
     },
+    dateLastIncrease:{
+      type: DataTypes.DATEONLY,
+      allowNull:true,
+    },
+    increasePercentage:{
+      type: DataTypes.DECIMAL,
+      alowNull: true,
+      defaultValue: 0
+    },
     invoiceAmountUSD: {
       type: DataTypes.DECIMAL,
-      allowNull: false
+      allowNull: true
     },
     MonthlyRecoginitionAmountUSD: {
       type: DataTypes.DECIMAL,
