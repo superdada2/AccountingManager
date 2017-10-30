@@ -10,8 +10,8 @@
         </el-option>
       </el-select>
       <a> = </a>
-      <el-input v-if="!isSelect" placeholder="Value"  v-model="searchValue"></el-input>
-      <el-select v-if = "isSelect" v-model="searchValue" placeholder="Value">
+      <el-input v-if="!isSelect" placeholder="Value" v-model="searchValue"></el-input>
+      <el-select v-if="isSelect" v-model="searchValue" placeholder="Value">
         <el-option v-for="item in searchValueOptions" :key="item.id" :label="item.data" :value="item.id">
         </el-option>
       </el-select>
@@ -19,7 +19,9 @@
       <br>
     </div>
     <div id="tags">
-
+      <el-tag v-for="tag in tags" :key="tag.id" @close="removeTagg(tag)"closable :type="success">
+        {{tag.value}}
+      </el-tag>
     </div>
     <div id="dataTable">
       <el-table :data="invoices" style="width: 100%">
@@ -56,12 +58,16 @@
 
 <script>
   import axios from 'Axios'
+  import _ from 'lodash'
   const urlBase = "http://localhost:3030"
   export default {
 
     name: 'invoice',
     data() {
       return {
+        tags: [
+
+        ],
         invoices: [],
         selector: '',
         searchValue: '',
@@ -80,7 +86,7 @@
     methods: {
       getInvoice(param) {
         const url = urlBase + '/api/v1/reports/getInvoice'
-        axios.post(url,param).then((res) => {
+        axios.post(url, param).then((res) => {
           this.invoices = res.data
         })
       },
@@ -96,24 +102,36 @@
         })
       },
       selectorChange(value) {
-        if(this.enumList[value] != undefined){
+        if (this.enumList[value] != undefined) {
           console.log("value", this.enumList[value])
           this.searchValueOptions = this.enumList[value]
           this.isSelect = true
+        } else {
+          this.isSelect = false
         }
-        else{
-          this.isSelect = false          
-        }
-        
-        
+
+
       },
       addTagg() {
         const currentParam = this.queryParam.where
         currentParam[this.selector] = this.searchValue
-        console.log(currentParam)
+        
         this.queryParam.where = currentParam
         this.getInvoice(this.queryParam)
-
+        if (_.findIndex(this.tags, i=>{ return i.id == this.selector}) != -1){
+          this.tags[_.findIndex(this.tags, i=>{ return i.id == this.selector})].value = (this.selector + " = " + this.searchValue)
+        } else {
+          this.tags.push({
+            id: this.selector,
+            value: (this.selector + " = " + this.searchValue)
+          })
+        }
+      },
+      removeTagg(tag){
+        console.log("remove tag", tag.id)
+        this.tags.splice(this.tags.indexOf(tag), 1)
+        delete this.queryParam.where[tag.id]
+        this.getInvoice(this.queryParam)
       }
     },
     created() {
@@ -129,14 +147,20 @@
   .header,
   .submit,
   .el-table,
-  .el-select {
+  .el-select,
+  #tags {
     margin: 10px;
     margin-left: 20px;
     border: 10px;
   }
-  .el-input{
-    width:250px;
+
+  .el-input {
+    width: 250px;
     margin-right: 50px
+  }
+  .el-tag{
+
+    margin-right: 10px
   }
 
 </style>
