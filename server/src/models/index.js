@@ -35,11 +35,12 @@ db.invoice.belongsTo(db.revenue_type_enum,{foreignKey: 'revenueType'})
 db.invoice.belongsTo(db.status_enum,{foreignKey: 'status'})
 db.invoice.belongsTo(db.subscription_enum,{foreignKey: 'subscriptionType'})
 db.invoice.belongsTo(db.type_enum,{foreignKey: 'type'})
+db.invoice.hasMany(db.income,{foreignKey:'invoiceId', onDelete: 'cascade'})
 
-db.income.belongsTo(db.invoice,{foreignKey:'invoiceId'})
+db.income.belongsTo(db.invoice,{foreignKey:'invoiceId', onDelete:'cascade'})
 db.income.belongsTo(db.month_enum,{foreignKey:'month'})
 
-db.deferred_balance.belongsTo(db.invoice,{foreignKey:'invoiceId'})
+db.deferred_balance.belongsTo(db.invoice,{foreignKey:'invoiceId', onDelete: 'cascade'})
 db.deferred_balance.belongsTo(db.month_enum,{foreignKey:'month'})
 
 

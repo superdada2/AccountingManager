@@ -237,6 +237,20 @@ router.post('/subscription',async (req, res)=>{
     })
   }
 })
+
+router.get('/month',async (req, res)=>{
+  try{
+    const result = await getMonth(req.body)
+    res.status(200).json(result)
+  }
+  catch(err){
+    const message = err.message;
+    res.status(500).json({
+      status:false,
+      message
+    })
+  }
+})
 export default router;
 
 

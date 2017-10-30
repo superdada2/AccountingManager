@@ -9,7 +9,8 @@ import {
   status_enum,
   subscription_enum,
   type_enum,
-  month_enum
+  month_enum,
+  sequelize
 } from '../../../models';
 import Promise from 'bluebird';
 
@@ -192,3 +193,101 @@ export function GetInvoice({ where }) {
     }]
   })
 }
+
+function getReportByClassProduct(year = 2017, month = 1, income = true){
+  var query = 'SELECT SUM(income.amount) AS amount, class_enum.data AS class, COUNT(income.amount) AS count, product_enum.data as product FROM invoice AS invoice LEFT JOIN income AS income on income.invoiceId = invoice.id AND income.year = %YEAR% AND income.month = %MONTH% LEFT JOIN product_enum as product_enum ON product_enum.id = invoice.product LEFT JOIN class_enum as class_enum ON class_enum.id = invoice.class GROUP BY invoice.product, invoice.class'
+  query = query.replace("%YEAR%", year).replace("%MONTH%", month)
+  if(!income)
+    query = query.replace(/income/g, "deferred_balance")
+  return sequelize.query(query,{ type: sequelize.QueryTypes.SELECT} )
+}
+
+function getReportByProduct(year = 2017, month = 1, income = true){
+  var query = 'SELECT SUM(income.amount) AS amount, COUNT(*) AS count, product_enum.data as product FROM invoice AS invoice LEFT JOIN income AS income on income.invoiceId = invoice.id AND income.year = %YEAR% AND income.month = %MONTH% LEFT JOIN product_enum as product_enum ON product_enum.id = invoice.product LEFT JOIN class_enum as class_enum ON class_enum.id = invoice.class GROUP BY invoice.product'
+  query = query.replace("%YEAR%", year).replace("%MONTH%", month)
+  if(!income)
+    query = query.replace(/income/g, "deferred_balance")
+  return sequelize.query(query,{ type: sequelize.QueryTypes.SELECT} )
+}
+
+function getReportByClass(year = 2017, month = 1, income = true){
+  var query = 'SELECT SUM(income.amount) AS amount, COUNT(income.amount) AS count, class_enum.data as class FROM invoice AS invoice LEFT JOIN income AS income on income.invoiceId = invoice.id AND income.year = %YEAR% AND income.month = %MONTH% LEFT JOIN product_enum as product_enum ON product_enum.id = invoice.product LEFT JOIN class_enum as class_enum ON class_enum.id = invoice.class GROUP BY  invoice.class'
+  query = query.replace("%YEAR%", year).replace("%MONTH%", month)
+  if(!income)
+    query = query.replace(/income/g, "deferred_balance")
+  return sequelize.query(query,{ type: sequelize.QueryTypes.SELECT} )
+}
+
+export  function getProductTable({startY = 2000, endY = 2016, startM = 1, endM = 12, isIncome = false}){
+  return new Promise(async (res, rej)=>{
+    try{
+      var dataTable = []
+      var currentY = startY
+      var currentM = startM
+      while(currentY != endY || currentM != endM){
+       const data = await  getReportByProduct(currentY, currentM,isIncome)
+       var currentEntry = {}
+       var count = 0
+       data.forEach(value=>{
+         currentEntry[value.product] = value.amount
+         count += value.count
+       })
+       currentEntry["year"] = currentY
+       currentEntry["month"] = currentM
+       currentEntry["count"] = count
+       
+       dataTable.push(currentEntry)
+       if(currentM == 12){
+         currentM = 1
+         currentY ++
+       }      
+       else
+         currentM ++
+      }
+      res(dataTable)
+    }
+    catch(err){
+      rej(err.message)
+    }
+    
+  })   
+}
+
+export  function getClassTable({startY = 2000, endY = 2016, startM = 1, endM = 12, isIncome = false}){
+  return new Promise(async (res, rej)=>{
+    try{
+      var dataTable = []
+      var currentY = startY
+      var currentM = startM
+      while(currentY != endY || currentM != endM){
+       const data = await  getReportByClass(currentY, currentM,isIncome)
+       var currentEntry = {}
+       var count = 0
+       data.forEach(value=>{
+         currentEntry[value.class] = value.amount
+         count += value.count
+       })
+       currentEntry["year"] = currentY
+       currentEntry["month"] = currentM
+       currentEntry["count"] = count
+
+       dataTable.push(currentEntry)
+       if(currentM == 12){
+         currentM = 1
+         currentY ++
+       }      
+       else
+         currentM ++
+      }
+      res(dataTable)
+    }
+    catch(err){
+      rej(err.message)
+    }
+    
+  })   
+}
+
+
+
+
