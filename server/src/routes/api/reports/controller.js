@@ -14,6 +14,12 @@ import {
 } from '../../../models';
 import Promise from 'bluebird';
 
+export function loadData(){
+  return new Promise(async(res, rej)=>{
+    res("works")
+  })
+}
+
 export function CreateInvoice({
   type = 1,
   Class = 1,

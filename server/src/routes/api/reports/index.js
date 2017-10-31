@@ -1,5 +1,5 @@
 import express from 'express';
-import {CreateInvoice, GetInvoice, getProductTable, getClassTable} from './controller'
+import {CreateInvoice, GetInvoice, getProductTable, getClassTable, loadData} from './controller'
 
 export const router = express.Router()
 router.post('/createInvoice',async (req, res)=>{
@@ -53,6 +53,22 @@ router.post('/getProductTable',async(req, res)=>{
 router.post('/getClassTable',async(req, res)=>{
   try{
     const result = await getClassTable(req.body)
+
+    res.status(200).json(result)
+  }
+  catch(err){
+    const message = err.message
+    console.log(err)
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
+
+router.get('/loadData',async(req, res)=>{
+  try{
+    const result = await loadData(req.body)
 
     res.status(200).json(result)
   }

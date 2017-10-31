@@ -12,7 +12,7 @@
     <el-row id="content">    
       <el-col :span="3" >
         <el-menu id="sideBar" default-active="Default" router="true" >
-          <el-menu-item index="Default"><i class="el-icon-menu"></i>Main</el-menu-item>
+          <el-menu-item index="Home"><i class="el-icon-menu"></i>Home</el-menu-item>
           <el-menu-item index="Invoice"><i class="el-icon-document"></i>Invoices</el-menu-item>
           <el-menu-item index="Report"><i class="el-icon-search"></i>Reports</el-menu-item>
           <el-menu-item index="Add"><i class="el-icon-circle-check"></i>Add Invoice</el-menu-item>

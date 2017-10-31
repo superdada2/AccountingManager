@@ -18,13 +18,10 @@
         <el-date-picker v-model="startM" type="month" placeholder="Start Month">
         </el-date-picker>
 
-        <el-date-picker v-model="startY" type="year" placeholder="Start Year">
-        </el-date-picker>
+
         <el-date-picker v-model="endM" type="month" placeholder="End Month">
         </el-date-picker>
 
-        <el-date-picker v-model="endY" type="year" placeholder="End Year">
-        </el-date-picker>
         <el-button id="submit" @click="GetReport">Submit</el-button>
       </a>
     </el-row>
@@ -93,8 +90,8 @@
         }
 
         const data = {
-          startY: this.startY.getFullYear(),
-          endY: this.endY.getFullYear(),
+          startY: this.startM.getFullYear(),
+          endY: this.endM.getFullYear(),
           startM: this.startM.getMonth() + 1,
           endM: this.endM.getMonth() + 1,
           isIncome: this.balanceType
