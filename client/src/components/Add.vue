@@ -27,14 +27,13 @@
           <el-option v-for="item in typeEnum" :key="item.id" :label="item.data" :value="item.id">
           </el-option>
         </el-select>
-        <el-select v-model="formValue.currency" placeholder="Currency">
+        <el-select @change="currencyOnchange" v-model="formValue.currency" placeholder="Currency">
           <el-option v-for="item in currencyEnum" :key="item.id" :label="item.data" :value="item.id">
           </el-option>
         </el-select>
-        <el-select v-model="formValue.billMonth" placeholder="Bill Month">
-          <el-option v-for="item in monthEnum" :key="item.id" :label="item.data" :value="item.id">
-          </el-option>
-        </el-select>
+
+        <el-date-picker v-model="formValue.billMonth" type="month" placeholder="Bill Month">
+        </el-date-picker>
         <el-select v-model="formValue.status" placeholder="Status">
           <el-option v-for="item in statusEnum" :key="item.id" :label="item.data" :value="item.id">
           </el-option>
@@ -43,17 +42,15 @@
         </el-input>
       </el-col>
       <el-col :span="12">
-        <el-select v-model="formValue.recognitionStrMonth" placeholder="Recognition Start Month">
-          <el-option v-for="item in monthEnum" :key="item.id" :label="item.data" :value="item.id">
-          </el-option>
-        </el-select>
+        <el-date-picker v-model="formValue.recognitionStrMonth" type="month" placeholder="Recognition Start Month">
+        </el-date-picker>
         <el-input placeholder="Length of Recognition(Months)" type="number" v-model="formValue.lengthRec"></el-input>
         <el-input placeholder="Invoice Amount(USD)" type="number" v-model="formValue.invoiceAmountUsd"></el-input>
         <el-input placeholder="Fx rate" type="number" v-model="formValue.fxRate"></el-input>
         <el-input placeholder="Monthly Recognition(USD)" type="number" v-model="formValue.monthlyRec"></el-input>
         <br>
         <div class="select">
-          <a>Annuel Increase Eligible </a>
+          <a>Annual Increase Eligible </a>
           <el-switch v-model="formValue.annualIncreaseBool" on-text="" off-text="">
           </el-switch>
         </div>
@@ -140,6 +137,7 @@
           this.subscriptionEnum = res.data.subscription
         })
       },
+      
       validate() {
         return true;
       },
@@ -166,7 +164,27 @@
             type: 'error'
           })
         }
+      },
+      invoiceAmountOnChange(value){
+
+      },
+      currencyOnchange(value){
+        var url = 'http://apilayer.net/api/live?access_key=a85aa84971650d26dc61c8932a548e31&currencies=AUD'
+        const currency = this.currencyEnum.find(i=> i.id == value).data
+        console.log(currency)
+        url = url.replace('AUD', currency)
+        axios.get(url).then(res=>{
+          console.log(res)
+          this.formValue.fxRate = res.data.quotes["USD" + currency]
+        })
+      },
+      fxRateOnChange(value){
+
+      },
+      lengthRecOnChange(value){
+
       }
+
     },
     created() {
       this.loadData()

@@ -28,8 +28,6 @@ fs
 
 db.invoice.belongsTo(db.class_enum,{foreignKey: 'class'})
 db.invoice.belongsTo(db.currency_enum,{foreignKey: 'currency'})
-db.invoice.belongsTo(db.month_enum,{as: 'billingMonthEnum',foreignKey: 'billingMonth'})
-db.invoice.belongsTo(db.month_enum,{as:'recognitionStrMonthEnum', foreignKey: 'recognitionStartMonth'})
 db.invoice.belongsTo(db.product_enum,{foreignKey: 'product'})
 db.invoice.belongsTo(db.revenue_type_enum,{foreignKey: 'revenueType'})
 db.invoice.belongsTo(db.status_enum,{foreignKey: 'status'})

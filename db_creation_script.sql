@@ -100,3 +100,6 @@ CREATE TABLE invoice(
     	REFERENCES type_enum(id)
     )
 
+
+INSERT INTO product_enum(data) 
+VALUES("Civic"), ("Accord"), ("Corrola"),("Model S")
