@@ -162,11 +162,14 @@
             yAxes: [{
               id: 'A',
               type: 'linear',
-              position: 'left'
+              position: 'left',
+              stacked: true
             }, {
               id: 'B',
               type: 'linear',
-              position: 'right'
+              position: 'right',
+              startValue:0,
+              stacked: true
             }]
           }
         },
