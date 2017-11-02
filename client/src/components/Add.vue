@@ -20,7 +20,7 @@
         </el-select>
 
         <el-input placeholder="Invoice Number" type="number" v-model="formValue.invoiceNumber"></el-input>
-        <el-input placeholder="Invoice Amount" type="number" v-model="formValue.invoiceAmount"></el-input>
+        <el-input @change="invoiceAmountOnChange" placeholder="Invoice Amount" type="number" v-model="formValue.invoiceAmount"></el-input>
         <el-date-picker v-model="formValue.invoiceDate" type="date" placeholder="Invoice Date">
         </el-date-picker>
         <el-select v-model="formValue.type" placeholder="Type">
@@ -44,9 +44,9 @@
       <el-col :span="12">
         <el-date-picker v-model="formValue.recognitionStrMonth" type="month" placeholder="Recognition Start Month">
         </el-date-picker>
-        <el-input placeholder="Length of Recognition(Months)" type="number" v-model="formValue.lengthRec"></el-input>
-        <el-input placeholder="Invoice Amount(USD)" type="number" v-model="formValue.invoiceAmountUsd"></el-input>
-        <el-input placeholder="Fx rate" type="number" v-model="formValue.fxRate"></el-input>
+        <el-input placeholder="Length of Recognition(Months)" @change="lengthRecOnChange" type="number" v-model="formValue.lengthRec"></el-input>
+        <el-input placeholder="Invoice Amount(USD)" @change="invoiceAmountUsdOnChange" type="number" v-model="formValue.invoiceAmountUsd"></el-input>
+        <el-input placeholder="Fx rate" type="number" @change="fxRateOnChange" v-model="formValue.fxRate"></el-input>
         <el-input placeholder="Monthly Recognition(USD)" type="number" v-model="formValue.monthlyRec"></el-input>
         <br>
         <div class="select">
@@ -115,7 +115,7 @@
           cancelationDate: '',
           comments: '',
           invoiceAmountUsd: '',
-          annualIncreaseBool: '',
+          annualIncreaseBool: true,
           subscription:''
         }
       }
@@ -166,23 +166,52 @@
         }
       },
       invoiceAmountOnChange(value){
-
+        if(this.formValue.lengthRec == ''){
+          this.formValue.lengthRec = 12
+        }
+        if(this.formValue.fxRate != ''){
+          this.formValue.invoiceAmountUsd = this.formValue.fxRate * value
+        }
+        if(this.formValue.increasePerc == ''){
+          this.formValue.increasePerc = 0.05
+        }
+        this.lengthRecOnChange(this.formValue.lengthRec)
       },
-      currencyOnchange(value){
+      currencyOnchange(value, value2){
         var url = 'http://apilayer.net/api/live?access_key=a85aa84971650d26dc61c8932a548e31&currencies=AUD'
         const currency = this.currencyEnum.find(i=> i.id == value).data
-        console.log(currency)
         url = url.replace('AUD', currency)
         axios.get(url).then(res=>{
-          console.log(res)
-          this.formValue.fxRate = res.data.quotes["USD" + currency]
+          this.formValue.fxRate = 1 / res.data.quotes["USD" + currency]
+
+          if(this.formValue.invoiceAmount != ''){
+            this.formValue.invoiceAmountUsd = this.formValue.fxRate * this.formValue.invoiceAmount
+          }
+          if(this.formValue.lengthRec == ''){
+          this.formValue.lengthRec = 12
+          }
+          this.lengthRecOnChange(this.formValue.lengthRec)
         })
       },
       fxRateOnChange(value){
-
+        if(this.formValue.invoiceAmount != ''){
+          this.formValue.invoiceAmountUsd = this.formValue.invoiceAmount * value
+        }
+        if(this.formValue.lengthRec == ''){
+          this.formValue.lengthRec = 12
+        }
+        this.lengthRecOnChange(this.formValue.lengthRec)
       },
       lengthRecOnChange(value){
-
+        if(this.formValue.invoiceAmountUsd != ''){
+          this.formValue.monthlyRec = this.formValue.invoiceAmountUsd / value
+        }
+      },
+      invoiceAmountUsdOnChange(value){
+        if(this.formValue.lengthRec == ''){
+          this.formValue.lengthRec = 12
+        }
+        this.lengthRecOnChange(this.formValue.lengthRec)
       }
 
     },
