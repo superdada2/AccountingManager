@@ -65,12 +65,8 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     billingMonth: {
-      type: DataTypes.INTEGER(11),
+      type: DataTypes.DATEONLY,
       allowNull: false,
-      references: {
-        model: 'month_enum',
-        key: 'id'
-      }
     },
     status: {
       type: DataTypes.INTEGER(11),
@@ -81,12 +77,9 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     recognitionStartMonth: {
-      type: DataTypes.INTEGER(11),
+      type: DataTypes.DATEONLY,
       allowNull: false,
-      references: {
-        model: 'month_enum',
-        key: 'id'
-      }
+
     },
     lengthMonth: {
       type: DataTypes.INTEGER(5).UNSIGNED,

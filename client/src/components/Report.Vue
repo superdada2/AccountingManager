@@ -54,7 +54,7 @@
           },
           {
             id: false,
-            data: "Deffered"
+            data: "Deferred"
           }
         ],
         groupByEnum: [{
