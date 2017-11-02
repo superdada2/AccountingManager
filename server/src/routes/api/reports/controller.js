@@ -181,9 +181,6 @@ export function GetInvoice({ where }) {
     }, {
       model: currency_enum
     }, {
-      model: month_enum,
-      as:'billingMonthEnum'      
-    }, {
       model: product_enum
     }, {
       model: revenue_type_enum
@@ -193,9 +190,6 @@ export function GetInvoice({ where }) {
       model: subscription_enum
     }, {
       model: type_enum
-    },{
-      model:month_enum,
-      as:'recognitionStrMonthEnum'
     }]
   })
 }
