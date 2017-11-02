@@ -1,70 +1,74 @@
 <template>
   <div id="app">
-    <el-row>
-      <el-col :span="21" >
+
+</el-container>
+    <el-container>
+      <el-header height="90px">
         <div id="header">
           <h1 id="title">INVOICES</h1>
           <img src="./assets/viz_logo.png">
         </div>
-      </el-col>
-    </el-row>
-        
-    <el-row id="content">    
-      <el-col :span="3" >
-        <el-menu id="sideBar" default-active="Default" router="true" >
-          <el-menu-item index="Home"><i class="el-icon-menu"></i>Home</el-menu-item>
-          <el-menu-item index="Invoice"><i class="el-icon-document"></i>Invoices</el-menu-item>
-          <el-menu-item index="Report"><i class="el-icon-search"></i>Reports</el-menu-item>
-          <el-menu-item index="Add"><i class="el-icon-circle-check"></i>Add Invoice</el-menu-item>
-        </el-menu>
-      </el-col>    
-      <el-col :span="20">
-        <router-view/>
-      </el-col>
-    </el-row>    
+      </el-header>
+      <el-container>
+        <el-aside width="160px">
+          <el-menu id="sideBar" default-active="Home" :router="true">
+            <el-menu-item index="Home">
+              <i class="el-icon-menu"></i>Home</el-menu-item>
+            <el-menu-item index="Invoice">
+              <i class="el-icon-document"></i>Invoices</el-menu-item>
+            <el-menu-item index="Report">
+              <i class="el-icon-search"></i>Reports</el-menu-item>
+            <el-menu-item index="Add">
+              <i class="el-icon-circle-check"></i>Add Invoice</el-menu-item>
+          </el-menu>
+        </el-aside>
+        <el-main id="content">
+          <router-view/>
+        </el-main>
+      </el-container>
+    </el-container>
+
   </div>
 </template>
 
 <script>
-export default {
-  name: 'app'
-}
+  export default {
+    name: 'app'
+  }
+
 </script>
 
 <style>
-body{
+  body {
     height: 100%;
     width: 100%;
     margin: 0;
-}
-#title{
-    padding-top: 20px;
-    display:inline-block;
-    padding-left: 30px;
-}
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
-#header{
-  position: fixed;
-  height: 100px;
-  background: #545454;
-  color: snow;
-  width: 100%;
-  z-index: 1;
-}
-#content{
-  position: relative;;
-  top:100px;
-  height: 100%;
-}
-#sideBar{
-  position: relative;
-  min-height: 880px;
-}
+  }
 
+  #title {
+    padding-top: 20px;
+    display: inline-block;
+    padding-left: 30px;
+  }
+
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2c3e50;
+  }
+
+  #header {
+    background: #545454;
+    color: snow;
+  }
+  .el-header{
+    padding: 0px
+  }
+  #sideBar{
+    height: 100%;
+    position: relative;
+  }
+  
 
 </style>

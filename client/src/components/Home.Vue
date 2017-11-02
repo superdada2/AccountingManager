@@ -6,6 +6,7 @@
       </div>
     </el-row>
     <el-row>
+      <div class="chart">
       <el-col :span="6">
         <pie-chart :chartData="billByCustomer" :options="customerChartOptions"></pie-chart>
       </el-col>
@@ -18,9 +19,12 @@
       <el-col :span="6">
         <pie-chart :chartData="billByProduct" :options="productChartOptions"></pie-chart>
       </el-col>
+      </div>
     </el-row>
     <el-row>
+      <div class = "chart">
       <line-chart :chartData="billByBillingMonth" :options="billingMonthChartOptions"></line-chart>
+      </div>
     </el-row>
   </div>
 </template>
@@ -28,8 +32,10 @@
 <script>
   import PieChart from '../charts/PieChart.js'
   import LineChart from '../charts/LineChart.js'
+  import DoughnutChart from '../charts/DoughnutChart.js'
   import axios from 'Axios'
   import _ from 'lodash'
+  import chartjs from 'chart.piecelabel.js'
   const urlBase = "http://localhost:3030"
   const colors = {
     backgroundColor: [
@@ -53,7 +59,8 @@
     name: 'default',
     components: {
       PieChart,
-      LineChart
+      LineChart,
+      DoughnutChart
     },
     data() {
       return {
@@ -65,6 +72,9 @@
             display: true,
             text: 'Bill by Customer'
           },
+          pieceLabel:{
+            render:'value'
+          }
         },
         billByClass: [],
         classChartOptions: {
@@ -73,6 +83,9 @@
           title: {
             display: true,
             text: 'Bill by Class'
+          },
+          pieceLabel:{
+            render:'value'
           }
         },
         billByCurrency: {},
@@ -82,6 +95,9 @@
           title: {
             display: true,
             text: 'Bill by Currency'
+          },
+          pieceLabel:{
+            render:'value'
           }
         },
         billByProduct: {},
@@ -91,25 +107,39 @@
           title: {
             display: true,
             text: 'Bill by Product'
+          },
+          pieceLabel:{
+            render:'value'
           }
         },
         billByBillingMonth: {
           datasets: [{
-            yAxisID:'A',
-            data: [{
-              x: new Date(2017, 4),
-              y: 10
-            }, {
-              x: new Date(2017, 8),
-              y: 7
-            }]
-          },
-          {
-            yAxisID:'B',
-            data: [{x:new Date(2017, 5), y: 4 }, {x:new Date(2017, 9), y: 6 }]
-          }]
+              yAxisID: 'A',
+              label: 'Total Invoiced',
+              data: [{
+                x: new Date(2016, 3),
+                y: 10
+              }, {
+                x: new Date(2016, 5),
+                y: 7
+              }]
+            },
+            {
+              label: 'Number of Invoice',
+              yAxisID: 'B',
+              data: [{
+                x: new Date(2016, 5),
+                y: 4
+              }, {
+                x: new Date(2016, 9),
+                y: 6
+              }],
+
+            }
+          ]
         },
         billingMonthChartOptions: {
+          
           responsive: true,
           maintainAspectRatio: false,
           title: {
@@ -129,14 +159,14 @@
                 labelString: 'Date'
               }
             }],
-            yAxes:[{
-              id:'A',
-              type:'linear',
-              position:'left'
-            },{
-              id:'B',
-              type:'linear',
-              position:'right'
+            yAxes: [{
+              id: 'A',
+              type: 'linear',
+              position: 'left'
+            }, {
+              id: 'B',
+              type: 'linear',
+              position: 'right'
             }]
           }
         },
@@ -251,12 +281,33 @@
           this.billByProduct = temp
         })
       },
+      GetBillByBillingMonth(){
+        const url = urlBase + "/api/v1/graph/billByBillingMonth"
+        axios.get(url).then(res=>{
+          const sumSet = res.data.map(i=>{
+            return {x: new Date(i.billingMonth), y: i.totalInvoice}
+          })
+          const countSet = res.data.map(i=>{
+            return {x: new Date(i.billingMonth), y: i.numberInvoice}
+          })
+          var temp = {...this.billByBillingMonth}
+          temp.datasets[0]['backgroundColor'] = colors.backgroundColor[1]
+          temp.datasets[0]['borderColor'] = colors.backgroundColor[1]
+          temp.datasets[0].data = sumSet
+          temp.datasets[1].data = countSet
+          temp.datasets[1]['backgroundColor'] = colors.backgroundColor[3]
+          temp.datasets[1]['borderColor'] = colors.backgroundColor[3]
+          this.billByBillingMonth = temp
+
+        })
+      }
     },
     created() {
       this.GetBillByCurrency()
       this.GetBillByCustomer()
       this.GetBillByProduct()
       this.GetBillByClass()
+      this.GetBillByBillingMonth()
 
     }
   }
@@ -265,6 +316,12 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .header,
+  .chart
+ {
+    margin: 10px;
+    margin-left: 20px;
+    border: 10px;
+  }
 
 </style>

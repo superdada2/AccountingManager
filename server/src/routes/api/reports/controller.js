@@ -73,28 +73,32 @@ export function CreateInvoice({
         MonthlyRecoginitionAmountUSD: monthlyRec
       })
       const id = response.dataValues.id
-      const yr = new Date(invoiceDate).getFullYear()
+      const billingStart = new Date(billMonth)
+      const supportStart = new Date(recognitionStrMonth)
+
+      console.log(billingStart, supportStart)
       const incomeList = createIncomeList({
         id: id,
-        startMonth: recognitionStrMonth,
-        year: yr,
+        startMonth: supportStart.getMonth() + 1,
+        year: supportStart.getFullYear(),
         length: lengthRec,
         invoiceAmount: invoiceAmountUsd
       })
-      console.log(incomeList)
+      console.log("incomeList", incomeList)
       incomeList.forEach(async(value) => {
         await income.create(value)
       })
       const defferedList = createDeferred({
         id: id,
-        startMonth: recognitionStrMonth,
-        year: yr,
+        startMonth: billingStart.getMonth() + 1,
+        year: billingStart.getFullYear(),
         length: lengthRec,
         invoiceAmount: invoiceAmountUsd
       })
       defferedList.forEach(async(value) => {
         await deferred_balance.create(value)
       })
+      console.log("Deffered", defferedList)
       res('Success')
     } catch (err) {
       rej(err.message)
@@ -146,15 +150,15 @@ function createDeferred({
     invoiceId: id,
     amount: remainingAmount,
     year: currentYr,
-    month: currentMonth - 2
+    month: currentMonth 
   })
   incomeList.push({
     invoiceId: id,
     amount: remainingAmount,
     year: currentYr,
-    month: currentMonth - 1
+    month: currentMonth +1
   })
-
+  currentMonth += 2
   for (var i = 0; i < length - 1; i++) {
     remainingAmount -= amountPerMonth
     incomeList.push({
@@ -203,7 +207,7 @@ function getReportByClassProduct(year = 2017, month = 1, income = true){
 }
 
 function getReportByProduct(year = 2017, month = 1, income = true){
-  var query = 'SELECT SUM(income.amount) AS amount, COUNT(*) AS count, product_enum.data as product FROM invoice AS invoice LEFT JOIN income AS income on income.invoiceId = invoice.id AND income.year = %YEAR% AND income.month = %MONTH% LEFT JOIN product_enum as product_enum ON product_enum.id = invoice.product LEFT JOIN class_enum as class_enum ON class_enum.id = invoice.class GROUP BY invoice.product'
+  var query = 'SELECT SUM(income.amount) AS amount, COUNT(income.amount) AS count, product_enum.data as product FROM invoice AS invoice LEFT JOIN income AS income on income.invoiceId = invoice.id AND income.year = %YEAR% AND income.month = %MONTH% LEFT JOIN product_enum as product_enum ON product_enum.id = invoice.product LEFT JOIN class_enum as class_enum ON class_enum.id = invoice.class GROUP BY invoice.product'
   query = query.replace("%YEAR%", year).replace("%MONTH%", month)
   if(!income)
     query = query.replace(/income/g, "deferred_balance")

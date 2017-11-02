@@ -9,7 +9,9 @@ router.post('/createInvoice',async (req, res)=>{
     res.status(200).json(result)
   }
   catch(err){
+
     const message = err.message
+    console.log("error", message)
     res.status(500).json({
       status: false,
       message

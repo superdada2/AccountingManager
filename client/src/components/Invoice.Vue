@@ -45,7 +45,7 @@
         </el-table-column>
         <el-table-column prop="product_enum.data" label="Product">
         </el-table-column>
-        <el-table-column prop="recognitionStrMonthEnum.data" label="RecStart">
+        <el-table-column prop="recognitionStartMonth" label="RecStart">
         </el-table-column>
         <el-table-column prop="lengthMonth" label="length">
         </el-table-column>
