@@ -10,7 +10,8 @@
         </el-option>
       </el-select>
       <a> = </a>
-      <el-input v-if="!isSelect" placeholder="Value" v-model="searchValue"></el-input>
+      <el-autocomplete v-if="isCustomer" placeholder="Value" v-model="searchValue" :fetch-suggestions="querySearchCustName"></el-autocomplete>
+      <el-autocomplete v-if="isInvoice" placeholder="Value" v-model="searchValue" :fetch-suggestions="querySearchInvoice"></el-autocomplete>
       <el-select v-if="isSelect" v-model="searchValue" placeholder="Value">
         <el-option v-for="item in searchValueOptions" :key="item.id" :label="item.data" :value="item.id">
         </el-option>
@@ -27,29 +28,29 @@
       <el-table :data="invoices" style="width: 100%">
         <el-table-column prop="type_enum.data" label="Type">
         </el-table-column>
-        <el-table-column prop="invoiceDate" label="Date">
+        <el-table-column prop="invoiceDate" label="Date" sortable>
         </el-table-column>
-        <el-table-column prop="invoiceNumber" label="Number">
+        <el-table-column prop="invoiceNumber" label="Number" sortable>
         </el-table-column>
-        <el-table-column prop="customerName" label="Name">
+        <el-table-column prop="customerName" label="Name" sortable>
         </el-table-column>
-        <el-table-column prop="class_enum.data" label="Class">
+        <el-table-column prop="class_enum.data" label="Class" sortable>
         </el-table-column>
-        <el-table-column prop="currency_enum.data" label="Currency">
+        <el-table-column prop="currency_enum.data" label="Currency" sortable>
         </el-table-column>
-        <el-table-column prop="subscription_enum.data" label="Subscription">
+        <el-table-column prop="subscription_enum.data" label="Subscription" sortable>
         </el-table-column>
-        <el-table-column prop="status_enum.data" label="Status">
+        <el-table-column prop="status_enum.data" label="Status" sortable>
         </el-table-column>
-        <el-table-column prop="revenue_type_enum.data" label="Revenue Type">
+        <el-table-column prop="revenue_type_enum.data" label="Revenue Type" sortable>
         </el-table-column>
-        <el-table-column prop="product_enum.data" label="Product">
+        <el-table-column prop="product_enum.data" label="Product" sortable>
         </el-table-column>
-        <el-table-column prop="recognitionStartMonth" label="RecStart">
+        <el-table-column prop="recognitionStartMonth" label="RecStart" sortable>
         </el-table-column>
-        <el-table-column prop="lengthMonth" label="length">
+        <el-table-column prop="lengthMonth" label="length" sortable>
         </el-table-column>
-        <el-table-column prop="invoiceAmountUSD" label="amountUSD">
+        <el-table-column prop="invoiceAmountUSD" label="amountUSD" sortable>
         </el-table-column>
       </el-table>
     </div>
@@ -78,9 +79,13 @@
         searchValueOptions: [],
         enumList: {},
         isSelect: true,
+        isCustomer:false,
+        isInvoice:false,
         queryParam: {
           where: {}
-        }
+        },
+        customerNameList: [],
+        invoiceNumberList:[],
       }
     },
     methods: {
@@ -98,16 +103,28 @@
           const keys = Object.keys(this.enumList)
           var enumListTemp = keys
           enumListTemp.push("customerName")
+          enumListTemp.push("invoiceNumber")
           this.fieldOptions = enumListTemp
         })
       },
       selectorChange(value) {
         if (this.enumList[value] != undefined) {
-          console.log("value", this.enumList[value])
+          console.log(this.selector)
+          console.log("value", this.enumList[value], value)
           this.searchValueOptions = this.enumList[value]
           this.isSelect = true
-        } else {
+          this.isCustomer = false
+          this.isInvoice = false
+        }
+        if(value == "customerName"){
           this.isSelect = false
+          this.isCustomer = true
+          this.isInvoice = false
+        }
+        if(value == "invoiceNumber"){
+          this.isSelect = false
+          this.isCustomer = false
+          this.isInvoice = true
         }
 
 
@@ -132,11 +149,40 @@
         this.tags.splice(this.tags.indexOf(tag), 1)
         delete this.queryParam.where[tag.id]
         this.getInvoice(this.queryParam)
+      },
+      querySearchCustName(queryString, cb){
+        var list = this.customerNameList
+        var results = queryString ? list.filter((this.createFilter(queryString))) : list;
+        cb(results)
+      },
+      querySearchInvoice(queryString, cb){
+        var list = this.invoiceNumberList
+        var results = queryString ? list.filter((this.createFilter(queryString))) : list;
+        cb(results)
+      },
+      createFilter(queryString) {
+        return (link) => {
+          return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      getCustomerName(){
+        const url = urlBase + '/api/v1/reports/getCustomerName'
+        axios.get(url).then(res=>{
+          this.customerNameList = res.data
+        })
+      },
+      getInvoiceNumber(){
+        const url = urlBase + '/api/v1/reports/getInvoiceNumber'
+        axios.get(url).then(res=>{
+          this.invoiceNumberList = res.data
+        })
       }
     },
     created() {
       this.getInvoice()
       this.getEnum()
+      this.getCustomerName()
+      this.getInvoiceNumber()
     }
   }
 

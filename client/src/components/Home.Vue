@@ -22,7 +22,11 @@
       </div>
     </el-row>
     <el-row>
+      <br>
       <div class = "chart">
+      <el-date-picker v-model="startDate" type="month" placeholder="Start Date"></el-date-picker>
+      <el-date-picker v-model="endDate" type="month" placeholder="End Date"></el-date-picker>
+      <el-button type="primary" @click='GetBillByBillingMonth'>Go</el-button>
       <line-chart :chartData="billByBillingMonth" :options="billingMonthChartOptions"></line-chart>
       </div>
     </el-row>
@@ -44,7 +48,12 @@
       'rgba(255, 206, 86, 0.2)',
       'rgba(75, 192, 192, 0.2)',
       'rgba(153, 102, 255, 0.2)',
-      'rgba(255, 159, 64, 0.2)'
+      'rgba(255, 159, 64, 0.2)',
+      'rgba(36, 224, 84, 0.2)',
+      'rgba(66, 99, 44, 0.2)',
+      'rgba(196, 172, 88, 0.2)',
+      'rgba(149, 169, 66, 0.2)',
+      'rgba(236, 110, 12, 0.2)',
     ],
     borderColor: [
       'rgba(255,99,132,1)',
@@ -52,7 +61,12 @@
       'rgba(255, 206, 86, 1)',
       'rgba(75, 192, 192, 1)',
       'rgba(153, 102, 255, 1)',
-      'rgba(255, 159, 64, 1)'
+      'rgba(255, 159, 64, 1)',
+      'rgba(36, 224, 84, 1)',
+      'rgba(66, 99, 44, 1)',
+      'rgba(196, 172, 88, 1)',
+      'rgba(149, 169, 66, 1)',
+      'rgba(236, 110, 12, 1)',
     ],
   }
   export default {
@@ -64,6 +78,8 @@
     },
     data() {
       return {
+        startDate:'',
+        endDate:'',
         billByCustomer: {},
         customerChartOptions: {
           responsive: true,
@@ -286,7 +302,10 @@
       },
       GetBillByBillingMonth(){
         const url = urlBase + "/api/v1/graph/billByBillingMonth"
-        axios.get(url).then(res=>{
+        var payload = {}
+        if(this.startDate != '' && this.endDate != '')
+          payload = {startM: new Date(this.startDate),endM: new Date(this.endDate) }
+        axios.post(url, payload).then(res=>{
           const sumSet = res.data.map(i=>{
             return {x: new Date(i.billingMonth), y: i.totalInvoice}
           })
@@ -297,9 +316,11 @@
           temp.datasets[0]['backgroundColor'] = colors.backgroundColor[1]
           temp.datasets[0]['borderColor'] = colors.backgroundColor[1]
           temp.datasets[0].data = sumSet
+          temp.datasets[0]['lineTension'] = 0
           temp.datasets[1].data = countSet
-          temp.datasets[1]['backgroundColor'] = colors.backgroundColor[3]
-          temp.datasets[1]['borderColor'] = colors.backgroundColor[3]
+          temp.datasets[1]['backgroundColor'] = colors.backgroundColor[0]
+          temp.datasets[1]['borderColor'] = colors.backgroundColor[0]
+          temp.datasets[1]['lineTension'] = 0
           this.billByBillingMonth = temp
 
         })
@@ -326,5 +347,7 @@
     margin-left: 20px;
     border: 10px;
   }
+
+
 
 </style>

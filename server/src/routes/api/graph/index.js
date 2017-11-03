@@ -62,7 +62,7 @@ router.get('/billByClass', async(req, res) => {
   }
 })
 
-router.get('/billByBillingMonth', async(req, res) => {
+router.post('/billByBillingMonth', async(req, res) => {
   try {
     console.log(req.body)
     const result = await BillByBillingMonth(req.body)

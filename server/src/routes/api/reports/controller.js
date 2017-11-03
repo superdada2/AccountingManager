@@ -10,13 +10,55 @@ import {
   subscription_enum,
   type_enum,
   month_enum,
-  sequelize
+  sequelize,
 } from '../../../models';
 import Promise from 'bluebird';
 
+const companies = [
+  '3Com Corp',
+  '3M Company',
+  'A.G. Edwards Inc.',
+  'Abbott Laboratories',
+  'Abercrombie & Fitch Co.',
+  'ABM Industries Incorporated',
+  'Ace Hardware Corporation',
+  'ACT Manufacturing Inc.',
+]
+function random(min,max)
+{
+    return Math.floor(Math.random()*(max-min+1)+min);
+}
+
+function randomDate(start, end) {
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
+}
+
 export function loadData(){
   return new Promise(async(res, rej)=>{
-    res("works")
+    var result = await CreateInvoice({
+      type:random(1,3),
+      Class:random(1,8),
+      product:random(1,4),
+      currency:random(1,5),
+      status:random(1,3),
+      revenueType:random(1,7),
+      companyName: companies[random(1,companies.length)],
+      invoiceNumber: random(1,90000),
+      invoiceDate:randomDate(new Date(2014,1), new Date(2017,11)),
+      invoiceAmount:random(0,100000),
+      billMonth: new Date(random(2014,2017),random(1,12)),
+      recognitionStrMonth: new Date(random(2014,2017),random(1,12)),
+      lengthRec: random(1,12),
+      fxRate: random (1,5),
+      monthlyRec: random(1, 5000),
+      dateLastIncrease: randomDate(new Date(2014,1), new Date(2017,11)),
+      increasePerc: random(1,5),
+      cancelationDate: randomDate(new Date(2014,1), new Date(2017,11)),
+      invoiceAmountUsd: random(1,20000),
+      annualIncreaseBool: true,
+      subscription: random(1,3)
+    })
+    res(result)
   })
 }
 
@@ -198,6 +240,16 @@ export function GetInvoice({ where }) {
   })
 }
 
+export function getDistinctInvoiceNumber(){
+  const query = "SELECT DISTINCT invoiceNumber AS value FROM invoice"
+  return sequelize.query(query,{ type: sequelize.QueryTypes.SELECT})
+}
+
+export function getDistinctCustomerName(){
+  const query = "SELECT DISTINCT customerName AS value FROM invoice"
+  return sequelize.query(query,{ type: sequelize.QueryTypes.SELECT})
+}
+
 function getReportByClassProduct(year = 2017, month = 1, income = true){
   var query = 'SELECT SUM(income.amount) AS amount, class_enum.data AS class, COUNT(income.amount) AS count, product_enum.data as product FROM invoice AS invoice LEFT JOIN income AS income on income.invoiceId = invoice.id AND income.year = %YEAR% AND income.month = %MONTH% LEFT JOIN product_enum as product_enum ON product_enum.id = invoice.product LEFT JOIN class_enum as class_enum ON class_enum.id = invoice.class GROUP BY invoice.product, invoice.class'
   query = query.replace("%YEAR%", year).replace("%MONTH%", month)
@@ -232,13 +284,18 @@ export  function getProductTable({startY = 2000, endY = 2016, startM = 1, endM =
        const data = await  getReportByProduct(currentY, currentM,isIncome)
        var currentEntry = {}
        var count = 0
+       var total = 0
+       
        data.forEach(value=>{
          currentEntry[value.product] = value.amount
          count += value.count
+         if(value.amount != null)
+         total +=parseFloat(value.amount)
        })
        currentEntry["year"] = currentY
        currentEntry["month"] = currentM
        currentEntry["count"] = count
+       currentEntry["total"] = total
        
        dataTable.push(currentEntry)
        if(currentM == 12){
@@ -267,13 +324,20 @@ export  function getClassTable({startY = 2000, endY = 2016, startM = 1, endM = 1
        const data = await  getReportByClass(currentY, currentM,isIncome)
        var currentEntry = {}
        var count = 0
+       var total = 0
        data.forEach(value=>{
          currentEntry[value.class] = value.amount
+        //  currentEntry[value.class] = {value:0, count:0}
+        //  currentEntry[value.class]["value"] = value.amount
+        //  currentEntry[value.class]["count"] = value.count
          count += value.count
+         if(value.amount != null)
+          total +=parseFloat(value.amount)
        })
        currentEntry["year"] = currentY
        currentEntry["month"] = currentM
        currentEntry["count"] = count
+       currentEntry["total"] = total
 
        dataTable.push(currentEntry)
        if(currentM == 12){

@@ -5,8 +5,11 @@
     <el-container>
       <el-header height="90px">
         <div id="header">
+          
+          <img id="image" src="./assets/viz_logo.png">
           <h1 id="title">INVOICES</h1>
-          <img src="./assets/viz_logo.png">
+          <router-link to="/setting"><el-button id="setting" type="info" round :v-link='{name:setting}'><i class="el-icon-setting"></i></el-button></router-link>
+          
         </div>
       </el-header>
       <el-container>
@@ -68,6 +71,15 @@
   #sideBar{
     height: 100%;
     position: relative;
+  }
+
+  #setting{
+    margin-top: 25px;
+    margin-right:10px;
+    float: right ;
+  }
+  #image{
+    margin-left: 20px;
   }
   
 

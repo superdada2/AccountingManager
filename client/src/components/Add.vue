@@ -150,7 +150,7 @@
             const data = await axios.post(url, message)
             this.$message({
               type: 'success',
-              message: data.message
+              message: "Success!"
             })
           } catch (err) {
             this.$message({

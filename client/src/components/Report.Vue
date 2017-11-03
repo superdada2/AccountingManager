@@ -32,6 +32,7 @@
           <el-table-column prop="month" label="Month" />
           <el-table-column prop="count" label="Count" />
           <el-table-column v-for="item in columnEnum" :key="item.id" :prop="item.data" :label="item.data" />
+          <el-table-column prop="total" label="Total"/>"
         </el-table>
       </div>
     </el-row>

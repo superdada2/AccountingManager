@@ -15,9 +15,46 @@ import {
   getSubscription ,
   addSubscription,
   getMonth,
+  updateClass,
+  updateCurrency,
+  updateProduct,
+  updateRevenueType,
+  updateStatus,
+  updateSubscription,
+  updateType,
+  update,
+  add
 } from './controller';
 
 export const router = express.Router();
+
+router.post('/update',async (req, res)=>{
+  try{
+    const result = await update(req.body)
+    res.status(200).json(result)
+  }
+  catch(err){
+    const message = err.message;
+    res.status(500).json({
+      status:false,
+      message
+    })
+  }
+})
+
+router.post('/add',async (req, res)=>{
+  try{
+    const result = await add(req.body)
+    res.status(200).json(result)
+  }
+  catch(err){
+    const message = err.message;
+    res.status(500).json({
+      status:false,
+      message
+    })
+  }
+})
 
 router.get('/all', async (req,res)=>{
   try{
@@ -43,6 +80,19 @@ router.get('/all', async (req,res)=>{
 router.get('/class',async (req, res)=>{
   try{
     const result = await getClass(req.body)
+    res.status(200).json(result)
+  }
+  catch(err){
+    const message = err.message;
+    res.status(500).json({
+      status:false,
+      message
+    })
+  }
+})
+router.post('/updateClass',async (req, res)=>{
+  try{
+    const result = await updateClass(req.body)
     res.status(200).json(result)
   }
   catch(err){
@@ -97,6 +147,7 @@ router.post('/currency',async (req, res)=>{
     })
   }
 })
+
 
 router.get('/product',async (req, res)=>{
   try{

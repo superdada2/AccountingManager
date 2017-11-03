@@ -62,7 +62,7 @@ export function BillByMonthInvoiced() {
     
   })
 }
-export function BillByBillingMonth({startM = new Date(2016,2),  endM = new Date(2017, 10)}) {
+export function BillByBillingMonth({startM = new Date(2015,2),  endM = new Date(2017, 10)}) {
   const Op = Sequelize.Op
   return invoice.findAll({
     attributes: ["billingMonth", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],[sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']],
