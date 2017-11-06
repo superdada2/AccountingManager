@@ -5,6 +5,17 @@
         <h1>Home</h1>
       </div>
     </el-row>
+    <el-row class="chart">
+      <el-select v-model="filter" placeholder="Active">
+        <el-option label="Total" value="total">
+          </el-option>
+          <el-option label="Active" value="active">
+            </el-option>
+        
+      </el-select>
+      <el-button type="primary" @click='GetPieData'>Go</el-button>
+      <br>
+    </el-row>
     <el-row>
       <div class="chart">
       <el-col :span="6">
@@ -78,6 +89,7 @@
     },
     data() {
       return {
+        filter:"active",
         startDate:'',
         endDate:'',
         billByCustomer: {},
@@ -192,10 +204,17 @@
       }
     },
     methods: {
+      GetPieData(){
+      this.GetBillByCurrency()
+      this.GetBillByCustomer()
+      this.GetBillByProduct()
+      this.GetBillByClass()
+      this.GetBillByBillingMonth()
+      },
       GetBillByCustomer() {
         const url = urlBase + "/api/v1/graph/billByCustomer"
         console.log(url)
-        axios.get(url).then(res => {
+        axios.post(url, {sort:this.filter}).then(res => {
           console.log(res.data)
           const result = res.data
           var temp = {}
@@ -222,7 +241,7 @@
       GetBillByCurrency() {
         const url = urlBase + "/api/v1/graph/billByCurrency"
         console.log(url)
-        axios.get(url).then(res => {
+        axios.post(url, {sort:this.filter}).then(res => {
           console.log(res.data)
           const result = res.data
           var temp = {}
@@ -249,7 +268,7 @@
       GetBillByClass() {
         const url = urlBase + "/api/v1/graph/billByClass"
         console.log(url)
-        axios.get(url).then(res => {
+        axios.post(url, {sort:this.filter}).then(res => {
           console.log(res.data)
           const result = res.data
           var temp = {}
@@ -276,7 +295,7 @@
       GetBillByProduct() {
         const url = urlBase + "/api/v1/graph/billByProduct"
         console.log(url)
-        axios.get(url).then(res => {
+        axios.post(url, {sort:this.filter}).then(res => {
           console.log(res.data)
           const result = res.data
           var temp = {}

@@ -9,7 +9,7 @@ import {
 } from './controller'
 
 export const router = express.Router()
-router.get('/billByCustomer', async(req, res) => {
+router.post('/billByCustomer', async(req, res) => {
   try {
     console.log(req.body)
     const result = await BillByCustomer(req.body)
@@ -22,7 +22,7 @@ router.get('/billByCustomer', async(req, res) => {
     })
   }
 })
-router.get('/billByProduct', async(req, res) => {
+router.post('/billByProduct', async(req, res) => {
   try {
     console.log(req.body)
     const result = await BillByProduct(req.body)
@@ -35,7 +35,7 @@ router.get('/billByProduct', async(req, res) => {
     })
   }
 })
-router.get('/billByCurrency', async(req, res) => {
+router.post('/billByCurrency', async(req, res) => {
   try {
     console.log(req.body)
     const result = await BillByCurrency(req.body)
@@ -48,7 +48,7 @@ router.get('/billByCurrency', async(req, res) => {
     })
   }
 })
-router.get('/billByClass', async(req, res) => {
+router.post('/billByClass', async(req, res) => {
   try {
     console.log(req.body)
     const result = await BillByClass(req.body)

@@ -218,26 +218,39 @@ function createDeferred({
   return incomeList
 }
 
+export function UpdateInvoiceDescription({id = 0, description = "", comments = ""}){
+  return invoice.update({description:description, comments: comments}, {where:{id:id}})
+}
+
 export function GetInvoice({ where }) {
-  console.log("queery", where)
-  return invoice.findAll({
-    where,
-    include: [{
-      model: class_enum
-    }, {
-      model: currency_enum
-    }, {
-      model: product_enum
-    }, {
-      model: revenue_type_enum
-    }, {
-      model: status_enum
-    }, {
-      model: subscription_enum
-    }, {
-      model: type_enum
-    }]
+  return new Promise(async (res, rej)=>{
+    try{
+
+      var result = await invoice.findAll({
+        where,
+        include: [{
+          model: class_enum
+        }, {
+          model: currency_enum
+        }, {
+          model: product_enum
+        }, {
+          model: revenue_type_enum
+        }, {
+          model: status_enum
+        }, {
+          model: subscription_enum
+        }, {
+          model: type_enum
+        }]
+      })
+      res(result.splice(0,50))
+    }
+    catch(err){
+      rej(err)
+    }
   })
+  
 }
 
 export function getDistinctInvoiceNumber(){

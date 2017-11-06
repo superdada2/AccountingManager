@@ -3,7 +3,25 @@
     <div class="header">
       <h1>Invoice </h1>
     </div>
+    <el-dialog title="Comments and Description" :visible.sync="commentDialogVisibility" width="50%">
+      <el-row>
+        <el-col :span="11" class="input">
+          <span> Comments </span>
+          <el-input type="textarea" :rows="5" v-model="currentComment">
+          </el-input>
 
+        </el-col>
+        <el-col :span="11" class="input">
+          <span> Description </span>
+          <el-input type="textarea" :rows="5" v-model="currentDescription">
+            </el-input>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="commentDialogVisibility = false">Cancel</el-button>
+        <el-button type="primary" @click="updateComments">Save</el-button>
+      </span>
+    </el-dialog>
     <div id="filter">
       <el-select v-model="selector" placeholder="Selector" @change="selectorChange">
         <el-option v-for="item in fieldOptions" :key="item" :label="item" :value="item">
@@ -20,12 +38,12 @@
       <br>
     </div>
     <div id="tags">
-      <el-tag v-for="tag in tags" :key="tag.id" @close="removeTagg(tag)"closable :type="success">
+      <el-tag v-for="tag in tags" :key="tag.id" @close="removeTagg(tag)" closable :type="success">
         {{tag.value}}
       </el-tag>
     </div>
     <div id="dataTable">
-      <el-table :data="invoices" style="width: 100%">
+      <el-table :data="invoices" style="width: 100%" @row-click="openComments">
         <el-table-column prop="type_enum.data" label="Type">
         </el-table-column>
         <el-table-column prop="invoiceDate" label="Date" sortable>
@@ -62,10 +80,13 @@
   import _ from 'lodash'
   const urlBase = "http://localhost:3030"
   export default {
-
     name: 'invoice',
     data() {
       return {
+        currentRow: {},
+        currentDescription: "",
+        currentComment: "",
+        commentDialogVisibility: false,
         tags: [
 
         ],
@@ -79,13 +100,13 @@
         searchValueOptions: [],
         enumList: {},
         isSelect: true,
-        isCustomer:false,
-        isInvoice:false,
+        isCustomer: false,
+        isInvoice: false,
         queryParam: {
           where: {}
         },
         customerNameList: [],
-        invoiceNumberList:[],
+        invoiceNumberList: [],
       }
     },
     methods: {
@@ -116,12 +137,12 @@
           this.isCustomer = false
           this.isInvoice = false
         }
-        if(value == "customerName"){
+        if (value == "customerName") {
           this.isSelect = false
           this.isCustomer = true
           this.isInvoice = false
         }
-        if(value == "invoiceNumber"){
+        if (value == "invoiceNumber") {
           this.isSelect = false
           this.isCustomer = false
           this.isInvoice = true
@@ -132,11 +153,15 @@
       addTagg() {
         const currentParam = this.queryParam.where
         currentParam[this.selector] = this.searchValue
-        
+
         this.queryParam.where = currentParam
         this.getInvoice(this.queryParam)
-        if (_.findIndex(this.tags, i=>{ return i.id == this.selector}) != -1){
-          this.tags[_.findIndex(this.tags, i=>{ return i.id == this.selector})].value = (this.selector + " = " + this.searchValue)
+        if (_.findIndex(this.tags, i => {
+            return i.id == this.selector
+          }) != -1) {
+          this.tags[_.findIndex(this.tags, i => {
+            return i.id == this.selector
+          })].value = (this.selector + " = " + this.searchValue)
         } else {
           this.tags.push({
             id: this.selector,
@@ -144,18 +169,18 @@
           })
         }
       },
-      removeTagg(tag){
+      removeTagg(tag) {
         console.log("remove tag", tag.id)
         this.tags.splice(this.tags.indexOf(tag), 1)
         delete this.queryParam.where[tag.id]
         this.getInvoice(this.queryParam)
       },
-      querySearchCustName(queryString, cb){
+      querySearchCustName(queryString, cb) {
         var list = this.customerNameList
         var results = queryString ? list.filter((this.createFilter(queryString))) : list;
         cb(results)
       },
-      querySearchInvoice(queryString, cb){
+      querySearchInvoice(queryString, cb) {
         var list = this.invoiceNumberList
         var results = queryString ? list.filter((this.createFilter(queryString))) : list;
         cb(results)
@@ -165,17 +190,32 @@
           return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
         };
       },
-      getCustomerName(){
+      getCustomerName() {
         const url = urlBase + '/api/v1/reports/getCustomerName'
-        axios.get(url).then(res=>{
+        axios.get(url).then(res => {
           this.customerNameList = res.data
         })
       },
-      getInvoiceNumber(){
+      getInvoiceNumber() {
         const url = urlBase + '/api/v1/reports/getInvoiceNumber'
-        axios.get(url).then(res=>{
+        axios.get(url).then(res => {
           this.invoiceNumberList = res.data
         })
+      },
+      openComments(row) {
+        this.commentDialogVisibility = true
+        console.log(row)
+        this.currentDescription = row.description
+        this.currentComment = row.comments
+        this.currentRow = row
+      },
+      updateComments(){
+        if(this.currentComment != this.currentRow.comments || this.currentDescription != this.currentRow.description){
+          const url = urlBase + '/api/v1/reports/updateDescription'
+          
+          axios.post(url, {description: this.currentDescription, comments: this.currentComment, id: this.currentRow.id})
+        }
+        this.commentDialogVisibility = false
       }
     },
     created() {
@@ -204,9 +244,13 @@
     width: 250px;
     margin-right: 50px
   }
-  .el-tag{
+
+  .el-tag {
 
     margin-right: 10px
+  }
+  .input{
+    margin: 10px;
   }
 
 </style>

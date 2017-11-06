@@ -173,6 +173,7 @@
       CreateChartData(tableData) {
         var chartData = { ...this.chartData
         }
+        var chartDataCount = {...this.chartDataCount}
         var sumDataSet = this.columnEnum.map((i, index) => {
 
           var singleSet = {
@@ -212,9 +213,10 @@
           return singleSet
         })
         chartData['datasets'] = sumDataSet
+        chartDataCount['datasets'] = countDataSet
         this.showChart = true
         this.chartData = chartData
-        this.chartDataCount['datasets'] = countDataSet
+        this.chartDataCount = chartDataCount
       },
 
       GetProductEnum() {
