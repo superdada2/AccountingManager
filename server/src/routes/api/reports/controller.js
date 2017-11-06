@@ -288,6 +288,7 @@ export  function getProductTable({startY = 2000, endY = 2016, startM = 1, endM =
        
        data.forEach(value=>{
          currentEntry[value.product] = value.amount
+         currentEntry[value.product + '_count'] = value.count
          count += value.count
          if(value.amount != null)
          total +=parseFloat(value.amount)
@@ -330,6 +331,7 @@ export  function getClassTable({startY = 2000, endY = 2016, startM = 1, endM = 1
         //  currentEntry[value.class] = {value:0, count:0}
         //  currentEntry[value.class]["value"] = value.amount
         //  currentEntry[value.class]["count"] = value.count
+        currentEntry[value.class + '_count'] = value.count
          count += value.count
          if(value.amount != null)
           total +=parseFloat(value.amount)
