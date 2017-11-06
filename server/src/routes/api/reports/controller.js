@@ -37,11 +37,11 @@ export function loadData(){
   return new Promise(async(res, rej)=>{
     var result = await CreateInvoice({
       type:random(1,3),
-      Class:random(1,8),
+      Class:random(1,6),
       product:random(1,4),
       currency:random(1,5),
       status:random(1,3),
-      revenueType:random(1,7),
+      revenueType:random(1,5),
       companyName: companies[random(1,companies.length)],
       invoiceNumber: random(1,90000),
       invoiceDate:randomDate(new Date(2014,1), new Date(2017,11)),
@@ -56,7 +56,7 @@ export function loadData(){
       cancelationDate: randomDate(new Date(2014,1), new Date(2017,11)),
       invoiceAmountUsd: random(1,20000),
       annualIncreaseBool: true,
-      subscription: random(1,3)
+      subscription: random(1,2)
     })
     res(result)
   })

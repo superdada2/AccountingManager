@@ -37,7 +37,7 @@ export function BillByCurrency({sort = 'active'}) {
       }],
       where:{
         recognitionStartMonth:{
-          $between:[sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date()]
+          $between:[sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000,1)]
         }
       }
     })
@@ -62,7 +62,7 @@ export function BillByClass({sort = 'active'}) {
       }],
       where:{
         recognitionStartMonth:{
-          $between:[sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date()]
+          $between:[sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000,1)]
         }
       }
     })
@@ -87,7 +87,7 @@ export function BillByProduct({sort = 'active'}) {
       }],
       where:{
         recognitionStartMonth:{
-          $between:[sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date()]
+          $between:[sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000,1)]
         }
       }
     })
@@ -111,7 +111,7 @@ export function BillByMonthInvoiced() {
     
   })
 }
-export function BillByBillingMonth({startM = new Date(2015,2),  endM = new Date(2017, 10)}) {
+export function BillByBillingMonth({startM = new Date(2015,1),  endM = new Date()}) {
   const Op = Sequelize.Op
   return invoice.findAll({
     attributes: ["billingMonth", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],[sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']],
