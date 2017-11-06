@@ -51,7 +51,7 @@
   import axios from 'Axios'
   import _ from 'lodash'
   import chartjs from 'chart.piecelabel.js'
-  const urlBase = "http://localhost:3030"
+  const urlBase = "http://"+ window.location.hostname + ":3030"
   const colors = {
     backgroundColor: [
       'rgba(255, 99, 132, 0.2)',

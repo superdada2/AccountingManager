@@ -48,7 +48,7 @@
 <script>
   import axios from 'Axios'
   import LineChart from '../charts/LineChart.js'
-  const urlBase = "http://localhost:3030"
+  const urlBase = "http://"+ window.location.hostname + ":3030"
   const colors = {
     backgroundColor: [
       'rgba(255, 99, 132, 0.2)',
@@ -154,6 +154,13 @@
         } else {
           url += '/api/v1/reports/getClassTable'
           this.GetClassEnum()
+        }
+        if(new Date(this.startM) > new Date (this.endM)){
+          this.$message({
+              type: 'error',
+              message: "Invalid date range"
+            })
+            return null
         }
 
         const data = {

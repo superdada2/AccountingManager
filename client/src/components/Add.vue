@@ -79,7 +79,7 @@
 
 <script>
   import axios from 'Axios'
-  const urlBase = "http://localhost:3030"
+  const urlBase = "http://"+ window.location.hostname + ":3030"
   export default {
     name: 'add',
     data() {

@@ -78,7 +78,7 @@
 <script>
   import axios from 'Axios'
   import _ from 'lodash'
-  const urlBase = "http://localhost:3030"
+  const urlBase = "http://"+ window.location.hostname + ":3030"
   export default {
     name: 'invoice',
     data() {
