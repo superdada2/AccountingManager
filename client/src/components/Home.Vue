@@ -18,18 +18,21 @@
     </el-row>
     <el-row>
       <div class="chart">
-      <el-col :span="6">
-        <pie-chart :chartData="billByCustomer" :options="customerChartOptions"></pie-chart>
-      </el-col>
-      <el-col :span="6">
+      <el-col :span="8">
         <pie-chart :chartData="billByCurrency" :options="currencyChartOptions"></pie-chart>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="8">
         <pie-chart :chartData="billByClass" :options="classChartOptions"></pie-chart>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="8">
         <pie-chart :chartData="billByProduct" :options="productChartOptions"></pie-chart>
       </el-col>
+      </div>
+    </el-row>
+    <el-row>
+      <div class="chart">
+        <br>
+        <bar-chart :chartData="billByCustomer" :options="customerChartOptions"></bar-chart>
       </div>
     </el-row>
     <el-row>
@@ -48,6 +51,7 @@
   import PieChart from '../charts/PieChart.js'
   import LineChart from '../charts/LineChart.js'
   import DoughnutChart from '../charts/DoughnutChart.js'
+  import BarChart from '../charts/BarChart.js'
   import axios from 'Axios'
   import _ from 'lodash'
   import chartjs from 'chart.piecelabel.js'
@@ -81,11 +85,12 @@
     ],
   }
   export default {
-    name: 'default',
+    name: 'home',
     components: {
       PieChart,
       LineChart,
-      DoughnutChart
+      DoughnutChart,
+      BarChart,
     },
     data() {
       return {
@@ -94,14 +99,34 @@
         endDate:'',
         billByCustomer: {},
         customerChartOptions: {
+          
           responsive: true,
           maintainAspectRatio: false,
+          // barPercentage: 1,
+          // barThickness: 20,
           title: {
             display: true,
             text: 'Bill by Customer'
           },
-          pieceLabel:{
-            render:'value'
+          scales:{
+            xAxes:[{
+              barPercentage: 0.7,
+              categoryPercentage: 0.7,
+            }],
+            yAxes:[{
+              
+                display :"true",
+                type: "linear",
+                position: "left",
+                id: "1"
+              },{
+                display: "true",
+                type: "linear",
+                position: "right",
+                id:"2",
+                startValue:0,
+                stacked: true,
+              }]            
           }
         },
         billByClass: [],
@@ -222,16 +247,18 @@
           const countData = {
             label: 'Number of Invoice By Customer',
             data: result.map(i => i.numberInvoice),
-            borderWidth: 1,
             backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length)
+            borderColor: colors.borderColor.slice(0, result.length),
+            yAxisID:"2",
+            borderWidth: 1,
           }
           const sumData = {
             label: 'Total Invoice By Customer',
             data: result.map(i => i.totalInvoice),
-            borderWidth: 1,
             backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length)
+            borderColor: colors.borderColor.slice(0, result.length),
+            yAxisID:"1",
+            borderWidth: 1,
           }
           temp["datasets"] = [sumData, countData]
 

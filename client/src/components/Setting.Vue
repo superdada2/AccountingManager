@@ -7,7 +7,7 @@
     </el-row>
     <div class="content">
       <el-tabs v-model='tab'>
-        <el-tab-pane label="Add" name='add'>
+        <el-tab-pane label="Add" name='setting'>
           <el-row>
             <el-col :span="12">
               <el-input placeholder="Add Class" v-model="Class"></el-input>

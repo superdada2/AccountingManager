@@ -79,7 +79,7 @@
   }
   export default {
 
-    name: 'search',
+    name: 'report',
     components: {
       LineChart,
     },
@@ -194,7 +194,7 @@
 
           singleSet.data = tableData.map(j => {
             return {
-              x: new Date(j.year, j.month),
+              x: new Date(j.year, j.month -1),
               y: j[i.data]
             }
           })
@@ -213,7 +213,7 @@
 
           singleSet.data = tableData.map(j => {
             return {
-              x: new Date(j.year, j.month),
+              x: new Date(j.year, j.month -1),
               y: j[i.data + '_count']
             }
           })
