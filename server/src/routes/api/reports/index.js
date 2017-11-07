@@ -12,13 +12,12 @@ import {
 
 export const router = express.Router()
 
-router.post('/updateDescription',async (req, res)=>{
-  try{
+router.post('/updateDescription', async(req, res) => {
+  try {
     console.log(req.body)
     const result = await UpdateInvoiceDescription(req.body)
     res.status(200).json(result)
-  }
-  catch(err){
+  } catch (err) {
 
     const message = err.message
     console.log("error", message)

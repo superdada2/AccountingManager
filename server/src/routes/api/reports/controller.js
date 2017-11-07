@@ -24,39 +24,39 @@ const companies = [
   'Ace Hardware Corporation',
   'ACT Manufacturing Inc.',
 ]
-function random(min,max)
-{
-    return Math.floor(Math.random()*(max-min+1)+min);
+
+function random(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 function randomDate(start, end) {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
 }
 
-export function loadData(){
-  return new Promise(async(res, rej)=>{
+export function loadData() {
+  return new Promise(async(res, rej) => {
     var result = await CreateInvoice({
-      type:random(1,3),
-      Class:random(1,6),
-      product:random(1,4),
-      currency:random(1,5),
-      status:random(1,3),
-      revenueType:random(1,5),
-      companyName: companies[random(1,companies.length)],
-      invoiceNumber: random(1,90000),
-      invoiceDate:randomDate(new Date(2014,1), new Date(2017,11)),
-      invoiceAmount:random(0,100000),
-      billMonth: new Date(random(2014,2017),random(1,12)),
-      recognitionStrMonth: new Date(random(2014,2017),random(1,12)),
-      lengthRec: random(1,12),
-      fxRate: random (1,5),
+      type: random(1, 3),
+      Class: random(1, 6),
+      product: random(1, 4),
+      currency: random(1, 5),
+      status: random(1, 3),
+      revenueType: random(1, 5),
+      companyName: companies[random(1, companies.length)],
+      invoiceNumber: random(1, 90000),
+      invoiceDate: randomDate(new Date(2014, 1), new Date(2017, 11)),
+      invoiceAmount: random(0, 100000),
+      billMonth: new Date(random(2014, 2017), random(1, 12)),
+      recognitionStrMonth: new Date(random(2014, 2017), random(1, 12)),
+      lengthRec: random(1, 12),
+      fxRate: random(1, 5),
       monthlyRec: random(1, 5000),
-      dateLastIncrease: randomDate(new Date(2014,1), new Date(2017,11)),
-      increasePerc: random(1,5),
-      cancelationDate: randomDate(new Date(2014,1), new Date(2017,11)),
-      invoiceAmountUsd: random(1,20000),
+      dateLastIncrease: randomDate(new Date(2014, 1), new Date(2017, 11)),
+      increasePerc: random(1, 5),
+      cancelationDate: randomDate(new Date(2014, 1), new Date(2017, 11)),
+      invoiceAmountUsd: random(1, 20000),
       annualIncreaseBool: true,
-      subscription: random(1,2)
+      subscription: random(1, 2)
     })
     res(result)
   })
@@ -192,13 +192,13 @@ function createDeferred({
     invoiceId: id,
     amount: remainingAmount,
     year: currentYr,
-    month: currentMonth 
+    month: currentMonth
   })
   incomeList.push({
     invoiceId: id,
     amount: remainingAmount,
     year: currentYr,
-    month: currentMonth +1
+    month: currentMonth + 1
   })
   currentMonth += 2
   for (var i = 0; i < length - 1; i++) {
@@ -218,13 +218,26 @@ function createDeferred({
   return incomeList
 }
 
-export function UpdateInvoiceDescription({id = 0, description = "", comments = ""}){
-  return invoice.update({description:description, comments: comments}, {where:{id:id}})
+export function UpdateInvoiceDescription({
+  id = 0,
+  description = "",
+  comments = ""
+}) {
+  return invoice.update({
+    description: description,
+    comments: comments
+  }, {
+    where: {
+      id: id
+    }
+  })
 }
 
-export function GetInvoice({ where }) {
-  return new Promise(async (res, rej)=>{
-    try{
+export function GetInvoice({
+  where
+}) {
+  return new Promise(async(res, rej) => {
+    try {
 
       var result = await invoice.findAll({
         where,
@@ -244,133 +257,146 @@ export function GetInvoice({ where }) {
           model: type_enum
         }]
       })
-      res(result.splice(0,50))
-    }
-    catch(err){
+      res(result.splice(0, 50))
+    } catch (err) {
       rej(err)
     }
   })
-  
+
 }
 
-export function getDistinctInvoiceNumber(){
+export function getDistinctInvoiceNumber() {
   const query = "SELECT DISTINCT invoiceNumber AS value FROM invoice"
-  return sequelize.query(query,{ type: sequelize.QueryTypes.SELECT})
+  return sequelize.query(query, {
+    type: sequelize.QueryTypes.SELECT
+  })
 }
 
-export function getDistinctCustomerName(){
+export function getDistinctCustomerName() {
   const query = "SELECT DISTINCT customerName AS value FROM invoice"
-  return sequelize.query(query,{ type: sequelize.QueryTypes.SELECT})
+  return sequelize.query(query, {
+    type: sequelize.QueryTypes.SELECT
+  })
 }
 
-function getReportByClassProduct(year = 2017, month = 1, income = true){
+function getReportByClassProduct(year = 2017, month = 1, income = true) {
   var query = 'SELECT SUM(income.amount) AS amount, class_enum.data AS class, COUNT(income.amount) AS count, product_enum.data as product FROM invoice AS invoice LEFT JOIN income AS income on income.invoiceId = invoice.id AND income.year = %YEAR% AND income.month = %MONTH% LEFT JOIN product_enum as product_enum ON product_enum.id = invoice.product LEFT JOIN class_enum as class_enum ON class_enum.id = invoice.class GROUP BY invoice.product, invoice.class'
   query = query.replace("%YEAR%", year).replace("%MONTH%", month)
-  if(!income)
+  if (!income)
     query = query.replace(/income/g, "deferred_balance")
-  return sequelize.query(query,{ type: sequelize.QueryTypes.SELECT} )
+  return sequelize.query(query, {
+    type: sequelize.QueryTypes.SELECT
+  })
 }
 
-function getReportByProduct(year = 2017, month = 1, income = true){
+function getReportByProduct(year = 2017, month = 1, income = true) {
   var query = 'SELECT SUM(income.amount) AS amount, COUNT(income.amount) AS count, product_enum.data as product FROM invoice AS invoice LEFT JOIN income AS income on income.invoiceId = invoice.id AND income.year = %YEAR% AND income.month = %MONTH% LEFT JOIN product_enum as product_enum ON product_enum.id = invoice.product LEFT JOIN class_enum as class_enum ON class_enum.id = invoice.class GROUP BY invoice.product'
   query = query.replace("%YEAR%", year).replace("%MONTH%", month)
-  if(!income)
+  if (!income)
     query = query.replace(/income/g, "deferred_balance")
-  return sequelize.query(query,{ type: sequelize.QueryTypes.SELECT} )
+  return sequelize.query(query, {
+    type: sequelize.QueryTypes.SELECT
+  })
 }
 
-function getReportByClass(year = 2017, month = 1, income = true){
+function getReportByClass(year = 2017, month = 1, income = true) {
   var query = 'SELECT SUM(income.amount) AS amount, COUNT(income.amount) AS count, class_enum.data as class FROM invoice AS invoice LEFT JOIN income AS income on income.invoiceId = invoice.id AND income.year = %YEAR% AND income.month = %MONTH% LEFT JOIN product_enum as product_enum ON product_enum.id = invoice.product LEFT JOIN class_enum as class_enum ON class_enum.id = invoice.class GROUP BY  invoice.class'
   query = query.replace("%YEAR%", year).replace("%MONTH%", month)
-  if(!income)
+  if (!income)
     query = query.replace(/income/g, "deferred_balance")
-  return sequelize.query(query,{ type: sequelize.QueryTypes.SELECT} )
+  return sequelize.query(query, {
+    type: sequelize.QueryTypes.SELECT
+  })
 }
 
-export  function getProductTable({startY = 2000, endY = 2016, startM = 1, endM = 12, isIncome = false}){
-  return new Promise(async (res, rej)=>{
-    try{
+export function getProductTable({
+  startY = 2000,
+  endY = 2016,
+  startM = 1,
+  endM = 12,
+  isIncome = false
+}) {
+  return new Promise(async(res, rej) => {
+    try {
       var dataTable = []
       var currentY = startY
       var currentM = startM
-      while(currentY != endY || currentM != endM){
-       const data = await  getReportByProduct(currentY, currentM,isIncome)
-       var currentEntry = {}
-       var count = 0
-       var total = 0
-       
-       data.forEach(value=>{
-         currentEntry[value.product] = value.amount
-         currentEntry[value.product + '_count'] = value.count
-         count += value.count
-         if(value.amount != null)
-         total +=parseFloat(value.amount)
-       })
-       currentEntry["year"] = currentY
-       currentEntry["month"] = currentM
-       currentEntry["count"] = count
-       currentEntry["total"] = total
-       
-       dataTable.push(currentEntry)
-       if(currentM == 12){
-         currentM = 1
-         currentY ++
-       }      
-       else
-         currentM ++
+      while (currentY != endY || currentM != endM) {
+        const data = await getReportByProduct(currentY, currentM, isIncome)
+        var currentEntry = {}
+        var count = 0
+        var total = 0
+
+        data.forEach(value => {
+          currentEntry[value.product] = value.amount
+          currentEntry[value.product + '_count'] = value.count
+          count += value.count
+          if (value.amount != null)
+            total += parseFloat(value.amount)
+        })
+        currentEntry["year"] = currentY
+        currentEntry["month"] = currentM
+        currentEntry["count"] = count
+        currentEntry["total"] = total
+
+        dataTable.push(currentEntry)
+        if (currentM == 12) {
+          currentM = 1
+          currentY++
+        } else
+          currentM++
       }
       res(dataTable)
-    }
-    catch(err){
+    } catch (err) {
       rej(err.message)
     }
-    
-  })   
+
+  })
 }
 
-export  function getClassTable({startY = 2000, endY = 2016, startM = 1, endM = 12, isIncome = false}){
-  return new Promise(async (res, rej)=>{
-    try{
+export function getClassTable({
+  startY = 2000,
+  endY = 2016,
+  startM = 1,
+  endM = 12,
+  isIncome = false
+}) {
+  return new Promise(async(res, rej) => {
+    try {
       var dataTable = []
       var currentY = startY
       var currentM = startM
-      while(currentY != endY || currentM != endM){
-       const data = await  getReportByClass(currentY, currentM,isIncome)
-       var currentEntry = {}
-       var count = 0
-       var total = 0
-       data.forEach(value=>{
-         currentEntry[value.class] = value.amount
-        //  currentEntry[value.class] = {value:0, count:0}
-        //  currentEntry[value.class]["value"] = value.amount
-        //  currentEntry[value.class]["count"] = value.count
-        currentEntry[value.class + '_count'] = value.count
-         count += value.count
-         if(value.amount != null)
-          total +=parseFloat(value.amount)
-       })
-       currentEntry["year"] = currentY
-       currentEntry["month"] = currentM
-       currentEntry["count"] = count
-       currentEntry["total"] = total
+      while (currentY != endY || currentM != endM) {
+        const data = await getReportByClass(currentY, currentM, isIncome)
+        var currentEntry = {}
+        var count = 0
+        var total = 0
+        data.forEach(value => {
+          currentEntry[value.class] = value.amount
+          //  currentEntry[value.class] = {value:0, count:0}
+          //  currentEntry[value.class]["value"] = value.amount
+          //  currentEntry[value.class]["count"] = value.count
+          currentEntry[value.class + '_count'] = value.count
+          count += value.count
+          if (value.amount != null)
+            total += parseFloat(value.amount)
+        })
+        currentEntry["year"] = currentY
+        currentEntry["month"] = currentM
+        currentEntry["count"] = count
+        currentEntry["total"] = total
 
-       dataTable.push(currentEntry)
-       if(currentM == 12){
-         currentM = 1
-         currentY ++
-       }      
-       else
-         currentM ++
+        dataTable.push(currentEntry)
+        if (currentM == 12) {
+          currentM = 1
+          currentY++
+        } else
+          currentM++
       }
       res(dataTable)
-    }
-    catch(err){
+    } catch (err) {
       rej(err.message)
     }
-    
-  })   
+
+  })
 }
-
-
-
-

@@ -8,25 +8,25 @@
     <el-row class="chart">
       <el-select v-model="filter" placeholder="Active">
         <el-option label="Total" value="total">
-          </el-option>
-          <el-option label="Active" value="active">
-            </el-option>
-        
+        </el-option>
+        <el-option label="Active" value="active">
+        </el-option>
+
       </el-select>
       <el-button type="primary" @click='GetPieData'>Go</el-button>
       <br>
     </el-row>
     <el-row>
       <div class="chart">
-      <el-col :span="8">
-        <pie-chart :chartData="billByCurrency" :options="currencyChartOptions"></pie-chart>
-      </el-col>
-      <el-col :span="8">
-        <pie-chart :chartData="billByClass" :options="classChartOptions"></pie-chart>
-      </el-col>
-      <el-col :span="8">
-        <pie-chart :chartData="billByProduct" :options="productChartOptions"></pie-chart>
-      </el-col>
+        <el-col :span="8">
+          <pie-chart :chartData="billByCurrency" :options="currencyChartOptions"></pie-chart>
+        </el-col>
+        <el-col :span="8">
+          <pie-chart :chartData="billByClass" :options="classChartOptions"></pie-chart>
+        </el-col>
+        <el-col :span="8">
+          <pie-chart :chartData="billByProduct" :options="productChartOptions"></pie-chart>
+        </el-col>
       </div>
     </el-row>
     <el-row>
@@ -37,11 +37,11 @@
     </el-row>
     <el-row>
       <br>
-      <div class = "chart">
-      <el-date-picker v-model="startDate" type="month" placeholder="Start Date"></el-date-picker>
-      <el-date-picker v-model="endDate" type="month" placeholder="End Date"></el-date-picker>
-      <el-button type="primary" @click='GetBillByBillingMonth'>Go</el-button>
-      <line-chart :chartData="billByBillingMonth" :options="billingMonthChartOptions"></line-chart>
+      <div class="chart">
+        <el-date-picker v-model="startDate" type="month" placeholder="Start Date"></el-date-picker>
+        <el-date-picker v-model="endDate" type="month" placeholder="End Date"></el-date-picker>
+        <el-button type="primary" @click='GetBillByBillingMonth'>Go</el-button>
+        <line-chart :chartData="billByBillingMonth" :options="billingMonthChartOptions"></line-chart>
       </div>
     </el-row>
   </div>
@@ -55,7 +55,7 @@
   import axios from 'Axios'
   import _ from 'lodash'
   import chartjs from 'chart.piecelabel.js'
-  const urlBase = "http://"+ window.location.hostname + ":3030"
+  const urlBase = "http://" + window.location.hostname + ":3030"
   const colors = {
     backgroundColor: [
       'rgba(255, 99, 132, 0.2)',
@@ -94,39 +94,37 @@
     },
     data() {
       return {
-        filter:"active",
-        startDate:'',
-        endDate:'',
+        filter: "active",
+        startDate: '',
+        endDate: '',
         billByCustomer: {},
         customerChartOptions: {
-          
+
           responsive: true,
           maintainAspectRatio: false,
-          // barPercentage: 1,
-          // barThickness: 20,
           title: {
             display: true,
             text: 'Bill by Customer'
           },
-          scales:{
-            xAxes:[{
+          scales: {
+            xAxes: [{
               barPercentage: 0.7,
               categoryPercentage: 0.7,
             }],
-            yAxes:[{
-              
-                display :"true",
-                type: "linear",
-                position: "left",
-                id: "1"
-              },{
-                display: "true",
-                type: "linear",
-                position: "right",
-                id:"2",
-                startValue:0,
-                stacked: true,
-              }]            
+            yAxes: [{
+
+              display: "true",
+              type: "linear",
+              position: "left",
+              id: "1"
+            }, {
+              display: "true",
+              type: "linear",
+              position: "right",
+              id: "2",
+              startValue: 0,
+              stacked: true,
+            }]
           }
         },
         billByClass: [],
@@ -137,8 +135,8 @@
             display: true,
             text: 'Bill by Class'
           },
-          pieceLabel:{
-            render:'value'
+          pieceLabel: {
+            render: 'value'
           }
         },
         billByCurrency: {},
@@ -149,8 +147,8 @@
             display: true,
             text: 'Bill by Currency'
           },
-          pieceLabel:{
-            render:'value'
+          pieceLabel: {
+            render: 'value'
           }
         },
         billByProduct: {},
@@ -161,8 +159,8 @@
             display: true,
             text: 'Bill by Product'
           },
-          pieceLabel:{
-            render:'value'
+          pieceLabel: {
+            render: 'value'
           }
         },
         billByBillingMonth: {
@@ -192,7 +190,7 @@
           ]
         },
         billingMonthChartOptions: {
-          
+
           responsive: true,
           maintainAspectRatio: false,
           title: {
@@ -221,7 +219,7 @@
               id: 'B',
               type: 'linear',
               position: 'right',
-              startValue:0,
+              startValue: 0,
               stacked: true
             }]
           }
@@ -229,17 +227,21 @@
       }
     },
     methods: {
-      GetPieData(){
-      this.GetBillByCurrency()
-      this.GetBillByCustomer()
-      this.GetBillByProduct()
-      this.GetBillByClass()
-      this.GetBillByBillingMonth()
+      GetPieData() {
+        this.GetBillByCurrency()
+        this.GetBillByCustomer()
+        this.GetBillByProduct()
+        this.GetBillByClass()
+        this.GetBillByBillingMonth()
       },
       GetBillByCustomer() {
+
+
         const url = urlBase + "/api/v1/graph/billByCustomer"
         console.log(url)
-        axios.post(url, {sort:this.filter}).then(res => {
+        axios.post(url, {
+          sort: this.filter
+        }).then(res => {
           console.log(res.data)
           const result = res.data
           var temp = {}
@@ -249,7 +251,7 @@
             data: result.map(i => i.numberInvoice),
             backgroundColor: colors.backgroundColor.slice(0, result.length),
             borderColor: colors.borderColor.slice(0, result.length),
-            yAxisID:"2",
+            yAxisID: "2",
             borderWidth: 1,
           }
           const sumData = {
@@ -257,7 +259,7 @@
             data: result.map(i => i.totalInvoice),
             backgroundColor: colors.backgroundColor.slice(0, result.length),
             borderColor: colors.borderColor.slice(0, result.length),
-            yAxisID:"1",
+            yAxisID: "1",
             borderWidth: 1,
           }
           temp["datasets"] = [sumData, countData]
@@ -268,7 +270,9 @@
       GetBillByCurrency() {
         const url = urlBase + "/api/v1/graph/billByCurrency"
         console.log(url)
-        axios.post(url, {sort:this.filter}).then(res => {
+        axios.post(url, {
+          sort: this.filter
+        }).then(res => {
           console.log(res.data)
           const result = res.data
           var temp = {}
@@ -295,7 +299,9 @@
       GetBillByClass() {
         const url = urlBase + "/api/v1/graph/billByClass"
         console.log(url)
-        axios.post(url, {sort:this.filter}).then(res => {
+        axios.post(url, {
+          sort: this.filter
+        }).then(res => {
           console.log(res.data)
           const result = res.data
           var temp = {}
@@ -322,7 +328,9 @@
       GetBillByProduct() {
         const url = urlBase + "/api/v1/graph/billByProduct"
         console.log(url)
-        axios.post(url, {sort:this.filter}).then(res => {
+        axios.post(url, {
+          sort: this.filter
+        }).then(res => {
           console.log(res.data)
           const result = res.data
           var temp = {}
@@ -346,19 +354,29 @@
           this.billByProduct = temp
         })
       },
-      GetBillByBillingMonth(){
+      GetBillByBillingMonth() {
         const url = urlBase + "/api/v1/graph/billByBillingMonth"
         var payload = {}
-        if(this.startDate != '' && this.endDate != '')
-          payload = {startM: new Date(this.startDate),endM: new Date(this.endDate) }
-        axios.post(url, payload).then(res=>{
-          const sumSet = res.data.map(i=>{
-            return {x: new Date(i.billingMonth), y: i.totalInvoice}
+        if (this.startDate != '' && this.endDate != '')
+          payload = {
+            startM: new Date(this.startDate),
+            endM: new Date(this.endDate)
+          }
+        axios.post(url, payload).then(res => {
+          const sumSet = res.data.map(i => {
+            return {
+              x: new Date(i.billingMonth),
+              y: i.totalInvoice
+            }
           })
-          const countSet = res.data.map(i=>{
-            return {x: new Date(i.billingMonth), y: i.numberInvoice}
+          const countSet = res.data.map(i => {
+            return {
+              x: new Date(i.billingMonth),
+              y: i.numberInvoice
+            }
           })
-          var temp = {...this.billByBillingMonth}
+          var temp = { ...this.billByBillingMonth
+          }
           temp.datasets[0]['backgroundColor'] = colors.backgroundColor[1]
           temp.datasets[0]['borderColor'] = colors.backgroundColor[1]
           temp.datasets[0].data = sumSet
@@ -387,13 +405,10 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .header,
-  .chart
- {
+  .chart {
     margin: 10px;
     margin-left: 20px;
     border: 10px;
   }
-
-
 
 </style>

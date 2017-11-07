@@ -22,8 +22,17 @@ export function addClass({
   })
 }
 
-export function updateClass({id = 0, data = "updated"}){
-  return class_enum.update({data:data}, {where:{id:id}})
+export function updateClass({
+  id = 0,
+  data = "updated"
+}) {
+  return class_enum.update({
+    data: data
+  }, {
+    where: {
+      id: id
+    }
+  })
 }
 
 export function getCurrency() {
@@ -38,8 +47,17 @@ export function addCurrency({
   })
 }
 
-export function updateCurrency({id = 0, data = "updated"}){
-  return currency_enum.update({data:data}, {where:{id:id}})
+export function updateCurrency({
+  id = 0,
+  data = "updated"
+}) {
+  return currency_enum.update({
+    data: data
+  }, {
+    where: {
+      id: id
+    }
+  })
 }
 
 
@@ -55,8 +73,17 @@ export function addProduct({
   })
 }
 
-export function updateProduct({id = 0, data = "updated"}){
-  return product_enum.update({data:data}, {where:{id:id}})
+export function updateProduct({
+  id = 0,
+  data = "updated"
+}) {
+  return product_enum.update({
+    data: data
+  }, {
+    where: {
+      id: id
+    }
+  })
 }
 
 
@@ -72,8 +99,17 @@ export function addRevenueType({
   })
 }
 
-export function updateRevenueType({id = 0, data = "updated"}){
-  return revenue_type_enum.update({data:data}, {where:{id:id}})
+export function updateRevenueType({
+  id = 0,
+  data = "updated"
+}) {
+  return revenue_type_enum.update({
+    data: data
+  }, {
+    where: {
+      id: id
+    }
+  })
 }
 
 
@@ -89,8 +125,17 @@ export function addStatus({
   })
 }
 
-export function updateStatus({id = 0, data = "updated"}){
-  return status_enum.update({data:data}, {where:{id:id}})
+export function updateStatus({
+  id = 0,
+  data = "updated"
+}) {
+  return status_enum.update({
+    data: data
+  }, {
+    where: {
+      id: id
+    }
+  })
 }
 
 
@@ -106,8 +151,17 @@ export function addSubscription({
   })
 }
 
-export function updateSubscription({id = 0, data = "updated"}){
-  return subscription_enum.update({data:data}, {where:{id:id}})
+export function updateSubscription({
+  id = 0,
+  data = "updated"
+}) {
+  return subscription_enum.update({
+    data: data
+  }, {
+    where: {
+      id: id
+    }
+  })
 }
 
 
@@ -123,8 +177,17 @@ export function addType({
   })
 }
 
-export function updateType({id = 0, data = "updated"}){
-  return type_enum.update({data:data}, {where:{id:id}})
+export function updateType({
+  id = 0,
+  data = "updated"
+}) {
+  return type_enum.update({
+    data: data
+  }, {
+    where: {
+      id: id
+    }
+  })
 }
 
 
@@ -132,54 +195,96 @@ export function getMonth() {
   return month_enum.findAll()
 }
 
-export function update({type='class', id = 0, data='Updated'}){
-  switch(type){
+export function update({
+  type = 'class',
+  id = 0,
+  data = 'Updated'
+}) {
+  switch (type) {
     case 'class':
-      return updateClass({id:id, data:data})
+      return updateClass({
+        id: id,
+        data: data
+      })
       break;
     case 'currency':
-      return updateCurrency({id:id, data:data})
+      return updateCurrency({
+        id: id,
+        data: data
+      })
       break;
     case 'product':
-      return updateProduct({id:id, data:data})
+      return updateProduct({
+        id: id,
+        data: data
+      })
       break;
     case 'revenueType':
-      return updateRevenueType({id:id, data:data})
+      return updateRevenueType({
+        id: id,
+        data: data
+      })
       break;
     case 'status':
-      return updateStatus({id:id, data:data})
+      return updateStatus({
+        id: id,
+        data: data
+      })
       break;
     case 'subscription':
-      return updateSubscription({id:id, data:data})
+      return updateSubscription({
+        id: id,
+        data: data
+      })
       break;
     case 'type':
-      return updateType({id:id, data:data})
-      break;    
+      return updateType({
+        id: id,
+        data: data
+      })
+      break;
   }
 }
 
-export function add({type='class', data='Updated'}){
-  switch(type){
+export function add({
+  type = 'class',
+  data = 'Updated'
+}) {
+  switch (type) {
     case 'class':
-      return addClass({data:data})
+      return addClass({
+        data: data
+      })
       break;
     case 'currency':
-      return addCurrency({data:data})
+      return addCurrency({
+        data: data
+      })
       break;
     case 'product':
-      return addProduct({data:data})
+      return addProduct({
+        data: data
+      })
       break;
     case 'revenueType':
-      return addRevenueType({data:data})
+      return addRevenueType({
+        data: data
+      })
       break;
     case 'status':
-      return addStatus({data:data})
+      return addStatus({
+        data: data
+      })
       break;
     case 'subscription':
-      return addSubscription({data:data})
+      return addSubscription({
+        data: data
+      })
       break;
     case 'type':
-      return addType({data:data})
-      break;    
+      return addType({
+        data: data
+      })
+      break;
   }
 }

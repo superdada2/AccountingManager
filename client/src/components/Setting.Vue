@@ -46,21 +46,21 @@
               <el-input placeholder="Modify Class" v-model="Class"></el-input>
               <el-button type="primary" @click='()=>updateClick("class")'>Modify</el-button>
               <br>
-							<el-select v-model="idCurrency" placeholder="Currency">
+              <el-select v-model="idCurrency" placeholder="Currency">
                 <el-option v-for="item in currencyEnum" :key="item.id" :label="item.data" :value="item.id">
                 </el-option>
               </el-select>
               <el-input placeholder="Modify Currency" v-model="currency"></el-input>
               <el-button type="primary" @click='()=>updateClick("currency")'>Modify</el-button>
               <br>
-							<el-select v-model="idProduct" placeholder="Product">
+              <el-select v-model="idProduct" placeholder="Product">
                 <el-option v-for="item in productEnum" :key="item.id" :label="item.data" :value="item.id">
                 </el-option>
               </el-select>
               <el-input placeholder="Modify Product" v-model="product"></el-input>
               <el-button type="primary" @click='()=>updateClick("product")'>Modify</el-button>
               <br>
-							<el-select v-model="idType" placeholder="Type">
+              <el-select v-model="idType" placeholder="Type">
                 <el-option v-for="item in typeEnum" :key="item.id" :label="item.data" :value="item.id">
                 </el-option>
               </el-select>
@@ -69,21 +69,21 @@
               <br>
             </el-col>
             <el-col :span="12">
-							<el-select v-model="idRevenueType" placeholder="Revenue Type">
+              <el-select v-model="idRevenueType" placeholder="Revenue Type">
                 <el-option v-for="item in classEnum" :key="item.id" :label="item.data" :value="item.id">
                 </el-option>
               </el-select>
               <el-input placeholder="Modify Revenue Type" v-model="revenueType"></el-input>
               <el-button type="primary" @click='()=>updateClick("revenueType")'>Modify</el-button>
               <br>
-							<el-select v-model="idStatus" placeholder="Status">
+              <el-select v-model="idStatus" placeholder="Status">
                 <el-option v-for="item in statusEnum" :key="item.id" :label="item.data" :value="item.id">
                 </el-option>
               </el-select>
               <el-input placeholder="Modify Status Type" v-model="status"></el-input>
               <el-button type="primary" @click='()=>updateClick("status")'>Modify</el-button>
               <br>
-							<el-select v-model="idSubscription" placeholder="Subscription">
+              <el-select v-model="idSubscription" placeholder="Subscription">
                 <el-option v-for="item in subscriptionEnum" :key="item.id" :label="item.data" :value="item.id">
                 </el-option>
               </el-select>
@@ -101,7 +101,7 @@
 
 <script>
   import axios from 'Axios'
-  const urlBase = "http://"+ window.location.hostname + ":3030"
+  const urlBase = "http://" + window.location.hostname + ":3030"
   export default {
     name: 'Settings',
     data() {
@@ -196,57 +196,57 @@
             type: 'error'
           })
         }
-			},
-			updateClick(value) {
+      },
+      updateClick(value) {
         const url = urlBase + '/api/v1/enum/update'
         var payLoad = {}
         switch (value) {
           case 'class':
             payLoad = {
-							type: value,
-							id:this.idClass,
+              type: value,
+              id: this.idClass,
               data: this.Class
             }
             break;
           case 'currency':
             payLoad = {
-							type: value,
-							id:this.idCurrency,
+              type: value,
+              id: this.idCurrency,
               data: this.currency
             }
             break;
           case 'product':
             payLoad = {
-							type: value,
-							id:this.idProduct,
+              type: value,
+              id: this.idProduct,
               data: this.product
             }
             break;
           case 'revenueType':
             payLoad = {
-							type: value,
-							id:this.idRevenueType,
+              type: value,
+              id: this.idRevenueType,
               data: this.revenueType
             }
             break;
           case 'status':
             payLoad = {
-							type: value,
-							id:this.idStatus,
+              type: value,
+              id: this.idStatus,
               data: this.status
             }
             break;
           case 'subscription':
             payLoad = {
-							type: value,
-							id:this.idSubscription,
+              type: value,
+              id: this.idSubscription,
               data: this.subscription
             }
             break;
           case 'type':
             payLoad = {
-							type: value,
-							id:this.idType,
+              type: value,
+              id: this.idType,
               data: this.type
             }
             break;

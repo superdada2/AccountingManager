@@ -48,7 +48,7 @@
 <script>
   import axios from 'Axios'
   import LineChart from '../charts/LineChart.js'
-  const urlBase = "http://"+ window.location.hostname + ":3030"
+  const urlBase = "http://" + window.location.hostname + ":3030"
   const colors = {
     backgroundColor: [
       'rgba(255, 99, 132, 0.2)',
@@ -113,9 +113,9 @@
         columnEnum: [],
         tableVisibility: false,
         monthEnum: [],
-        showChart:false,
+        showChart: false,
         chartData: {},
-        chartDataCount:{},
+        chartDataCount: {},
         chartOptions: {
 
           responsive: true,
@@ -155,12 +155,12 @@
           url += '/api/v1/reports/getClassTable'
           this.GetClassEnum()
         }
-        if(new Date(this.startM) > new Date (this.endM)){
+        if (new Date(this.startM) > new Date(this.endM)) {
           this.$message({
-              type: 'error',
-              message: "Invalid date range"
-            })
-            return null
+            type: 'error',
+            message: "Invalid date range"
+          })
+          return null
         }
 
         const data = {
@@ -180,21 +180,22 @@
       CreateChartData(tableData) {
         var chartData = { ...this.chartData
         }
-        var chartDataCount = {...this.chartDataCount}
+        var chartDataCount = { ...this.chartDataCount
+        }
         var sumDataSet = this.columnEnum.map((i, index) => {
 
           var singleSet = {
             yAxisID: 'A',
             label: i.data,
             data: [],
-            backgroundColor:colors.backgroundColor[index],
+            backgroundColor: colors.backgroundColor[index],
             borderColor: colors.borderColor[index],
             borderCapStyle: 'butt'
           }
 
           singleSet.data = tableData.map(j => {
             return {
-              x: new Date(j.year, j.month -1),
+              x: new Date(j.year, j.month - 1),
               y: j[i.data]
             }
           })
@@ -206,14 +207,14 @@
             yAxisID: 'A',
             label: i.data,
             data: [],
-            backgroundColor:colors.backgroundColor[index],
+            backgroundColor: colors.backgroundColor[index],
             borderColor: colors.borderColor[index],
             borderCapStyle: 'butt'
           }
 
           singleSet.data = tableData.map(j => {
             return {
-              x: new Date(j.year, j.month -1),
+              x: new Date(j.year, j.month - 1),
               y: j[i.data + '_count']
             }
           })

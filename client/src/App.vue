@@ -1,15 +1,19 @@
 <template>
   <div id="app">
 
-</el-container>
+    </el-container>
     <el-container>
       <el-header height="90px">
         <div id="header">
-          
+
           <img id="image" src="./assets/viz_logo.png">
           <h1 id="title">INVOICES</h1>
-          <router-link to="/setting"><el-button id="setting" type="info" round :v-link='{name:setting}'><i class="el-icon-setting"></i></el-button></router-link>
-          
+          <router-link to="/setting">
+            <el-button id="setting" type="info" round :v-link='{name:setting}'>
+              <i class="el-icon-setting"></i>
+            </el-button>
+          </router-link>
+
         </div>
       </el-header>
       <el-container>
@@ -65,22 +69,24 @@
     background: #545454;
     color: snow;
   }
-  .el-header{
+
+  .el-header {
     padding: 0px
   }
-  #sideBar{
+
+  #sideBar {
     height: 100%;
     position: relative;
   }
 
-  #setting{
+  #setting {
     margin-top: 25px;
-    margin-right:10px;
-    float: right ;
+    margin-right: 10px;
+    float: right;
   }
-  #image{
+
+  #image {
     margin-left: 20px;
   }
-  
 
 </style>

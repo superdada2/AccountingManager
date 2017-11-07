@@ -5,7 +5,9 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import router from './routes';
 import expressPartils from 'express-partials';
-import {sequelize} from './models'
+import {
+  sequelize
+} from './models'
 import mysql from 'mysql'
 
 
@@ -16,8 +18,10 @@ app.set("view engine", 'ejs')
   .use(compress())
   .use(cors())
   .use(bodyParser.json())
-  .use(bodyParser.urlencoded({extended:true}))
-  .use('/',router)
+  .use(bodyParser.urlencoded({
+    extended: true
+  }))
+  .use('/', router)
 
 export default app;
 
@@ -25,8 +29,8 @@ const server = http.createServer(app);
 const port = process.env.PORT || 3030;
 
 sequelize.sync()
-  .then(()=>{
-    server.listen(port,function(){
+  .then(() => {
+    server.listen(port, function () {
       console.log('Server listening at port %d', port);
     })
   })

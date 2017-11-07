@@ -79,7 +79,7 @@
 
 <script>
   import axios from 'Axios'
-  const urlBase = "http://"+ window.location.hostname + ":3030"
+  const urlBase = "http://" + window.location.hostname + ":3030"
   export default {
     name: 'add',
     data() {
@@ -92,7 +92,7 @@
         statusEnum: [],
         revenueEnum: [],
         subscriptionEnum: [],
-        formValue:{
+        formValue: {
           Class: '',
           product: '',
           type: '',
@@ -116,7 +116,7 @@
           comments: '',
           invoiceAmountUsd: '',
           annualIncreaseBool: true,
-          subscription:''
+          subscription: ''
         }
       }
     },
@@ -137,7 +137,7 @@
           this.subscriptionEnum = res.data.subscription
         })
       },
-      
+
       validate() {
         return true;
       },
@@ -145,7 +145,8 @@
         const url = urlBase + "/api/v1/reports/createInvoice"
         const formValues = this.formValue
         if (this.validate()) {
-          const message = { ...formValues}
+          const message = { ...formValues
+          }
           try {
             const data = await axios.post(url, message)
             this.$message({
@@ -165,50 +166,50 @@
           })
         }
       },
-      invoiceAmountOnChange(value){
-        if(this.formValue.lengthRec == ''){
+      invoiceAmountOnChange(value) {
+        if (this.formValue.lengthRec == '') {
           this.formValue.lengthRec = 12
         }
-        if(this.formValue.fxRate != ''){
+        if (this.formValue.fxRate != '') {
           this.formValue.invoiceAmountUsd = this.formValue.fxRate * value
         }
-        if(this.formValue.increasePerc == ''){
+        if (this.formValue.increasePerc == '') {
           this.formValue.increasePerc = 0.05
         }
         this.lengthRecOnChange(this.formValue.lengthRec)
       },
-      currencyOnchange(value, value2){
+      currencyOnchange(value, value2) {
         var url = 'http://apilayer.net/api/live?access_key=a85aa84971650d26dc61c8932a548e31&currencies=AUD'
-        const currency = this.currencyEnum.find(i=> i.id == value).data
+        const currency = this.currencyEnum.find(i => i.id == value).data
         url = url.replace('AUD', currency)
-        axios.get(url).then(res=>{
+        axios.get(url).then(res => {
           this.formValue.fxRate = 1 / res.data.quotes["USD" + currency]
 
-          if(this.formValue.invoiceAmount != ''){
+          if (this.formValue.invoiceAmount != '') {
             this.formValue.invoiceAmountUsd = this.formValue.fxRate * this.formValue.invoiceAmount
           }
-          if(this.formValue.lengthRec == ''){
-          this.formValue.lengthRec = 12
+          if (this.formValue.lengthRec == '') {
+            this.formValue.lengthRec = 12
           }
           this.lengthRecOnChange(this.formValue.lengthRec)
         })
       },
-      fxRateOnChange(value){
-        if(this.formValue.invoiceAmount != ''){
+      fxRateOnChange(value) {
+        if (this.formValue.invoiceAmount != '') {
           this.formValue.invoiceAmountUsd = this.formValue.invoiceAmount * value
         }
-        if(this.formValue.lengthRec == ''){
+        if (this.formValue.lengthRec == '') {
           this.formValue.lengthRec = 12
         }
         this.lengthRecOnChange(this.formValue.lengthRec)
       },
-      lengthRecOnChange(value){
-        if(this.formValue.invoiceAmountUsd != ''){
+      lengthRecOnChange(value) {
+        if (this.formValue.invoiceAmountUsd != '') {
           this.formValue.monthlyRec = this.formValue.invoiceAmountUsd / value
         }
       },
-      invoiceAmountUsdOnChange(value){
-        if(this.formValue.lengthRec == ''){
+      invoiceAmountUsdOnChange(value) {
+        if (this.formValue.lengthRec == '') {
           this.formValue.lengthRec = 12
         }
         this.lengthRecOnChange(this.formValue.lengthRec)

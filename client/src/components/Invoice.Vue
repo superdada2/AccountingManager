@@ -14,7 +14,7 @@
         <el-col :span="11" class="input">
           <span> Description </span>
           <el-input type="textarea" :rows="5" v-model="currentDescription">
-            </el-input>
+          </el-input>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -78,7 +78,7 @@
 <script>
   import axios from 'Axios'
   import _ from 'lodash'
-  const urlBase = "http://"+ window.location.hostname + ":3030"
+  const urlBase = "http://" + window.location.hostname + ":3030"
   export default {
     name: 'invoice',
     data() {
@@ -209,11 +209,15 @@
         this.currentComment = row.comments
         this.currentRow = row
       },
-      updateComments(){
-        if(this.currentComment != this.currentRow.comments || this.currentDescription != this.currentRow.description){
+      updateComments() {
+        if (this.currentComment != this.currentRow.comments || this.currentDescription != this.currentRow.description) {
           const url = urlBase + '/api/v1/reports/updateDescription'
-          
-          axios.post(url, {description: this.currentDescription, comments: this.currentComment, id: this.currentRow.id})
+
+          axios.post(url, {
+            description: this.currentDescription,
+            comments: this.currentComment,
+            id: this.currentRow.id
+          })
         }
         this.commentDialogVisibility = false
       }
@@ -249,7 +253,8 @@
 
     margin-right: 10px
   }
-  .input{
+
+  .input {
     margin: 10px;
   }
 
