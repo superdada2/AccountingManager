@@ -238,11 +238,11 @@
 
 
         const url = urlBase + "/api/v1/graph/billByCustomer"
-        console.log(url)
+
         axios.post(url, {
           sort: this.filter
         }).then(res => {
-          console.log(res.data)
+
           const result = res.data
           var temp = {}
           temp['labels'] = result.map(i => i.customerName)
@@ -269,11 +269,11 @@
       },
       GetBillByCurrency() {
         const url = urlBase + "/api/v1/graph/billByCurrency"
-        console.log(url)
+
         axios.post(url, {
           sort: this.filter
         }).then(res => {
-          console.log(res.data)
+
           const result = res.data
           var temp = {}
           temp['labels'] = result.map(i => i.currency_enum.data)
@@ -298,11 +298,11 @@
       },
       GetBillByClass() {
         const url = urlBase + "/api/v1/graph/billByClass"
-        console.log(url)
+
         axios.post(url, {
           sort: this.filter
         }).then(res => {
-          console.log(res.data)
+
           const result = res.data
           var temp = {}
           temp['labels'] = result.map(i => i.class_enum.data)
@@ -327,11 +327,9 @@
       },
       GetBillByProduct() {
         const url = urlBase + "/api/v1/graph/billByProduct"
-        console.log(url)
         axios.post(url, {
           sort: this.filter
         }).then(res => {
-          console.log(res.data)
           const result = res.data
           var temp = {}
           temp['labels'] = result.map(i => i.product_enum.data)

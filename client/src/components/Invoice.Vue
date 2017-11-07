@@ -130,8 +130,6 @@
       },
       selectorChange(value) {
         if (this.enumList[value] != undefined) {
-          console.log(this.selector)
-          console.log("value", this.enumList[value], value)
           this.searchValueOptions = this.enumList[value]
           this.isSelect = true
           this.isCustomer = false
@@ -170,7 +168,6 @@
         }
       },
       removeTagg(tag) {
-        console.log("remove tag", tag.id)
         this.tags.splice(this.tags.indexOf(tag), 1)
         delete this.queryParam.where[tag.id]
         this.getInvoice(this.queryParam)
@@ -204,7 +201,6 @@
       },
       openComments(row) {
         this.commentDialogVisibility = true
-        console.log(row)
         this.currentDescription = row.description
         this.currentComment = row.comments
         this.currentRow = row

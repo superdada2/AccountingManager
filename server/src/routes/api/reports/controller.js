@@ -118,7 +118,7 @@ export function CreateInvoice({
       const billingStart = new Date(billMonth)
       const supportStart = new Date(recognitionStrMonth)
 
-      console.log(billingStart, supportStart)
+
       const incomeList = createIncomeList({
         id: id,
         startMonth: supportStart.getMonth() + 1,
@@ -126,7 +126,6 @@ export function CreateInvoice({
         length: lengthRec,
         invoiceAmount: invoiceAmountUsd
       })
-      console.log("incomeList", incomeList)
       incomeList.forEach(async(value) => {
         await income.create(value)
       })
@@ -140,7 +139,6 @@ export function CreateInvoice({
       defferedList.forEach(async(value) => {
         await deferred_balance.create(value)
       })
-      console.log("Deffered", defferedList)
       res('Success')
     } catch (err) {
       rej(err.message)
