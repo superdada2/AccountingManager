@@ -5,75 +5,117 @@
         <h1>Add Invoice </h1>
       </div>
     </el-row>
-    <el-row>
-      <el-col :span="12">
-        <el-input placeholder="Company Name" v-model="formValue.companyName"></el-input>
-        <br>
-        <el-select v-model="formValue.product" placeholder="Product">
-          <el-option v-for="item in productEnum" :key="item.id" :label="item.data" :value="item.id">
-          </el-option>
-        </el-select>
-
-        <el-select v-model="formValue.Class" placeholder="Class">
-          <el-option v-for="item in classEnum" :key="item.id" :label="item.data" :value="item.id">
-          </el-option>
-        </el-select>
-
-        <el-input placeholder="Invoice Number" type="number" v-model="formValue.invoiceNumber"></el-input>
-        <el-input @change="invoiceAmountOnChange" placeholder="Invoice Amount" type="number" v-model="formValue.invoiceAmount"></el-input>
-        <el-date-picker v-model="formValue.invoiceDate" type="date" placeholder="Invoice Date">
-        </el-date-picker>
-        <el-select v-model="formValue.type" placeholder="Type">
-          <el-option v-for="item in typeEnum" :key="item.id" :label="item.data" :value="item.id">
-          </el-option>
-        </el-select>
-        <el-select @change="currencyOnchange" v-model="formValue.currency" placeholder="Currency">
-          <el-option v-for="item in currencyEnum" :key="item.id" :label="item.data" :value="item.id">
-          </el-option>
-        </el-select>
-
-        <el-date-picker v-model="formValue.billMonth" type="month" placeholder="Bill Month">
-        </el-date-picker>
-        <el-select v-model="formValue.status" placeholder="Status">
-          <el-option v-for="item in statusEnum" :key="item.id" :label="item.data" :value="item.id">
-          </el-option>
-        </el-select>
-        <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" placeholder="Description" v-model="formValue.description">
-        </el-input>
-      </el-col>
-      <el-col :span="12">
-        <el-date-picker v-model="formValue.recognitionStrMonth" type="month" placeholder="Recognition Start Month">
-        </el-date-picker>
-        <el-input placeholder="Length of Recognition(Months)" @change="lengthRecOnChange" type="number" v-model="formValue.lengthRec"></el-input>
-        <el-input placeholder="Invoice Amount(USD)" @change="invoiceAmountUsdOnChange" type="number" v-model="formValue.invoiceAmountUsd"></el-input>
-        <el-input placeholder="Fx rate" type="number" @change="fxRateOnChange" v-model="formValue.fxRate"></el-input>
-        <el-input placeholder="Monthly Recognition(USD)" type="number" v-model="formValue.monthlyRec"></el-input>
-        <br>
-        <div class="select">
-          <a>Annual Increase Eligible </a>
-          <el-switch v-model="formValue.annualIncreaseBool" on-text="" off-text="">
-          </el-switch>
+    <el-form :model="formValue" :rules="rules" ref="formValue">
+      <el-row>
+        <el-col :span="12">
+          <el-form-item prop="companyName">
+            <el-input placeholder="Company Name" v-model="formValue.companyName"></el-input>
+            <br>
+          </el-form-item>
+          <el-form-item prop="product">
+            <el-select v-model="formValue.product" placeholder="Product">
+              <el-option v-for="item in productEnum" :key="item.id" :label="item.data" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="Class">
+            <el-select v-model="formValue.Class" placeholder="Class">
+              <el-option v-for="item in classEnum" :key="item.id" :label="item.data" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="invoiceNumber">
+            <el-input placeholder="Invoice Number" type="number" v-model="formValue.invoiceNumber"></el-input>
+          </el-form-item>
+          <el-form-item prop="invoiceAmount">
+            <el-input @change="invoiceAmountOnChange" placeholder="Invoice Amount" type="number" v-model="formValue.invoiceAmount"></el-input>
+          </el-form-item>
+          <el-form-item prop="invoiceDate">
+            <el-date-picker v-model="formValue.invoiceDate" type="date" placeholder="Invoice Date">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item prop="type">
+            <el-select v-model="formValue.type" placeholder="Type">
+              <el-option v-for="item in typeEnum" :key="item.id" :label="item.data" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="currency">
+            <el-select @change="currencyOnchange" v-model="formValue.currency" placeholder="Currency">
+              <el-option v-for="item in currencyEnum" :key="item.id" :label="item.data" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="billMonth">
+            <el-date-picker v-model="formValue.billMonth" type="month" placeholder="Bill Month">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item prop="status">
+            <el-select v-model="formValue.status" placeholder="Status">
+              <el-option v-for="item in statusEnum" :key="item.id" :label="item.data" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="description">
+            <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" placeholder="Description" v-model="formValue.description">
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item prop="recognitionStrMonth">
+            <el-date-picker v-model="formValue.recognitionStrMonth" type="month" placeholder="Recognition Start Month">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item prop="lengthRec">
+            <el-input placeholder="Length of Recognition(Months)" @change="lengthRecOnChange" type="number" v-model="formValue.lengthRec"
+              ref="lengthRec"></el-input>
+          </el-form-item>
+          <el-form-item prop="invoiceAmountUsd">
+            <el-input placeholder="Invoice Amount(USD)" @change="invoiceAmountUsdOnChange" type="number" v-model="formValue.invoiceAmountUsd"></el-input>
+          </el-form-item>
+          <el-form-item prop="fxRate">
+            <el-input placeholder="Fx rate" type="number" @change="fxRateOnChange" v-model="formValue.fxRate"></el-input>
+          </el-form-item>
+          <el-form-item prop="monthlyRec">
+            <el-input placeholder="Monthly Recognition(USD)" type="number" v-model="formValue.monthlyRec"></el-input>
+          </el-form-item>
+          <div class="select">
+            <a>Annual Increase Eligible </a>
+            <el-switch v-model="formValue.annualIncreaseBool" on-text="" off-text="">
+            </el-switch>
+          </div>
+          <el-form-item prop="dateLastIncrease">
+            <el-date-picker v-model="formValue.dateLastIncrease" type="date" placeholder="Date Last Increase">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item prop="increasePerc">
+            <el-input placeholder="Increase Percentage" type="number" v-model="formValue.increasePerc"></el-input>
+          </el-form-item>
+          <el-form-item prop="subscription">
+            <el-select v-model="formValue.subscription" placeholder="Subscription Type">
+              <el-option v-for="item in subscriptionEnum" :key="item.id" :label="item.data" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="revenueType">
+            <el-select v-model="formValue.revenueType" placeholder="Revenue Type">
+              <el-option v-for="item in revenueEnum" :key="item.id" :label="item.data" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="comments">
+            <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" placeholder="Comments" v-model="formValue.comments">
+            </el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <div class="submit">
+          <el-button type="primary" @click="submit('formValue')">Add Invoice</el-button>
+          <el-button @click="resetForm('formValue')">Reset</el-button>
         </div>
-        <el-date-picker v-model="formValue.dateLastIncrease" type="date" placeholder="Date Last Increase">
-        </el-date-picker>
-        <el-input placeholder="Increase Percentage" type="number" v-model="formValue.increasePerc"></el-input>
-        <el-select v-model="formValue.subscription" placeholder="Subscription Type">
-          <el-option v-for="item in subscriptionEnum" :key="item.id" :label="item.data" :value="item.id">
-          </el-option>
-        </el-select>
-        <el-select v-model="formValue.revenueType" placeholder="Revenue Type">
-          <el-option v-for="item in revenueEnum" :key="item.id" :label="item.data" :value="item.id">
-          </el-option>
-        </el-select>
-        <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" placeholder="Comments" v-model="formValue.comments">
-        </el-input>
-      </el-col>
-    </el-row>
-    <el-row>
-      <div class="submit">
-        <el-button @click="submit">Add Invoice</el-button>
-      </div>
-    </el-row>
+      </el-row>
+    </el-form>
   </div>
 </template>
 
@@ -117,6 +159,98 @@
           invoiceAmountUsd: '',
           annualIncreaseBool: true,
           subscription: ''
+        },
+        rules: {
+          companyName: [{
+            required: true,
+            message: 'Please input Company Name',
+            trigger: 'blur'
+          }],
+          product: [{
+            required: true,
+            type: 'number',
+            message: 'Please select a product',
+            trigger: 'change'
+          }],
+          Class: [{
+            required: true,
+            type: 'number',
+            message: 'Please select a class',
+            trigger: 'change'
+          }],
+          invoiceNumber: [{
+            required: true,
+            message: 'Please input an invoice number',
+            trigger: 'blur'
+          }],
+          invoiceAmount: [{
+            required: true,
+            message: 'Please input an invoice amount',
+            trigger: 'blur'
+          }],
+          invoiceDate: [{
+            required: true,
+            type: 'date',
+            message: 'Please select an invoice date',
+            trigger: 'change'
+          }],
+          type: [{
+            required: true,
+            type: 'number',
+            message: 'Please select a type',
+            trigger: 'change'
+          }],
+          currency: [{
+            required: true,
+            type: 'number',
+            message: 'Please select a currency',
+            trigger: 'change'
+          }],
+          billMonth: [{
+            required: true,
+            type: 'date',
+            message: 'Please select a billingMonth',
+            trigger: 'change'
+          }],
+          status: [{
+            required: true,
+            type: 'number',
+            message: 'Please select a status',
+            trigger: 'change'
+          }],
+          description: [{
+            max: 500,
+            message: 'Description too long',
+            trigger: 'blur'
+          }],
+          recognitionStrMonth: [{
+            required: true,
+            type: 'date',
+            message: 'Please select a Recognition Start Month',
+            trigger: 'blur'
+          }],
+          lengthRec: [{
+            required: false,
+            message: 'Please input a recognition length',
+            trigger: 'blur'
+          }],
+          subscription: [{
+            required: true,
+            type: 'number',
+            message: 'Please select a subscription',
+            trigger: 'change'
+          }],
+          revenueType: [{
+            required: true,
+            type: 'number',
+            message: 'Please select a revenue type',
+            trigger: 'change'
+          }],
+          comments: [{
+            max: 500,
+            message: 'Comments too long',
+            trigger: 'blur'
+          }]
         }
       }
     },
@@ -141,30 +275,41 @@
       validate() {
         return true;
       },
-      async submit() {
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+      async submit(formName) {
         const url = urlBase + "/api/v1/reports/createInvoice"
-        const formValues = this.formValue
-        if (this.validate()) {
-          const message = { ...formValues
-          }
-          try {
-            const data = await axios.post(url, message)
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            const formValues = this.formValue
+            const message = { ...formValues
+            }
+            try {
+              const data = axios.post(url, message).then(i => {
+                this.$message({
+                  type: 'success',
+                  message: "Success!"
+                })
+              })
+
+            } catch (err) {
+              this.$message({
+                message: err.message,
+                type: 'error'
+              })
+            }
+          } else {
             this.$message({
-              type: 'success',
-              message: "Success!"
+              type: 'error',
+              message: 'Invalid Inputs'
             })
-          } catch (err) {
-            this.$message({
-              message: err.message,
-              type: 'error'
-            })
+            return false;
           }
-        } else {
-          this.$message({
-            message: "invalid inputs",
-            type: 'error'
-          })
-        }
+        });
+
+
+
       },
       invoiceAmountOnChange(value) {
         if (this.formValue.lengthRec == '') {
