@@ -62,6 +62,51 @@ export function loadData() {
   })
 }
 
+export function DeleteInvoice({
+  id = 0
+}){
+  return new Promise((res,rej)=>{
+    try{
+      income.destroy({
+        where:{
+          invoiceId:id
+        }
+      }).then(()=>{
+        deferred_balance.destroy({
+          where:{
+            invoiceId:id
+          }
+        }).then(()=>{
+          invoice.destroy({
+            where:{
+              id:id
+            }
+          }).then(()=>{
+            res("success")
+          })
+        })
+      })
+    }
+    catch(err){
+      rej(err)
+    }
+  })
+
+}
+
+export function ModifyInvoice(body){
+  return new Promise(async(res, rej)=>{
+    try{
+      await DeleteInvoice({id:body.id})
+      await CreateInvoice(body)
+      res("success")
+    }
+    catch(err){
+      rej(err)
+    }
+  })
+}
+
 export function CreateInvoice({
   type = 1,
   Class = 1,

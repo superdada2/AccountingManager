@@ -22,6 +22,9 @@
         <el-button type="primary" @click="updateComments">Save</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="Modify" :visible.sync="modifyDialogVisibility" width="80%">
+      <Modify :invoice-data="currentRow" :close="closeModify"/>
+    </el-dialog>
     <div id="filter">
       <el-select v-model="selector" placeholder="Selector" @change="selectorChange">
         <el-option v-for="item in fieldOptions" :key="item" :label="item" :value="item">
@@ -43,7 +46,7 @@
       </el-tag>
     </div>
     <div id="dataTable">
-      <el-table :data="invoices" style="width: 100%" @row-click="openComments">
+      <el-table :data="invoices" style="width: 100%" @row-click="openComments" @row-contextmenu="(row, e)=>{e.stopPropagation(), modifyInvoice(row,e)}">
         <el-table-column prop="type_enum.data" label="Type">
         </el-table-column>
         <el-table-column prop="invoiceDate" label="Date" sortable>
@@ -78,15 +81,20 @@
 <script>
   import axios from 'Axios'
   import _ from 'lodash'
+  import Modify from './Modify'
   const urlBase = "http://" + window.location.hostname + ":3030"
   export default {
     name: 'invoice',
+    components:{
+      Modify
+    },
     data() {
       return {
         currentRow: {},
         currentDescription: "",
         currentComment: "",
         commentDialogVisibility: false,
+        modifyDialogVisibility: false,
         tags: [
 
         ],
@@ -216,6 +224,15 @@
           })
         }
         this.commentDialogVisibility = false
+      },
+      modifyInvoice(row, e){
+        this.modifyDialogVisibility = true
+        this.currentRow = row
+        console.log(e)
+        e.stopPropagation()
+      },
+      closeModify(){
+        this.modifyDialogVisibility = false
       }
     },
     created() {
