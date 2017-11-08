@@ -16,8 +16,17 @@ import {
 } from '../../../models';
 export function BillByCustomer({sort = 'active'}) {
   if(sort == 'active'){
-    const query  = "SELECT customerName AS customerName, sum(invoiceAmountUSD) As 'totalInvoice', count(invoiceAmountUSD) AS 'numberInvoice' from invoice  WHERE invoice.recognitionStartMonth BETWEEN DATE_SUB(NOW(), INTERVAL invoice.lengthMonth MONTH) AND NOW() group by customerName"
-    return sequelize.query(query,{ type: sequelize.QueryTypes.SELECT} )
+    return invoice.findAll({
+      attributes: ["customerName", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],[sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']],
+      group: ['customerName'],
+      where:{
+        recognitionStartMonth:{
+          $between:[sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000,1)]
+        },
+        status: {$ne: 3}
+      }
+    })
+  
   }
   else{
     return invoice.findAll({
@@ -38,7 +47,8 @@ export function BillByCurrency({sort = 'active'}) {
       where:{
         recognitionStartMonth:{
           $between:[sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000,1)]
-        }
+        },
+        status: {$ne: 3}
       }
     })
   }
@@ -63,7 +73,8 @@ export function BillByClass({sort = 'active'}) {
       where:{
         recognitionStartMonth:{
           $between:[sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000,1)]
-        }
+        },
+        status: {$ne: 3}
       }
     })
   }
@@ -88,7 +99,8 @@ export function BillByProduct({sort = 'active'}) {
       where:{
         recognitionStartMonth:{
           $between:[sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000,1)]
-        }
+        },
+        status: {$ne: 3}
       }
     })
   }

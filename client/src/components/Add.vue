@@ -5,105 +5,104 @@
         <h1>Add Invoice </h1>
       </div>
     </el-row>
-    <el-form :model="formValue" :rules="rules" ref="formValue">
+    <el-form :model="formValue" :rules="rules" ref="formValue" label-width="200px" align="left" >
       <el-row>
         <el-col :span="12">
-          <el-form-item prop="companyName">
+          <el-form-item prop="companyName" label='Company Name'>
             <el-input placeholder="Company Name" v-model="formValue.companyName"></el-input>
             <br>
           </el-form-item>
-          <el-form-item prop="product">
+          <el-form-item prop="product" label='Product'>
             <el-select v-model="formValue.product" placeholder="Product">
               <el-option v-for="item in productEnum" :key="item.id" :label="item.data" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item prop="Class">
+          <el-form-item prop="Class" label='Class'>
             <el-select v-model="formValue.Class" placeholder="Class">
               <el-option v-for="item in classEnum" :key="item.id" :label="item.data" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item prop="invoiceNumber">
+          <el-form-item prop="invoiceNumber" label='Invoice Number'>
             <el-input placeholder="Invoice Number" type="number" v-model="formValue.invoiceNumber"></el-input>
           </el-form-item>
-          <el-form-item prop="invoiceAmount">
+          <el-form-item prop="invoiceAmount" label='Invoice Amount'>
             <el-input @change="invoiceAmountOnChange" placeholder="Invoice Amount" type="number" v-model="formValue.invoiceAmount"></el-input>
           </el-form-item>
-          <el-form-item prop="invoiceDate">
+          <el-form-item prop="invoiceDate" label='Invoice Date'>
             <el-date-picker v-model="formValue.invoiceDate" type="date" placeholder="Invoice Date">
             </el-date-picker>
           </el-form-item>
-          <el-form-item prop="type">
+          <el-form-item prop="type" label='Type'>
             <el-select v-model="formValue.type" placeholder="Type">
               <el-option v-for="item in typeEnum" :key="item.id" :label="item.data" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item prop="currency">
+          <el-form-item prop="currency" label='Currency'>
             <el-select @change="currencyOnchange" v-model="formValue.currency" placeholder="Currency">
               <el-option v-for="item in currencyEnum" :key="item.id" :label="item.data" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item prop="billMonth">
+          <el-form-item prop="billMonth" label='Billing Month'>
             <el-date-picker v-model="formValue.billMonth" type="month" placeholder="Bill Month">
             </el-date-picker>
           </el-form-item>
-          <el-form-item prop="status">
+          <el-form-item prop="status" label='Status'>
             <el-select v-model="formValue.status" placeholder="Status">
               <el-option v-for="item in statusEnum" :key="item.id" :label="item.data" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item prop="description">
+          <el-form-item prop="description" label='Description'>
             <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" placeholder="Description" v-model="formValue.description">
             </el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item prop="recognitionStrMonth">
+          <el-form-item prop="recognitionStrMonth" label='Recognition Start Month'>
             <el-date-picker v-model="formValue.recognitionStrMonth" type="month" placeholder="Recognition Start Month">
             </el-date-picker>
           </el-form-item>
-          <el-form-item prop="lengthRec">
+          <el-form-item prop="lengthRec" label='Recognition Length'>
             <el-input placeholder="Length of Recognition(Months)" @change="lengthRecOnChange" type="number" v-model="formValue.lengthRec"
               ref="lengthRec"></el-input>
           </el-form-item>
-          <el-form-item prop="invoiceAmountUsd">
+          <el-form-item prop="invoiceAmountUsd" label='Invoice Amount USD'>
             <el-input placeholder="Invoice Amount(USD)" @change="invoiceAmountUsdOnChange" type="number" v-model="formValue.invoiceAmountUsd"></el-input>
           </el-form-item>
-          <el-form-item prop="fxRate">
+          <el-form-item prop="fxRate" label='FxRate'>
             <el-input placeholder="Fx rate" type="number" @change="fxRateOnChange" v-model="formValue.fxRate"></el-input>
           </el-form-item>
-          <el-form-item prop="monthlyRec">
+          <el-form-item prop="monthlyRec"  label='Monthly Recognition USD'>
             <el-input placeholder="Monthly Recognition(USD)" type="number" v-model="formValue.monthlyRec"></el-input>
           </el-form-item>
-          <div class="select">
-            <a>Annual Increase Eligible </a>
+          <el-form-item prop="annualIncreaseBool" label="Annual Increase Eligible">            
             <el-switch v-model="formValue.annualIncreaseBool" on-text="" off-text="">
             </el-switch>
-          </div>
-          <el-form-item prop="dateLastIncrease">
+          </el-form-item>
+          <el-form-item prop="dateLastIncrease"  label='Date Since Last Increase'>
             <el-date-picker v-model="formValue.dateLastIncrease" type="date" placeholder="Date Last Increase">
             </el-date-picker>
           </el-form-item>
-          <el-form-item prop="increasePerc">
+          <el-form-item prop="increasePerc"  label='Increase Percentage'>
             <el-input placeholder="Increase Percentage" type="number" v-model="formValue.increasePerc"></el-input>
           </el-form-item>
-          <el-form-item prop="subscription">
+          <el-form-item prop="subscription" label='Subscription'>
             <el-select v-model="formValue.subscription" placeholder="Subscription Type">
               <el-option v-for="item in subscriptionEnum" :key="item.id" :label="item.data" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item prop="revenueType">
+          <el-form-item prop="revenueType" label='Revenue Type'>
             <el-select v-model="formValue.revenueType" placeholder="Revenue Type">
               <el-option v-for="item in revenueEnum" :key="item.id" :label="item.data" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item prop="comments">
+          <el-form-item prop="comments" label='Comments'>
             <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" placeholder="Comments" v-model="formValue.comments">
             </el-input>
           </el-form-item>
@@ -291,6 +290,7 @@
                   type: 'success',
                   message: "Success!"
                 })
+                this.$refs[formName].resetFields();
               })
 
             } catch (err) {
@@ -370,16 +370,25 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+  
   .el-select,
   .el-input,
-  .el-textarea,
-  .select,
+  .el-textarea{
+    width: 80%;
+  }  
+
+
   .header,
+  .el-switch,
   .submit {
     margin: 10px;
-    margin-left: 20px;
+    margin-left: 10px;
     width: 70%;
     border: 10px;
   }
+
+  
+
 
 </style>
