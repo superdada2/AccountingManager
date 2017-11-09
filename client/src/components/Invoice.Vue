@@ -80,7 +80,7 @@
       </el-tag>
     </div>
     <div id="dataTable">
-      <el-table :data="invoices" style="width: 100%" @row-click="openComments" @row-contextmenu="(row, e)=>{e.stopPropagation(), modifyInvoice(row,e)}">
+      <el-table :data="invoices" style="width: 100%" @row-click="openComments" @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
         <el-table-column prop="type_enum.data" label="Type">
         </el-table-column>
         <el-table-column prop="invoiceDate" label="Date" sortable>
