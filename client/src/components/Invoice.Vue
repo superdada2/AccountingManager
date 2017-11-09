@@ -23,7 +23,7 @@
       </span>
     </el-dialog>
     <el-dialog title="Modify" :visible.sync="modifyDialogVisibility" width="80%">
-      <Modify :invoice-data="currentRow" :close="closeModify"/>
+      <Modify :invoice-data="currentRow" :close="closeModify" />
     </el-dialog>
     <div id="filter">
       <el-select v-model="selector" placeholder="Selector" @change="selectorChange">
@@ -38,6 +38,16 @@
         </el-option>
       </el-select>
       <el-button type="primary" id="tagAdder" @click="addTagg">Add</el-button>
+      <el-dropdown @command="handleExport">
+        <el-button type="primary" class="export">
+          Export
+          <i class="el-icon-arrow-down el-icon--right"></i>
+        </el-button>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="all">All</el-dropdown-item>
+          <el-dropdown-item command="selected">Selected</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
       <br>
     </div>
     <div id="tags">
@@ -82,10 +92,11 @@
   import axios from 'Axios'
   import _ from 'lodash'
   import Modify from './Modify'
+  import * as jsonexport from 'jsonexport/dist'
   const urlBase = "http://" + window.location.hostname + ":3030"
   export default {
     name: 'invoice',
-    components:{
+    components: {
       Modify
     },
     data() {
@@ -118,6 +129,54 @@
       }
     },
     methods: {
+      async handleExport(command) {
+
+        var tempInvoice = []
+        if (command == "all") {
+          const url = urlBase + '/api/v1/reports/getInvoice'
+          tempInvoice = (await axios.post(url, {
+            all: true
+          })).data
+          console.log("test", tempInvoice)
+        } else {
+          tempInvoice = [...this.invoices]
+        }
+        const tempInvoice2 = tempInvoice.map(temp => {
+          var invoice = { ...temp
+          }
+          invoice.class = temp.class_enum.data
+          invoice.currency = temp.currency_enum.data
+          invoice.product = temp.product_enum.data
+          invoice.revenueType = temp.revenue_type_enum.data
+          invoice.status = temp.status_enum.data
+          invoice.subscriptionType = temp.subscription_enum.data
+          invoice.type = temp.type_enum.data
+          delete invoice.class_enum
+          delete invoice.currency_enum
+          delete invoice.product_enum
+          delete invoice.revenue_type_enum
+          delete invoice.status_enum
+          delete invoice.subscription_enum
+          delete invoice.type_enum
+          return invoice
+        })
+        jsonexport(tempInvoice2, (err, csv) => {
+          if (err) return console.log(err)
+          var uriContent = "data:application/octet-stream," + encodeURIComponent(csv);
+          var link = document.createElement("a");
+          link.setAttribute("href", uriContent);
+          link.setAttribute("download", "Invoices.csv");
+          document.body.appendChild(link); // Required for FF
+
+          link.click();
+          this.$message({
+            type: "success",
+            message: command
+          })
+        })
+
+
+      },
       getInvoice(param) {
         const url = urlBase + '/api/v1/reports/getInvoice'
         axios.post(url, param).then((res) => {
@@ -225,13 +284,13 @@
         }
         this.commentDialogVisibility = false
       },
-      modifyInvoice(row, e){
+      modifyInvoice(row, e) {
         this.modifyDialogVisibility = true
         this.currentRow = row
         console.log(e)
         e.stopPropagation()
       },
-      closeModify(){
+      closeModify() {
         this.modifyDialogVisibility = false
       }
     },
@@ -269,6 +328,10 @@
 
   .input {
     margin: 10px;
+  }
+
+  .el-dropdown {
+    float: right;
   }
 
 </style>

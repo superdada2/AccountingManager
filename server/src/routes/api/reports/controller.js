@@ -277,7 +277,8 @@ export function UpdateInvoiceDescription({
 }
 
 export function GetInvoice({
-  where
+  where,
+  all = false
 }) {
   return new Promise(async(res, rej) => {
     try {
@@ -300,7 +301,12 @@ export function GetInvoice({
           model: type_enum
         }]
       })
-      res(result.splice(0, 50))
+      if(all){
+        res(result)
+      }else{
+        res(result.splice(0, 80))
+      }
+      
     } catch (err) {
       rej(err)
     }

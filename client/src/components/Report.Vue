@@ -22,7 +22,8 @@
         <el-date-picker v-model="endM" type="month" placeholder="End Month">
         </el-date-picker>
 
-        <el-button id="submit" @click="GetReport">Submit</el-button>
+        <el-button id="submit" type="primary "@click="GetReport">Submit</el-button>
+        <el-button id="export" type="primary "@click="handleExport">Export</el-button>
       </a>
     </el-row>
     <el-row>
@@ -48,6 +49,7 @@
 <script>
   import axios from 'Axios'
   import LineChart from '../charts/LineChart.js'
+  import * as jsonexport from 'jsonexport/dist'
   const urlBase = "http://" + window.location.hostname + ":3030"
   const colors = {
     backgroundColor: [
@@ -241,6 +243,22 @@
           this.columnEnum = res.data
         })
       },
+      handleExport(){
+        jsonexport(this.tableData, (err, csv) => {
+          if (err) return console.log(err)
+          var uriContent = "data:application/octet-stream," + encodeURIComponent(csv);
+          var link = document.createElement("a");
+          link.setAttribute("href", uriContent);
+          link.setAttribute("download", "Report.csv");
+          document.body.appendChild(link); // Required for FF
+
+          link.click();
+          this.$message({
+            type: "success",
+            message: "Success"
+          })
+        })
+      }
 
 
 
@@ -265,7 +283,10 @@
   }
 
   #submit {
-    float: right;
+    margin-left: 40px
+  }
+  #export{
+    float:right;
   }
 
 </style>
