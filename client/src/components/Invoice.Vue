@@ -387,25 +387,28 @@
   .header,
   .submit,
   .el-table,
-  .el-select,
+  #filter,
   #tags {
     margin: 10px;
     margin-left: 20px;
     border: 10px;
   }
 
-  .el-input {
+  .el-input,
+  .el-select,
+  .el-autocomplete {
     width: 250px;
-    margin-right: 50px
+    margin: 10px;
+    margin-left: 0px;   
+    
+  }
+  a{
+    margin-right: 10px;
   }
 
   .el-tag {
-
     margin-right: 10px
   }
-
-
-
   .el-dropdown {
     float: right;
   }
