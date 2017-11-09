@@ -26,18 +26,7 @@
       <Modify :invoice-data="currentRow" :close="closeModify" :refresh="refreshData" />
     </el-dialog>
     <div id="filter">
-      <el-select v-model="selector" placeholder="Selector" @change="selectorChange">
-        <el-option v-for="item in fieldOptions" :key="item" :label="item" :value="item">
-        </el-option>
-      </el-select>
-      <a> = </a>
-      <el-autocomplete v-if="isCustomer" placeholder="Value" v-model="searchValue" :fetch-suggestions="querySearchCustName"></el-autocomplete>
-      <el-autocomplete v-if="isInvoice" placeholder="Value" v-model="searchValue" :fetch-suggestions="querySearchInvoice"></el-autocomplete>
-      <el-select v-if="isSelect" v-model="searchValue" placeholder="Value">
-        <el-option v-for="item in searchValueOptions" :key="item.id" :label="item.data" :value="item.id">
-        </el-option>
-      </el-select>
-      <el-button type="primary" id="tagAdder" @click="addTagg">Add</el-button>
+      
       <el-dropdown @command="handleExport">
         <el-button type="primary" class="export">
           Export
@@ -48,6 +37,7 @@
           <el-dropdown-item command="selected">Selected</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
+      
       <br>
 
       <el-select v-model="selector2" placeholder="Selector" @change="selector2Change">
@@ -70,6 +60,19 @@
       <el-date-picker v-if="!isNumber" v-model="max" type="date" placeholder="End Date">
       </el-date-picker>
       <el-button type="primary" id="tagAdder" @click="addTagg2">Add</el-button>
+      <br>
+      <el-select v-model="selector" placeholder="Selector" @change="selectorChange">
+        <el-option v-for="item in fieldOptions" :key="item" :label="item" :value="item">
+        </el-option>
+      </el-select>
+      <a> = </a>
+      <el-autocomplete v-if="isCustomer" placeholder="Value" v-model="searchValue" :fetch-suggestions="querySearchCustName"></el-autocomplete>
+      <el-autocomplete v-if="isInvoice" placeholder="Value" v-model="searchValue" :fetch-suggestions="querySearchInvoice"></el-autocomplete>
+      <el-select v-if="isSelect" v-model="searchValue" placeholder="Value">
+        <el-option v-for="item in searchValueOptions" :key="item.id" :label="item.data" :value="item.id">
+        </el-option>
+      </el-select>
+      <el-button type="primary" id="tagAdder" @click="addTagg">Add</el-button>
     </div>
     <div id="tags">
       <el-tag v-for="tag in tags" :key="tag.id" @close="removeTagg(tag)" closable :type="success">
