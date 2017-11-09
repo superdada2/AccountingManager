@@ -159,9 +159,14 @@ export function CreateInvoice({
         invoiceAmountUSD: invoiceAmountUsd,
         MonthlyRecoginitionAmountUSD: monthlyRec
       })
+
+      Date.prototype.addDays = function(days) {
+        this.setDate(this.getDate() + parseInt(days));
+        return this;
+    };
       const id = response.dataValues.id
-      const billingStart = new Date(billMonth)
-      const supportStart = new Date(recognitionStrMonth)
+      const billingStart = new Date(billMonth).addDays(2)
+      const supportStart = new Date(recognitionStrMonth).addDays(2)
 
 
       const incomeList = createIncomeList({

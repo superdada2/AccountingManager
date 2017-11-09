@@ -27,8 +27,9 @@
             <el-input @change="invoiceAmountOnChange" placeholder="Invoice Amount" type="number" v-model="formValue.invoiceAmount"></el-input>
           </el-form-item>
           <el-form-item prop="invoiceDate" label='Invoice Date'>
-            <el-date-picker v-model="formValue.invoiceDate" type="date" placeholder="Invoice Date">
-            </el-date-picker>
+            <!-- <el-date-picker v-model="formValue.invoiceDate" type="date" placeholder="Invoice Date">
+            </el-date-picker> -->
+          <el-input placeholder="Company Name" v-model="formValue.invoiceDate"></el-input>
           </el-form-item>
           <el-form-item prop="type" label='Type'>
             <el-select v-model="formValue.type" placeholder="Type">
@@ -43,8 +44,9 @@
             </el-select>
           </el-form-item>
           <el-form-item prop="billMonth" label='Billing Month'>
-            <el-date-picker v-model="formValue.billMonth" type="month" placeholder="Bill Month">
-            </el-date-picker>
+            <!-- <el-date-picker v-model="formValue.billMonth" type="month" placeholder="Bill Month">
+            </el-date-picker> -->
+            <el-input placeholder="Company Name" v-model="formValue.billMonth"></el-input>
           </el-form-item>
           <el-form-item prop="status" label='Status'>
             <el-select v-model="formValue.status" placeholder="Status">
@@ -59,8 +61,9 @@
         </el-col>
         <el-col :span="12">
           <el-form-item prop="recognitionStrMonth" label='Recognition Start Month'>
-            <el-date-picker v-model="formValue.recognitionStrMonth" type="month" placeholder="Recognition Start Month">
-            </el-date-picker>
+            <!-- <el-date-picker v-model="formValue.recognitionStrMonth" type="month" placeholder="Recognition Start Month">
+            </el-date-picker> -->
+            <el-input placeholder="Company Name" v-model="formValue.recognitionStrMonth"></el-input>
           </el-form-item>
           <el-form-item prop="lengthRec" label='Recognition Length'>
             <el-input placeholder="Length of Recognition(Months)" @change="lengthRecOnChange" type="number" v-model="formValue.lengthRec"
@@ -227,12 +230,12 @@
             message: 'Please select a Recognition Start Month',
             trigger: 'blur'
           }],
-          lengthRec: [{
-            type: 'number',
-            required: false,
-            message: 'Please input a recognition length',
-            trigger: 'blur'
-          }],
+          // lengthRec: [{
+          //   type: 'number',
+          //   required: false,
+          //   message: 'Please input a recognition length',
+          //   trigger: 'blur'
+          // }],
           subscription: [{
             required: true,
             type: 'number',

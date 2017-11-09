@@ -228,11 +228,11 @@
             message: 'Please select a Recognition Start Month',
             trigger: 'blur'
           }],
-          lengthRec: [{
-            required: false,
-            message: 'Please input a recognition length',
-            trigger: 'blur'
-          }],
+          // lengthRec: [{
+          //   required: false,
+          //   message: 'Please input a recognition length',
+          //   trigger: 'blur'
+          // }],
           subscription: [{
             required: true,
             type: 'number',
