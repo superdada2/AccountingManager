@@ -120,7 +120,7 @@
   const urlBase = "http://" + window.location.hostname + ":3030"
   export default {
     name: 'modify',
-    props: ['invoiceData', 'close'],
+    props: ['invoiceData', 'close', 'refresh'],
     data() {
       return {
         classEnum: [],
@@ -286,9 +286,10 @@
             id: this.invoiceData.id
           }).then((res) => {
             this.$message({
-              type: 'sucess',
+              type: 'success',
               message: 'Success!'
             })
+            this.refresh()
             this.close()
           })
         }
@@ -317,6 +318,7 @@
                   message: "Success!"
                 })
                 this.$refs[formName].resetFields();
+                this.refresh()
                 this.close()
               })
 

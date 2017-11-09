@@ -23,7 +23,7 @@
       </span>
     </el-dialog>
     <el-dialog title="Modify" :visible.sync="modifyDialogVisibility" width="80%">
-      <Modify :invoice-data="currentRow" :close="closeModify" />
+      <Modify :invoice-data="currentRow" :close="closeModify" :refresh="refreshData" />
     </el-dialog>
     <div id="filter">
       <el-select v-model="selector" placeholder="Selector" @change="selectorChange">
@@ -129,6 +129,10 @@
       }
     },
     methods: {
+
+      refreshData(){
+        this.getInvoice(this.queryParam)
+      },
       async handleExport(command) {
 
         var tempInvoice = []
@@ -283,6 +287,7 @@
           })
         }
         this.commentDialogVisibility = false
+        this.refreshData()
       },
       modifyInvoice(row, e) {
         this.modifyDialogVisibility = true

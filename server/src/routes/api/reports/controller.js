@@ -304,7 +304,7 @@ export function GetInvoice({
       if(all){
         res(result)
       }else{
-        res(result.splice(0, 80))
+        res(result.splice(0, 50))
       }
       
     } catch (err) {
