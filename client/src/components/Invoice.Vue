@@ -49,6 +49,27 @@
         </el-dropdown-menu>
       </el-dropdown>
       <br>
+
+      <el-select v-model="selector2" placeholder="Selector" @change="selector2Change">
+        <el-option key="invoiceAmount" label="invoiceAmount" value="invoiceAmount">
+        </el-option>
+        <el-option key="invoiceAmountUSD" label="invoiceAmountUSD" value="invoiceAmountUSD">
+        </el-option>
+        <el-option key="invoiceDate" label="invoiceDate" value="invoiceDate">
+        </el-option>
+        <el-option key="billingMonth" label="billingMonth" value="billingMonth">
+        </el-option>
+        <el-option key="recognitionStartMonth" label="recognitionStartMonth" value="recognitionStartMonth">
+        </el-option>
+      </el-select>
+      <a> = </a>
+      <el-input v-if="isNumber" placeholder="Min" v-model="min" type="number"></el-input>
+      <el-input v-if="isNumber" placeholder="Max" v-model="max" type="number"></el-input>
+      <el-date-picker v-if="!isNumber" v-model="min" type="date" placeholder="Start Date">
+      </el-date-picker>
+      <el-date-picker v-if="!isNumber" v-model="max" type="date" placeholder="End Date">
+      </el-date-picker>
+      <el-button type="primary" id="tagAdder" @click="addTagg2">Add</el-button>
     </div>
     <div id="tags">
       <el-tag v-for="tag in tags" :key="tag.id" @close="removeTagg(tag)" closable :type="success">
@@ -126,11 +147,15 @@
         },
         customerNameList: [],
         invoiceNumberList: [],
+        isNumber: true,
+        selector2: "",
+        min: "",
+        max: "",
       }
     },
     methods: {
 
-      refreshData(){
+      refreshData() {
         this.getInvoice(this.queryParam)
       },
       async handleExport(command) {
@@ -199,6 +224,15 @@
           this.fieldOptions = enumListTemp
         })
       },
+
+      selector2Change(value) {
+        if (value == "invoiceAmountUSD" || value == "invoiceAmount") {
+          this.isNumber = true
+        } else {
+          this.isNumber = false
+        }
+
+      },
       selectorChange(value) {
         if (this.enumList[value] != undefined) {
           this.searchValueOptions = this.enumList[value]
@@ -219,8 +253,45 @@
 
 
       },
+
+      addTagg2() {
+        // if(this.selector2 == "" || (this.))
+        var currentParam = { ...this.queryParam.where
+        }
+        if (this.max == "") {
+          currentParam[this.selector2] = {
+            $gte: this.min,
+          }
+        } else {
+          currentParam[this.selector2] = {
+            $and: {
+              $gte: this.min,
+              $lte: this.max
+            }
+          }
+        }
+
+        this.queryParam.where = currentParam
+        this.getInvoice(this.queryParam)
+        if (_.findIndex(this.tags, i => {
+            return i.id == this.selector2
+          }) != -1) {
+          this.tags[_.findIndex(this.tags, i => {
+            return i.id == this.selector2
+          })].value = (((this.min.toString().length ==57)?this.min.toString().slice(8,15): this.min ) + "<"+ this.selector2 + "<"+ ((this.max.toString().length ==57)?this.min.toString().slice(8,15): this.max ))
+        } else {
+          this.tags.push({
+            id: this.selector2,
+            value: (((this.min.toString().length ==57)?this.min.toString().slice(8,15): this.min ) + "<"+ this.selector2 + "<"+ ((this.max.toString().length ==57)?this.min.toString().slice(8,15): this.max ))
+          })
+        }
+        this.selector2 = ""
+        this.min = ""
+        this.max = ""
+      },
       addTagg() {
-        const currentParam = this.queryParam.where
+        const currentParam = { ...this.queryParam.where
+        }
         currentParam[this.selector] = this.searchValue
 
         this.queryParam.where = currentParam
@@ -237,6 +308,8 @@
             value: (this.selector + " = " + this.searchValue)
           })
         }
+        this.selector = ""
+        this.searchValue = ""
       },
       removeTagg(tag) {
         this.tags.splice(this.tags.indexOf(tag), 1)
@@ -331,9 +404,7 @@
     margin-right: 10px
   }
 
-  .input {
-    margin: 10px;
-  }
+
 
   .el-dropdown {
     float: right;
