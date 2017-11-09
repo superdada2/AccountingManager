@@ -4,14 +4,18 @@ import Home from '@/components/Home'
 import Add from '@/components/Add'
 import Invoice from '@/components/Invoice'
 import Report from '@/components/Report'
+import Setting from '@/components/Setting'
 
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
+  routes: [{
       path: '/home',
       name: 'Home',
+      component: Home
+    },
+    {
+      path: '/',
       component: Home
     },
     {
@@ -28,6 +32,12 @@ export default new Router({
       path: '/add',
       name: 'Add',
       component: Add
+    },
+    {
+      path: '/setting',
+      name: 'Setting',
+      component: Setting
     }
+
   ]
 })

@@ -1,11 +1,11 @@
-// LineChart.js
+// PieChart.js
 import {
-  Line,
+  Doughnut,
   mixins
 } from 'vue-chartjs'
 
 export default {
-  extends: Line,
+  extends: Doughnut,
   props: ['options'],
   mixins: [mixins.reactiveProp],
   mounted() {

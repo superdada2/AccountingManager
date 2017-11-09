@@ -1,11 +1,7 @@
 <template>
   <div id='Add'>
-    <el-row>
-      <div class="header">
-        <h1>Add Invoice </h1>
-      </div>
-    </el-row>
-    <el-form :model="formValue" :rules="rules" ref="formValue" label-width="200px" align="left" >
+
+    <el-form :model="formValue" :rules="rules" ref="formValue" label-width="200px" align="left">
       <el-row>
         <el-col :span="12">
           <el-form-item prop="companyName" label='Company Name'>
@@ -31,8 +27,9 @@
             <el-input @change="invoiceAmountOnChange" placeholder="Invoice Amount" type="number" v-model="formValue.invoiceAmount"></el-input>
           </el-form-item>
           <el-form-item prop="invoiceDate" label='Invoice Date'>
-            <el-date-picker v-model="formValue.invoiceDate" type="date" placeholder="Invoice Date">
-            </el-date-picker>
+            <!-- <el-date-picker v-model="formValue.invoiceDate" type="date" placeholder="Invoice Date">
+            </el-date-picker> -->
+          <el-input placeholder="Company Name" v-model="formValue.invoiceDate"></el-input>
           </el-form-item>
           <el-form-item prop="type" label='Type'>
             <el-select v-model="formValue.type" placeholder="Type">
@@ -47,8 +44,9 @@
             </el-select>
           </el-form-item>
           <el-form-item prop="billMonth" label='Billing Month'>
-            <el-date-picker v-model="formValue.billMonth" type="month" placeholder="Bill Month">
-            </el-date-picker>
+            <!-- <el-date-picker v-model="formValue.billMonth" type="month" placeholder="Bill Month">
+            </el-date-picker> -->
+            <el-input placeholder="Company Name" v-model="formValue.billMonth"></el-input>
           </el-form-item>
           <el-form-item prop="status" label='Status'>
             <el-select v-model="formValue.status" placeholder="Status">
@@ -63,8 +61,9 @@
         </el-col>
         <el-col :span="12">
           <el-form-item prop="recognitionStrMonth" label='Recognition Start Month'>
-            <el-date-picker v-model="formValue.recognitionStrMonth" type="month" placeholder="Recognition Start Month">
-            </el-date-picker>
+            <!-- <el-date-picker v-model="formValue.recognitionStrMonth" type="month" placeholder="Recognition Start Month">
+            </el-date-picker> -->
+            <el-input placeholder="Company Name" v-model="formValue.recognitionStrMonth"></el-input>
           </el-form-item>
           <el-form-item prop="lengthRec" label='Recognition Length'>
             <el-input placeholder="Length of Recognition(Months)" @change="lengthRecOnChange" type="number" v-model="formValue.lengthRec"
@@ -76,18 +75,18 @@
           <el-form-item prop="fxRate" label='FxRate'>
             <el-input placeholder="Fx rate" type="number" @change="fxRateOnChange" v-model="formValue.fxRate"></el-input>
           </el-form-item>
-          <el-form-item prop="monthlyRec"  label='Monthly Recognition USD'>
+          <el-form-item prop="monthlyRec" label='Monthly Recognition USD'>
             <el-input placeholder="Monthly Recognition(USD)" type="number" v-model="formValue.monthlyRec"></el-input>
           </el-form-item>
-          <el-form-item prop="annualIncreaseBool" label="Annual Increase Eligible">            
+          <el-form-item prop="annualIncreaseBool" label="Annual Increase Eligible">
             <el-switch v-model="formValue.annualIncreaseBool" on-text="" off-text="">
             </el-switch>
           </el-form-item>
-          <el-form-item prop="dateLastIncrease"  label='Date Since Last Increase'>
+          <el-form-item prop="dateLastIncrease" label='Date Since Last Increase'>
             <el-date-picker v-model="formValue.dateLastIncrease" type="date" placeholder="Date Last Increase">
             </el-date-picker>
           </el-form-item>
-          <el-form-item prop="increasePerc"  label='Increase Percentage'>
+          <el-form-item prop="increasePerc" label='Increase Percentage'>
             <el-input placeholder="Increase Percentage" type="number" v-model="formValue.increasePerc"></el-input>
           </el-form-item>
           <el-form-item prop="subscription" label='Subscription'>
@@ -110,8 +109,9 @@
       </el-row>
       <el-row>
         <div class="submit">
-          <el-button type="primary" @click="submit('formValue')">Add Invoice</el-button>
-          <el-button @click="resetForm('formValue')">Reset</el-button>
+          <el-button type="primary" @click="submit('formValue')">Modify Invoice</el-button>
+          <el-button type="danger" @click="deleteInvoice">Delete Invoice</el-button>
+          <el-button  @click="cancel">Cancel</el-button>
         </div>
       </el-row>
     </el-form>
@@ -122,7 +122,8 @@
   import axios from 'Axios'
   const urlBase = "http://" + window.location.hostname + ":3030"
   export default {
-    name: 'add',
+    name: 'modify',
+    props: ['invoiceData', 'close', 'refresh'],
     data() {
       return {
         classEnum: [],
@@ -179,6 +180,7 @@
           }],
           invoiceNumber: [{
             required: true,
+            type: 'number',
             message: 'Please input an invoice number',
             trigger: 'blur'
           }],
@@ -189,7 +191,7 @@
           }],
           invoiceDate: [{
             required: true,
-            type: 'date',
+
             message: 'Please select an invoice date',
             trigger: 'change'
           }],
@@ -207,7 +209,7 @@
           }],
           billMonth: [{
             required: true,
-            type: 'date',
+
             message: 'Please select a billingMonth',
             trigger: 'change'
           }],
@@ -224,11 +226,12 @@
           }],
           recognitionStrMonth: [{
             required: true,
-            type: 'date',
+
             message: 'Please select a Recognition Start Month',
             trigger: 'blur'
           }],
           // lengthRec: [{
+          //   type: 'number',
           //   required: false,
           //   message: 'Please input a recognition length',
           //   trigger: 'blur'
@@ -277,20 +280,49 @@
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
+
+      deleteInvoice() {
+        const url = urlBase + "/api/v1/reports/deleteInvoice"
+        console.log(this.invoiceData.id, url)
+        try {
+          axios.post(url, {
+            id: this.invoiceData.id
+          }).then((res) => {
+            this.$message({
+              type: 'success',
+              message: 'Success!'
+            })
+            this.refresh()
+            this.close()
+          })
+        }
+        catch(err){
+          this.$message({
+            type:'error',
+            message:err
+          })
+        }
+      },
+
+      cancel() {
+        this.close()
+      },
       async submit(formName) {
-        const url = urlBase + "/api/v1/reports/createInvoice"
+        const url = urlBase + "/api/v1/reports/modifyInvoice"
         this.$refs[formName].validate((valid) => {
           if (valid) {
             const formValues = this.formValue
-            const message = { ...formValues
-            }
+            const message = { id: this.invoiceData.id, ...formValues}
             try {
               const data = axios.post(url, message).then(i => {
+                console.log("test")
                 this.$message({
                   type: 'success',
                   message: "Success!"
                 })
                 this.$refs[formName].resetFields();
+                this.refresh()
+                this.close()
               })
 
             } catch (err) {
@@ -307,9 +339,6 @@
             return false;
           }
         });
-
-
-
       },
       invoiceAmountOnChange(value) {
         if (this.formValue.lengthRec == '') {
@@ -361,8 +390,46 @@
       }
 
     },
+    watch: {
+      invoiceData: function (newVal, old) {
+
+        newVal["companyName"] = newVal.customerName
+        newVal["Class"] = newVal.class
+        newVal["billMonth"] = newVal.billingMonth
+        newVal["recognitionStrMonth"] = newVal.recognitionStartMonth
+        newVal["lengthRec"] = newVal.lengthMonth
+        newVal["invoiceAmountUsd"] = newVal.invoiceAmountUSD
+        newVal["fxRate"] = newVal.FXRate
+        newVal['monthlyRec'] = newVal.MonthlyRecoginitionAmountUSD
+        newVal['increasePerc'] = newVal.increasePercentage
+        newVal['annualIncreaseBool'] = newVal.annualIncreaseEli
+        newVal['subscription'] = newVal.subscriptionType
+
+        this.formValue = { ...newVal
+        }
+
+      }
+    },
     created() {
       this.loadData()
+      var newVal = { ...this.invoiceData
+      }
+      newVal["companyName"] = newVal.customerName
+      newVal["Class"] = newVal.class
+      newVal["billMonth"] = newVal.billingMonth
+      newVal["recognitionStrMonth"] = newVal.recognitionStartMonth
+      newVal["lengthRec"] = newVal.lengthMonth
+      newVal["invoiceAmountUsd"] = newVal.invoiceAmountUSD
+      newVal["fxRate"] = newVal.FXRate
+      newVal['monthlyRec'] = newVal.MonthlyRecoginitionAmountUSD
+      newVal['increasePerc'] = newVal.increasePercentage
+      newVal['annualIncreaseBool'] = newVal.annualIncreaseEli
+      newVal['subscription'] = newVal.subscriptionType
+
+      this.formValue = { ...newVal
+      }
+
+
     }
   }
 
@@ -370,13 +437,11 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-  
   .el-select,
   .el-input,
-  .el-textarea{
+  .el-textarea {
     width: 80%;
-  }  
+  }
 
 
   .header,
@@ -387,8 +452,5 @@
     width: 70%;
     border: 10px;
   }
-
-  
-
 
 </style>

@@ -14,15 +14,44 @@ import {
   sequelize,
   Sequelize,
 } from '../../../models';
-export function BillByCustomer() {
-  return invoice.findAll({
-    attributes: ["customerName", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],[sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']],
-    group: ['customerName'],   
-
-  })
+export function BillByCustomer({sort = 'active'}) {
+  if(sort == 'active'){
+    return invoice.findAll({
+      attributes: ["customerName", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],[sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']],
+      group: ['customerName'],
+      where:{
+        recognitionStartMonth:{
+          $between:[sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000,1)]
+        },
+        status: {$ne: 3}
+      }
+    })
+  
+  }
+  else{
+    return invoice.findAll({
+      attributes: ["customerName", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],[sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']],
+      group: ['customerName'],   
+    })
+  }
 }
 
-export function BillByCurrency() {
+export function BillByCurrency({sort = 'active'}) {
+  if(sort == 'active'){
+    return invoice.findAll({
+      attributes: ["currency", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],[sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']],
+      group: ['currency'],
+      include:[{
+        model: currency_enum
+      }],
+      where:{
+        recognitionStartMonth:{
+          $between:[sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000,1)]
+        },
+        status: {$ne: 3}
+      }
+    })
+  }
   return invoice.findAll({
     attributes: ["currency", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],[sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']],
     group: ['currency'],
@@ -32,7 +61,24 @@ export function BillByCurrency() {
   })
 }
 
-export function BillByClass() {
+export function BillByClass({sort = 'active'}) {
+  if(sort == 'active'){
+
+    return invoice.findAll({
+      attributes: ["class", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],[sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']],
+      group: ['class'],
+      include:[{
+        model: class_enum
+      }],
+      where:{
+        recognitionStartMonth:{
+          $between:[sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000,1)]
+        },
+        status: {$ne: 3}
+      }
+    })
+  }
+  
   return invoice.findAll({
     attributes: ["class", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],[sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']],
     group: ['class'],
@@ -42,14 +88,29 @@ export function BillByClass() {
   })
 }
 
-export function BillByProduct() {
+export function BillByProduct({sort = 'active'}) {
+  if(sort == 'active'){
+    return invoice.findAll({
+      attributes: ["product", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],[sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']],
+      group: ['product'],
+      include:[{
+        model: product_enum
+      }],
+      where:{
+        recognitionStartMonth:{
+          $between:[sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000,1)]
+        },
+        status: {$ne: 3}
+      }
+    })
+  }
+
   return invoice.findAll({
     attributes: ["product", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],[sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']],
     group: ['product'],
     include:[{
       model: product_enum
-    }]
-
+    }],
   })
 }
 
@@ -62,15 +123,11 @@ export function BillByMonthInvoiced() {
     
   })
 }
-export function BillByBillingMonth({startM = 1, startY = 2014, endM = 12,endY = 2017}) {
+export function BillByBillingMonth({startM = new Date(2015,1),  endM = new Date()}) {
   const Op = Sequelize.Op
   return invoice.findAll({
     attributes: ["billingMonth", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],[sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']],
     group: ['billingMonth'],
-    include:[{
-      model: month_enum,
-      as:'billingMonthEnum'      
-    }],
     where:{
       billingMonth:{
         [Op.and]:{
