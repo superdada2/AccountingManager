@@ -23,10 +23,13 @@
               <i class="el-icon-menu"></i>Home</el-menu-item>
             <el-menu-item index="Invoice">
               <i class="el-icon-document"></i>Invoices</el-menu-item>
+            <el-menu-item index="details">
+              <i class="el-icon-zoom-in"></i>Details</el-menu-item>
             <el-menu-item index="Report">
               <i class="el-icon-search"></i>Reports</el-menu-item>
             <el-menu-item index="Add">
               <i class="el-icon-circle-check"></i>Add Invoice</el-menu-item>
+
           </el-menu>
         </el-aside>
         <el-main id="content">

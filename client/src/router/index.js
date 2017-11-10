@@ -5,6 +5,7 @@ import Add from '@/components/Add'
 import Invoice from '@/components/Invoice'
 import Report from '@/components/Report'
 import Setting from '@/components/Setting'
+import Details from '@/components/Details'
 
 Vue.use(Router)
 
@@ -34,9 +35,15 @@ export default new Router({
       component: Add
     },
     {
-      path: '/setting',
+      path: '/setting/:id',
       name: 'Setting',
-      component: Setting
+      component: Setting,
+      props:true
+    },
+    {
+      path: '/details',
+      name: 'Details',
+      component: Details
     }
 
   ]

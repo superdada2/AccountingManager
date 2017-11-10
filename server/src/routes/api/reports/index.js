@@ -9,7 +9,8 @@ import {
   getDistinctInvoiceNumber,
   UpdateInvoiceDescription,
   DeleteInvoice,
-  ModifyInvoice
+  ModifyInvoice,
+  GetIncomeDeferred
 } from './controller'
 
 export const router = express.Router()
@@ -33,6 +34,22 @@ router.post('/deleteInvoice', async(req, res) => {
   try {
     console.log(req.body)
     const result = await DeleteInvoice(req.body)
+    res.status(200).json(result)
+  } catch (err) {
+
+    const message = err.message
+    console.log("error", message)
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
+
+router.post('/getIncomeDeferred', async(req, res) => {
+  try {
+    console.log(req.body)
+    const result = await GetIncomeDeferred(req.body)
     res.status(200).json(result)
   } catch (err) {
 

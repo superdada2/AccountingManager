@@ -1,7 +1,7 @@
 <template>
   <div id="sd">
     <div class="header">
-      <h1>Invoice </h1>
+      <h1>Details </h1>
     </div>
     <el-dialog title="Comments and Description" :visible.sync="commentDialogVisibility" width="50%">
       <el-row>
@@ -26,8 +26,8 @@
       <Modify :invoice-data="currentRow" :close="closeModify" :refresh="refreshData" />
     </el-dialog>
     <div id="filter">
-      
-      <el-dropdown @command="handleExport">
+
+      <!-- <el-dropdown @command="handleExport">
         <el-button type="primary" class="export">
           Export
           <i class="el-icon-arrow-down el-icon--right"></i>
@@ -36,30 +36,8 @@
           <el-dropdown-item command="all">All</el-dropdown-item>
           <el-dropdown-item command="selected">Selected</el-dropdown-item>
         </el-dropdown-menu>
-      </el-dropdown>
-      
-      <br>
+      </el-dropdown> -->
 
-      <el-select v-model="selector2" placeholder="Selector" @change="selector2Change">
-        <el-option key="invoiceAmount" label="invoiceAmount" value="invoiceAmount">
-        </el-option>
-        <el-option key="invoiceAmountUSD" label="invoiceAmountUSD" value="invoiceAmountUSD">
-        </el-option>
-        <el-option key="invoiceDate" label="invoiceDate" value="invoiceDate">
-        </el-option>
-        <el-option key="billingMonth" label="billingMonth" value="billingMonth">
-        </el-option>
-        <el-option key="recognitionStartMonth" label="recognitionStartMonth" value="recognitionStartMonth">
-        </el-option>
-      </el-select>
-      <a> = </a>
-      <el-input v-if="isNumber" placeholder="Min" v-model="min" type="number"></el-input>
-      <el-input v-if="isNumber" placeholder="Max" v-model="max" type="number"></el-input>
-      <el-date-picker v-if="!isNumber" v-model="min" type="date" placeholder="Start Date">
-      </el-date-picker>
-      <el-date-picker v-if="!isNumber" v-model="max" type="date" placeholder="End Date">
-      </el-date-picker>
-      <el-button type="primary" id="tagAdder" @click="addTagg2">Add</el-button>
       <br>
       <el-select v-model="selector" placeholder="Selector" @change="selectorChange">
         <el-option v-for="item in fieldOptions" :key="item" :label="item" :value="item">
@@ -68,17 +46,9 @@
       <a> = </a>
       <el-autocomplete v-if="isCustomer" placeholder="Value" v-model="searchValue" :fetch-suggestions="querySearchCustName"></el-autocomplete>
       <el-autocomplete v-if="isInvoice" placeholder="Value" v-model="searchValue" :fetch-suggestions="querySearchInvoice"></el-autocomplete>
-      <el-select v-if="isSelect" v-model="searchValue" placeholder="Value">
-        <el-option v-for="item in searchValueOptions" :key="item.id" :label="item.data" :value="item.id">
-        </el-option>
-      </el-select>
-      <el-button type="primary" id="tagAdder" @click="addTagg">Add</el-button>
+      <el-button type="primary" id="tagAdder" @click="addTagg">Search</el-button>
     </div>
-    <div id="tags">
-      <el-tag v-for="tag in tags" :key="tag.id" @close="removeTagg(tag)" closable :type="success">
-        {{tag.value}}
-      </el-tag>
-    </div>
+    <el-row>
     <div id="dataTable">
       <el-table :data="invoices" style="width: 100%" @row-click="openComments" @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
         <el-table-column prop="type_enum.data" label="Type">
@@ -109,6 +79,24 @@
         </el-table-column>
       </el-table>
     </div>
+    </el-row>
+    <el-row>
+    
+      <el-col :span="6" v-for="detail in details" :key="detail.id" > 
+      <el-table  :data="detail"  style="width: 100%">
+        <el-table-column :label="detail.customerName + ': '+ detail.invoiceNumber">
+        <el-table-column prop="year" label="Year">
+        </el-table-column>
+        <el-table-column prop="month" label="Month">
+        </el-table-column>
+        <el-table-column prop="income" label="Income">
+        </el-table-column>
+        <el-table-column prop="deferred" label="Deferred">
+        </el-table-column>
+        </el-table-column>
+      </el-table>
+    </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -119,7 +107,7 @@
   import * as jsonexport from 'jsonexport/dist'
   const urlBase = "http://" + window.location.hostname + ":3030"
   export default {
-    name: 'invoice',
+    name: 'details',
     components: {
       Modify
     },
@@ -130,20 +118,14 @@
         currentComment: "",
         commentDialogVisibility: false,
         modifyDialogVisibility: false,
-        tags: [
-
-        ],
         invoices: [],
         selector: '',
         searchValue: '',
-        fieldOptions: [{
-          id: 1,
-          data: 12
-        }],
+        fieldOptions: ['customerName', 'invoiceNumber'],
         searchValueOptions: [],
         enumList: {},
-        isSelect: true,
-        isCustomer: false,
+        details: [],
+        isCustomer: true,
         isInvoice: false,
         queryParam: {
           where: {}
@@ -151,9 +133,6 @@
         customerNameList: [],
         invoiceNumberList: [],
         isNumber: true,
-        selector2: "",
-        min: "",
-        max: "",
       }
     },
     methods: {
@@ -211,38 +190,92 @@
       },
       getInvoice(param) {
         const url = urlBase + '/api/v1/reports/getInvoice'
+        const url2 = urlBase + '/api/v1/reports/getIncomeDeferred'
         axios.post(url, param).then((res) => {
           this.invoices = res.data
         })
-      },
-      getEnum() {
-        const url = urlBase + "/api/v1/enum/all"
-
-        axios.get(url).then((res) => {
-          this.enumList = res.data
-          const keys = Object.keys(this.enumList)
-          var enumListTemp = keys
-          enumListTemp.push("customerName")
-          enumListTemp.push("invoiceNumber")
-          this.fieldOptions = enumListTemp
+        axios.post(url2, param).then((res) => {
+          var details = []
+          res.data.forEach(entry => {            
+            var temp = this.merge(entry.incomes, entry.deferred_balances)
+            temp["invoiceNumber"] = entry.invoiceNumber
+            temp["customerName"] = entry.customerName
+            details.push(temp)
+            console.log(temp)
+          })
+          this.details = details
         })
       },
 
-      selector2Change(value) {
-        if (value == "invoiceAmountUSD" || value == "invoiceAmount") {
-          this.isNumber = true
-        } else {
-          this.isNumber = false
+      merge(income, deferred) {
+        console.log(income, deferred)
+        var output = []
+        var incomeIndex = 0
+        var deferredIndex = 0
+        while (incomeIndex < income.length || deferredIndex < deferred.length) {
+          switch (this.compareDate(income[incomeIndex], deferred[deferredIndex])) {
+            case 0:
+              const current1 = deferred[deferredIndex]
+              output.push({
+                month: current1.month,
+                year: current1.year,
+                income: 0,
+                deferred: current1.amount
+              })
+              deferredIndex++
+              break;
+            case 1:
+              const current2 = income[incomeIndex]
+              output.push({
+                month: current2.month,
+                year: current2.year,
+                income: current2.amount,
+                deferred: 0
+              })
+              incomeIndex++
+              break;
+            case 2:
+              const currentIncome = income[incomeIndex]
+              const currentDeffered = deferred[deferredIndex]
+              output.push({
+                month: currentIncome.month,
+                year: currentIncome.year,
+                income: currentIncome.amount,
+                deferred: currentDeffered.amount
+              })
+              incomeIndex++
+              deferredIndex ++
+              break;
+          }
+          console.log(output)
         }
-
+        return output
       },
-      selectorChange(value) {
-        if (this.enumList[value] != undefined) {
-          this.searchValueOptions = this.enumList[value]
-          this.isSelect = true
-          this.isCustomer = false
-          this.isInvoice = false
+
+      compareDate(entry1, entry2) {
+        if (entry1 == null) {
+          return 0
         }
+        if (entry2 == null) {
+          return 1
+        }
+        if (entry1.year > entry2.year) {
+          return 0
+        }
+        if (entry2.year > entry1.year) {
+          return 1
+        }
+        if (entry1.month > entry2.month) {
+          return 0
+        }
+        if (entry1.month < entry2.month) {
+          return 1
+        }
+        return 2
+      },
+
+      selectorChange(value) {
+
         if (value == "customerName") {
           this.isSelect = false
           this.isCustomer = true
@@ -253,71 +286,15 @@
           this.isCustomer = false
           this.isInvoice = true
         }
-
-
-      },
-
-      addTagg2() {
-        // if(this.selector2 == "" || (this.))
-        var currentParam = { ...this.queryParam.where
-        }
-        if (this.max == "") {
-          currentParam[this.selector2] = {
-            $gte: this.min,
-          }
-        } else {
-          currentParam[this.selector2] = {
-            $and: {
-              $gte: this.min,
-              $lte: this.max
-            }
-          }
-        }
-
-        this.queryParam.where = currentParam
-        this.getInvoice(this.queryParam)
-        if (_.findIndex(this.tags, i => {
-            return i.id == this.selector2
-          }) != -1) {
-          this.tags[_.findIndex(this.tags, i => {
-            return i.id == this.selector2
-          })].value = (((this.min.toString().length ==57)?this.min.toString().slice(8,15): this.min ) + "<"+ this.selector2 + "<"+ ((this.max.toString().length ==57)?this.min.toString().slice(8,15): this.max ))
-        } else {
-          this.tags.push({
-            id: this.selector2,
-            value: (((this.min.toString().length ==57)?this.min.toString().slice(8,15): this.min ) + "<"+ this.selector2 + "<"+ ((this.max.toString().length ==57)?this.min.toString().slice(8,15): this.max ))
-          })
-        }
-        this.selector2 = ""
-        this.min = ""
-        this.max = ""
       },
       addTagg() {
-        const currentParam = { ...this.queryParam.where
-        }
+        const currentParam = {}
         currentParam[this.selector] = this.searchValue
 
         this.queryParam.where = currentParam
         this.getInvoice(this.queryParam)
-        if (_.findIndex(this.tags, i => {
-            return i.id == this.selector
-          }) != -1) {
-          this.tags[_.findIndex(this.tags, i => {
-            return i.id == this.selector
-          })].value = (this.selector + " = " + this.searchValue)
-        } else {
-          this.tags.push({
-            id: this.selector,
-            value: (this.selector + " = " + this.searchValue)
-          })
-        }
         this.selector = ""
         this.searchValue = ""
-      },
-      removeTagg(tag) {
-        this.tags.splice(this.tags.indexOf(tag), 1)
-        delete this.queryParam.where[tag.id]
-        this.getInvoice(this.queryParam)
       },
       querySearchCustName(queryString, cb) {
         var list = this.customerNameList
@@ -381,8 +358,6 @@
       }
     },
     created() {
-      this.getInvoice()
-      this.getEnum()
       this.getCustomerName()
       this.getInvoiceNumber()
     }
@@ -407,16 +382,17 @@
   .el-autocomplete {
     width: 250px;
     margin: 10px;
-    margin-left: 0px;   
-    
+    margin-left: 0px;
   }
-  a{
+
+  a {
     margin-right: 10px;
   }
 
   .el-tag {
     margin-right: 10px
   }
+
   .el-dropdown {
     float: right;
   }

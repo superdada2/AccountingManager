@@ -111,7 +111,11 @@
         <div class="submit">
           <el-button type="primary" @click="submit('formValue')">Modify Invoice</el-button>
           <el-button type="danger" @click="deleteInvoice">Delete Invoice</el-button>
+          <!-- <router-link to="/details">
+            <el-button type="info"  :v-link='{name:Details}'>Details </el-button>
+          </router-link> -->
           <el-button  @click="cancel">Cancel</el-button>
+          
         </div>
       </el-row>
     </el-form>

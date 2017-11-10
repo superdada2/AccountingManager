@@ -104,6 +104,7 @@
   const urlBase = "http://" + window.location.hostname + ":3030"
   export default {
     name: 'Settings',
+    props:['id'],
     data() {
       return {
         temp: "",
