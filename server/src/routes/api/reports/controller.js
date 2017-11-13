@@ -32,8 +32,13 @@ function random(min, max) {
 function randomDate(start, end) {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
 }
+export async function loadData(){
+  for(var i = 0; i < 100; i++){
+    await loadData2()
+  }
+}
 
-export function loadData() {
+function loadData2() {
   return new Promise(async(res, rej) => {
     var month =  random(1, 12)
     var year = (random(2014, 2017))
@@ -49,16 +54,16 @@ export function loadData() {
       companyName: companies[random(1, companies.length)],
       invoiceNumber: random(1, 90000),
       invoiceDate: randomDate(new Date(2014, 1), new Date(2017, 11)),
-      invoiceAmount: random(0, 100000),
+      invoiceAmount: random(0, 100000)/random(1,3),
       billMonth: billingMonth,
       recognitionStrMonth: recStartMonth,
       lengthRec: random(10, 12),
       fxRate: random(1, 5),
-      monthlyRec: random(1, 5000),
+      monthlyRec: random(1, 10000)/random(1,3),
       dateLastIncrease: randomDate(new Date(2014, 1), new Date(2017, 11)),
       increasePerc: random(1, 5),
       cancelationDate: randomDate(new Date(2014, 1), new Date(2017, 11)),
-      invoiceAmountUsd: random(1, 80000),
+      invoiceAmountUsd: random(1, 80000)/random(1,3),
       annualIncreaseBool: true,
       subscription: random(1, 2)
     })

@@ -82,8 +82,8 @@
     </el-row>
     <el-row>
     
-      <el-col :span="6" v-for="detail in details" :key="detail.id" > 
-      <el-table  :data="detail"  style="width: 100%">
+      <el-col :span="6" v-for="detail in details" :key="detail.id"> 
+      <el-table  :data="detail"  style="width: 100%; height:758px;" class="detailTable" >
         <el-table-column :label="detail.customerName + ': '+ detail.invoiceNumber">
         <el-table-column prop="year" label="Year">
         </el-table-column>

@@ -35,7 +35,7 @@ export default new Router({
       component: Add
     },
     {
-      path: '/setting/:id',
+      path: '/setting/',
       name: 'Setting',
       component: Setting,
       props:true
