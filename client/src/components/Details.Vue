@@ -41,7 +41,7 @@
       <el-button id="export" type="primary " @click="handleExport">Export</el-button>
     </div>
     <el-row>
-      <div id="dataTable">
+      <div id="dataTable" v-if="invoices.length > 0">
         <el-table :data="invoices" style="width: 100%" @row-click="openComments" @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
           <el-table-column prop="type_enum.data" label="Type">
           </el-table-column>
@@ -155,6 +155,11 @@
       getInvoice(param) {
         const url = urlBase + '/api/v1/reports/getInvoice'
         const url2 = urlBase + '/api/v1/reports/getIncomeDeferred'
+        const loading = this.$loading({
+          lock:true,
+          text:'Loading',
+          spinner:'el-icon-loading'
+        })
         axios.post(url, param).then((res) => {
           this.invoices = res.data
         })
@@ -165,8 +170,10 @@
             temp["invoiceNumber"] = entry.invoiceNumber
             temp["customerName"] = entry.customerName
             details.push(temp)
+            loading.close();
           })
           this.details = details
+
         })
       },
 

@@ -26,7 +26,7 @@
       <Modify :invoice-data="currentRow" :close="closeModify" :refresh="refreshData" />
     </el-dialog>
     <div id="filter">
-      
+
       <el-dropdown @command="handleExport">
         <el-button type="primary" class="export">
           Export
@@ -37,7 +37,7 @@
           <el-dropdown-item command="selected">Selected</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      
+
       <br>
 
       <el-select v-model="selector2" placeholder="Selector" @change="selector2Change">
@@ -80,7 +80,7 @@
       </el-tag>
     </div>
     <div id="dataTable">
-      <el-table :data="invoices" style="width: 100%" @row-click="openComments" @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
+      <el-table :data="invoices" v-loading="loading" style="width: 100%" @row-click="openComments" @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
         <el-table-column prop="type_enum.data" label="Type">
         </el-table-column>
         <el-table-column prop="invoiceDate" label="Date" sortable>
@@ -154,6 +154,7 @@
         selector2: "",
         min: "",
         max: "",
+        loading: true,
       }
     },
     methods: {
@@ -210,8 +211,10 @@
       },
       getInvoice(param) {
         const url = urlBase + '/api/v1/reports/getInvoice'
+        this.loading = true
         axios.post(url, param).then((res) => {
           this.invoices = res.data
+          this.loading = false
         })
       },
       getEnum() {
@@ -280,11 +283,15 @@
           }) != -1) {
           this.tags[_.findIndex(this.tags, i => {
             return i.id == this.selector2
-          })].value = (((this.min.toString().length ==57)?this.min.toString().slice(8,15): this.min ) + "<"+ this.selector2 + "<"+ ((this.max.toString().length ==57)?this.min.toString().slice(8,15): this.max ))
+          })].value = (((this.min.toString().length == 57) ? this.min.toString().slice(8, 15) : this.min) + "<" +
+            this.selector2 + "<" + ((this.max.toString().length == 57) ? this.min.toString().slice(8, 15) : this.max)
+          )
         } else {
           this.tags.push({
             id: this.selector2,
-            value: (((this.min.toString().length ==57)?this.min.toString().slice(8,15): this.min ) + "<"+ this.selector2 + "<"+ ((this.max.toString().length ==57)?this.min.toString().slice(8,15): this.max ))
+            value: (((this.min.toString().length == 57) ? this.min.toString().slice(8, 15) : this.min) + "<" + this
+              .selector2 + "<" + ((this.max.toString().length == 57) ? this.min.toString().slice(8, 15) : this.max)
+            )
           })
         }
         this.selector2 = ""
@@ -405,16 +412,17 @@
   .el-autocomplete {
     width: 250px;
     margin: 10px;
-    margin-left: 0px;   
-    
+    margin-left: 0px;
   }
-  a{
+
+  a {
     margin-right: 10px;
   }
 
   .el-tag {
     margin-right: 10px
   }
+
   .el-dropdown {
     float: right;
   }
