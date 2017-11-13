@@ -272,7 +272,7 @@
       },
       loadData() {
         const url = urlBase + "/api/v1/enum/all"
-        console.log(url)
+
         axios.get(url).then((res) => {
           this.classEnum = res.data.Class
           this.productEnum = res.data.product
