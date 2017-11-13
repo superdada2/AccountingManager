@@ -27,16 +27,7 @@
     </el-dialog>
     <div id="filter">
 
-      <!-- <el-dropdown @command="handleExport">
-        <el-button type="primary" class="export">
-          Export
-          <i class="el-icon-arrow-down el-icon--right"></i>
-        </el-button>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="all">All</el-dropdown-item>
-          <el-dropdown-item command="selected">Selected</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown> -->
+      
 
       <br>
       <el-select v-model="selector" placeholder="Selector" @change="selectorChange">
@@ -47,55 +38,56 @@
       <el-autocomplete v-if="isCustomer" placeholder="Value" v-model="searchValue" :fetch-suggestions="querySearchCustName"></el-autocomplete>
       <el-autocomplete v-if="isInvoice" placeholder="Value" v-model="searchValue" :fetch-suggestions="querySearchInvoice"></el-autocomplete>
       <el-button type="primary" id="tagAdder" @click="addTagg">Search</el-button>
+      <el-button id="export" type="primary " @click="handleExport">Export</el-button>
     </div>
     <el-row>
-    <div id="dataTable">
-      <el-table :data="invoices" style="width: 100%" @row-click="openComments" @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
-        <el-table-column prop="type_enum.data" label="Type">
-        </el-table-column>
-        <el-table-column prop="invoiceDate" label="Date" sortable>
-        </el-table-column>
-        <el-table-column prop="invoiceNumber" label="Number" sortable>
-        </el-table-column>
-        <el-table-column prop="customerName" label="Name" sortable>
-        </el-table-column>
-        <el-table-column prop="class_enum.data" label="Class" sortable>
-        </el-table-column>
-        <el-table-column prop="currency_enum.data" label="Currency" sortable>
-        </el-table-column>
-        <el-table-column prop="subscription_enum.data" label="Subscription" sortable>
-        </el-table-column>
-        <el-table-column prop="status_enum.data" label="Status" sortable>
-        </el-table-column>
-        <el-table-column prop="revenue_type_enum.data" label="Revenue Type" sortable>
-        </el-table-column>
-        <el-table-column prop="product_enum.data" label="Product" sortable>
-        </el-table-column>
-        <el-table-column prop="recognitionStartMonth" label="RecStart" sortable>
-        </el-table-column>
-        <el-table-column prop="lengthMonth" label="length" sortable>
-        </el-table-column>
-        <el-table-column prop="invoiceAmountUSD" label="amountUSD" sortable>
-        </el-table-column>
-      </el-table>
-    </div>
+      <div id="dataTable">
+        <el-table :data="invoices" style="width: 100%" @row-click="openComments" @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
+          <el-table-column prop="type_enum.data" label="Type">
+          </el-table-column>
+          <el-table-column prop="invoiceDate" label="Date" sortable>
+          </el-table-column>
+          <el-table-column prop="invoiceNumber" label="Number" sortable>
+          </el-table-column>
+          <el-table-column prop="customerName" label="Name" sortable>
+          </el-table-column>
+          <el-table-column prop="class_enum.data" label="Class" sortable>
+          </el-table-column>
+          <el-table-column prop="currency_enum.data" label="Currency" sortable>
+          </el-table-column>
+          <el-table-column prop="subscription_enum.data" label="Subscription" sortable>
+          </el-table-column>
+          <el-table-column prop="status_enum.data" label="Status" sortable>
+          </el-table-column>
+          <el-table-column prop="revenue_type_enum.data" label="Revenue Type" sortable>
+          </el-table-column>
+          <el-table-column prop="product_enum.data" label="Product" sortable>
+          </el-table-column>
+          <el-table-column prop="recognitionStartMonth" label="RecStart" sortable>
+          </el-table-column>
+          <el-table-column prop="lengthMonth" label="length" sortable>
+          </el-table-column>
+          <el-table-column prop="invoiceAmountUSD" label="amountUSD" sortable>
+          </el-table-column>
+        </el-table>
+      </div>
     </el-row>
     <el-row>
-    
-      <el-col :span="6" v-for="detail in details" :key="detail.id"> 
-      <el-table  :data="detail"  style="width: 100%; height:758px;" class="detailTable" >
-        <el-table-column :label="detail.customerName + ': '+ detail.invoiceNumber">
-        <el-table-column prop="year" label="Year">
-        </el-table-column>
-        <el-table-column prop="month" label="Month">
-        </el-table-column>
-        <el-table-column prop="income" label="Income">
-        </el-table-column>
-        <el-table-column prop="deferred" label="Deferred">
-        </el-table-column>
-        </el-table-column>
-      </el-table>
-    </el-col>
+
+      <el-col :span="6" v-for="detail in details" :key="detail.id">
+        <el-table :data="detail" style="width: 100%; height:758px;" class="detailTable">
+          <el-table-column :label="detail.customerName + ': '+ detail.invoiceNumber">
+            <el-table-column prop="year" label="Year">
+            </el-table-column>
+            <el-table-column prop="month" label="Month">
+            </el-table-column>
+            <el-table-column prop="income" label="Income">
+            </el-table-column>
+            <el-table-column prop="deferred" label="Deferred">
+            </el-table-column>
+          </el-table-column>
+        </el-table>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -141,49 +133,21 @@
         this.getInvoice(this.queryParam)
       },
       async handleExport(command) {
-
-        var tempInvoice = []
-        if (command == "all") {
-          const url = urlBase + '/api/v1/reports/getInvoice'
-          tempInvoice = (await axios.post(url, {
-            all: true
-          })).data
-          console.log("test", tempInvoice)
-        } else {
-          tempInvoice = [...this.invoices]
-        }
-        const tempInvoice2 = tempInvoice.map(temp => {
-          var invoice = { ...temp
-          }
-          invoice.class = temp.class_enum.data
-          invoice.currency = temp.currency_enum.data
-          invoice.product = temp.product_enum.data
-          invoice.revenueType = temp.revenue_type_enum.data
-          invoice.status = temp.status_enum.data
-          invoice.subscriptionType = temp.subscription_enum.data
-          invoice.type = temp.type_enum.data
-          delete invoice.class_enum
-          delete invoice.currency_enum
-          delete invoice.product_enum
-          delete invoice.revenue_type_enum
-          delete invoice.status_enum
-          delete invoice.subscription_enum
-          delete invoice.type_enum
-          return invoice
-        })
-        jsonexport(tempInvoice2, (err, csv) => {
-          if (err) return console.log(err)
-          var uriContent = "data:application/octet-stream," + encodeURIComponent(csv);
-          var link = document.createElement("a");
-          link.setAttribute("href", uriContent);
-          link.setAttribute("download", "Invoices.csv");
-          document.body.appendChild(link); // Required for FF
-
-          link.click();
-          this.$message({
-            type: "success",
-            message: command
+        this.details.forEach(i => {
+          jsonexport(i, (err, csv) => {
+            if (err) return console.log(err)
+            var uriContent = "data:application/octet-stream," + encodeURIComponent(csv);
+            var link = document.createElement("a");
+            link.setAttribute("href", uriContent);
+            link.setAttribute("download", i.customerName +"_"+i.invoiceNumber +  ".csv");
+            document.body.appendChild(link); // Required for FF          
+            link.click();
           })
+        })
+
+        this.$message({
+          type: "success",
+          message: "Success"
         })
 
 
@@ -196,7 +160,7 @@
         })
         axios.post(url2, param).then((res) => {
           var details = []
-          res.data.forEach(entry => {            
+          res.data.forEach(entry => {
             var temp = this.merge(entry.incomes, entry.deferred_balances)
             temp["invoiceNumber"] = entry.invoiceNumber
             temp["customerName"] = entry.customerName
@@ -244,7 +208,7 @@
                 deferred: currentDeffered.amount
               })
               incomeIndex++
-              deferredIndex ++
+              deferredIndex++
               break;
           }
           console.log(output)
@@ -394,6 +358,9 @@
   }
 
   .el-dropdown {
+    float: right;
+  }
+  #export{
     float: right;
   }
 
