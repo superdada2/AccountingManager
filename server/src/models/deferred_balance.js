@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     amount: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL(10,3),
       allowNull: false,
 
     },
