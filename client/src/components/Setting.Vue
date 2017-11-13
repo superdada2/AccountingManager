@@ -6,8 +6,8 @@
       </div>
     </el-row>
     <div class="content">
-      <el-tabs v-model='tab'>
-        <el-tab-pane label="Add" name='setting'>
+      <el-tabs  value='add'>
+        <el-tab-pane label="Add" name='add'>
           <el-row>
             <el-col :span="12">
               <el-input placeholder="Add Class" v-model="Class"></el-input>
@@ -108,7 +108,7 @@
     data() {
       return {
         temp: "",
-        tab: 'add',
+        tab: 'Add',
         Class: "",
         currency: "",
         product: "",

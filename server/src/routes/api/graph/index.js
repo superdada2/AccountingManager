@@ -5,7 +5,10 @@ import {
   BillByCurrency,
   BillByBillingMonth,
   BillByMonthInvoiced,
-  BillByProduct
+  BillByProduct,
+  BillByRevenueType,
+  BillByType,
+  BillByStatus
 } from './controller'
 
 export const router = express.Router()
@@ -22,10 +25,52 @@ router.post('/billByCustomer', async(req, res) => {
     })
   }
 })
+
+router.post('/billByRevenueType', async(req, res) => {
+  try {
+    console.log(req.body)
+    const result = await BillByRevenueType(req.body)
+    res.status(200).json(result)
+  } catch (err) {
+    const message = err.message
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
+
+router.post('/billByType', async(req, res) => {
+  try {
+    console.log(req.body)
+    const result = await BillByType(req.body)
+    res.status(200).json(result)
+  } catch (err) {
+    const message = err.message
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
 router.post('/billByProduct', async(req, res) => {
   try {
     console.log(req.body)
     const result = await BillByProduct(req.body)
+    res.status(200).json(result)
+  } catch (err) {
+    const message = err.message
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
+
+router.post('/billByStatus', async(req, res) => {
+  try {
+    console.log(req.body)
+    const result = await BillByStatus(req.body)
     res.status(200).json(result)
   } catch (err) {
     const message = err.message

@@ -27,7 +27,19 @@
         <el-col :span="8">
           <pie-chart :chartData="billByProduct" :options="productChartOptions"></pie-chart>
         </el-col>
+        
       </div>
+    </el-row>
+    <el-row>
+      <el-col :span="8">
+          <pie-chart :chartData="billByRevenueType" :options="revenueTypeChartOptions"></pie-chart>
+      </el-col>
+      <el-col :span="8">
+          <pie-chart :chartData="billByType" :options="typeChartOptions"></pie-chart>
+      </el-col>
+      <el-col :span="8">
+          <pie-chart :chartData="billByStatus" :options="statusChartOptions"></pie-chart>
+      </el-col>
     </el-row>
     <el-row>
       <div class="chart">
@@ -97,6 +109,42 @@
         filter: "active",
         startDate: '',
         endDate: '',
+        billByType:[],
+        typeChartOptions:{
+          responsive: true,
+          maintainAspectRatio: false,
+          title: {
+            display: true,
+            text: 'Bill By Type'
+          },
+          pieceLabel: {
+            render: 'value'
+          }
+        },
+        billByRevenueType:[],
+        revenueTypeChartOptions:{
+          responsive: true,
+          maintainAspectRatio: false,
+          title: {
+            display: true,
+            text: 'Bill By Revenue Type'
+          },
+          pieceLabel: {
+            render: 'value'
+          }
+        },
+        billByStatus:[],
+        statusChartOptions:{
+          responsive: true,
+          maintainAspectRatio: false,
+          title: {
+            display: true,
+            text: 'Bill By Status'
+          },
+          pieceLabel: {
+            render: 'value'
+          }
+        },
         billByCustomer: {},
         customerChartOptions: {
 
@@ -233,9 +281,11 @@
         this.GetBillByProduct()
         this.GetBillByClass()
         this.GetBillByBillingMonth()
+        this.GetBillByRevenueType()
+        this.GetBillByType()
+        this.GetBillByStatus()
       },
       GetBillByCustomer() {
-
 
         const url = urlBase + "/api/v1/graph/billByCustomer"
 
@@ -294,6 +344,93 @@
           temp["datasets"] = [sumData, countData]
 
           this.billByCurrency = temp
+        })
+      },
+      GetBillByStatus() {
+        const url = urlBase + "/api/v1/graph/billByStatus"
+
+        axios.post(url, {
+          sort: this.filter
+        }).then(res => {
+
+          const result = res.data
+          var temp = {}
+          temp['labels'] = result.map(i => i.status_enum.data)
+          const countData = {
+            label: 'Number of Invoice By Status',
+            data: result.map(i => i.numberInvoice),
+            borderWidth: 1,
+            backgroundColor: colors.backgroundColor.slice(0, result.length),
+            borderColor: colors.borderColor.slice(0, result.length)
+          }
+          const sumData = {
+            label: 'Total Invoice By Status',
+            data: result.map(i => i.totalInvoice),
+            borderWidth: 1,
+            backgroundColor: colors.backgroundColor.slice(0, result.length),
+            borderColor: colors.borderColor.slice(0, result.length)
+          }
+          temp["datasets"] = [sumData, countData]
+
+          this.billByStatus = temp
+        })
+      },
+      GetBillByType() {
+        const url = urlBase + "/api/v1/graph/billByType"
+
+        axios.post(url, {
+          sort: this.filter
+        }).then(res => {
+
+          const result = res.data
+          var temp = {}
+          temp['labels'] = result.map(i => i.type_enum.data)
+          const countData = {
+            label: 'Number of Invoice By Type',
+            data: result.map(i => i.numberInvoice),
+            borderWidth: 1,
+            backgroundColor: colors.backgroundColor.slice(0, result.length),
+            borderColor: colors.borderColor.slice(0, result.length)
+          }
+          const sumData = {
+            label: 'Total Invoice By Type',
+            data: result.map(i => i.totalInvoice),
+            borderWidth: 1,
+            backgroundColor: colors.backgroundColor.slice(0, result.length),
+            borderColor: colors.borderColor.slice(0, result.length)
+          }
+          temp["datasets"] = [sumData, countData]
+
+          this.billByType = temp
+        })
+      },
+      GetBillByRevenueType() {
+        const url = urlBase + "/api/v1/graph/billByRevenueType"
+
+        axios.post(url, {
+          sort: this.filter
+        }).then(res => {
+          console.log(res.data)
+          const result = res.data
+          var temp = {}
+          temp['labels'] = result.map(i => i.revenue_type_enum.data)
+          const countData = {
+            label: 'Number of Invoice By Revenue Type',
+            data: result.map(i => i.numberInvoice),
+            borderWidth: 1,
+            backgroundColor: colors.backgroundColor.slice(0, result.length),
+            borderColor: colors.borderColor.slice(0, result.length)
+          }
+          const sumData = {
+            label: 'Total Invoice By Revenue Type',
+            data: result.map(i => i.totalInvoice),
+            borderWidth: 1,
+            backgroundColor: colors.backgroundColor.slice(0, result.length),
+            borderColor: colors.borderColor.slice(0, result.length)
+          }
+          temp["datasets"] = [sumData, countData]
+
+          this.billByRevenueType = temp
         })
       },
       GetBillByClass() {
@@ -389,11 +526,7 @@
       }
     },
     created() {
-      this.GetBillByCurrency()
-      this.GetBillByCustomer()
-      this.GetBillByProduct()
-      this.GetBillByClass()
-      this.GetBillByBillingMonth()
+      this.GetPieData()
 
     }
   }
