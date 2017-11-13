@@ -498,15 +498,16 @@
             endM: new Date(this.endDate)
           }
         axios.post(url, payload).then(res => {
+          console.log(res.data)
           const sumSet = res.data.map(i => {
             return {
-              x: new Date(i.billingMonth),
+              x: new Date(i.billingMonth + "1"),
               y: i.totalInvoice
             }
           })
           const countSet = res.data.map(i => {
             return {
-              x: new Date(i.billingMonth),
+              x: new Date(i.billingMonth+"1"),
               y: i.numberInvoice
             }
           })
