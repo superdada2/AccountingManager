@@ -1,59 +1,59 @@
 <template>
-  <div class="Default">
+  <div class='Default'>
     <el-row>
-      <div class="header">
+      <div class='header'>
         <h1>Home</h1>
       </div>
     </el-row>
-    <el-row class="chart">
-      <el-select v-model="filter" placeholder="Active">
-        <el-option label="Total" value="total">
+    <el-row class='chart'>
+      <el-select v-model='filter' placeholder='Active'>
+        <el-option label='Total' value='total'>
         </el-option>
-        <el-option label="Active" value="active">
+        <el-option label='Active' value='active'>
         </el-option>
 
       </el-select>
-      <el-button type="primary" @click='GetPieData'>Go</el-button>
+      <el-button type='primary' @click='GetPieData'>Go</el-button>
       <br>
     </el-row>
     <el-row>
-      <div class="chart">
-        <el-col :span="8">
-          <pie-chart :chartData="billByCurrency" :options="currencyChartOptions"></pie-chart>
+      <div class='chart'>
+        <el-col :span='8'>
+          <pie-chart :chartData='billByCurrency' :options='currencyChartOptions'></pie-chart>
         </el-col>
-        <el-col :span="8">
-          <pie-chart :chartData="billByClass" :options="classChartOptions"></pie-chart>
+        <el-col :span='8'>
+          <pie-chart :chartData='billByClass' :options='classChartOptions'></pie-chart>
         </el-col>
-        <el-col :span="8">
-          <pie-chart :chartData="billByProduct" :options="productChartOptions"></pie-chart>
+        <el-col :span='8'>
+          <pie-chart :chartData='billByProduct' :options='productChartOptions'></pie-chart>
         </el-col>
         
       </div>
     </el-row>
     <el-row>
-      <el-col :span="8">
-          <pie-chart :chartData="billByRevenueType" :options="revenueTypeChartOptions"></pie-chart>
+      <el-col :span='8'>
+          <pie-chart :chartData='billByRevenueType' :options='revenueTypeChartOptions'></pie-chart>
       </el-col>
-      <el-col :span="8">
-          <pie-chart :chartData="billByType" :options="typeChartOptions"></pie-chart>
+      <el-col :span='8'>
+          <pie-chart :chartData='billByType' :options='typeChartOptions'></pie-chart>
       </el-col>
-      <el-col :span="8">
-          <pie-chart :chartData="billByStatus" :options="statusChartOptions"></pie-chart>
+      <el-col :span='8'>
+          <pie-chart :chartData='billByStatus' :options='statusChartOptions'></pie-chart>
       </el-col>
     </el-row>
     <el-row>
-      <div class="chart">
+      <div class='chart'>
         <br>
-        <bar-chart :chartData="billByCustomer" :options="customerChartOptions"></bar-chart>
+        <bar-chart :chartData='billByCustomer' :options='customerChartOptions'></bar-chart>
       </div>
     </el-row>
     <el-row>
       <br>
-      <div class="chart">
-        <el-date-picker v-model="startDate" type="month" placeholder="Start Date"></el-date-picker>
-        <el-date-picker v-model="endDate" type="month" placeholder="End Date"></el-date-picker>
-        <el-button type="primary" @click='GetBillByBillingMonth'>Go</el-button>
-        <line-chart :chartData="billByBillingMonth" :options="billingMonthChartOptions"></line-chart>
+      <div class='chart'>
+        <el-date-picker v-model='startDate' type='month' placeholder='Start Date'></el-date-picker>
+        <el-date-picker v-model='endDate' type='month' placeholder='End Date'></el-date-picker>
+        <el-button type='primary' @click='GetBillByBillingMonth'>Go</el-button>
+        <line-chart :chartData='billByBillingMonth' :options='billingMonthChartOptions'></line-chart>
       </div>
     </el-row>
   </div>
@@ -67,7 +67,8 @@
   import axios from 'Axios'
   import _ from 'lodash'
   import chartjs from 'chart.piecelabel.js'
-  const urlBase = "http://" + window.location.hostname + ":3030"
+  import {urlBase} from '../settings.js'
+  
   const colors = {
     backgroundColor: [
       'rgba(255, 99, 132, 0.2)',
@@ -106,7 +107,7 @@
     },
     data() {
       return {
-        filter: "active",
+        filter: 'active',
         startDate: '',
         endDate: '',
         billByType:[],
@@ -161,15 +162,15 @@
             }],
             yAxes: [{
 
-              display: "true",
-              type: "linear",
-              position: "left",
-              id: "1"
+              display: 'true',
+              type: 'linear',
+              position: 'left',
+              id: '1'
             }, {
-              display: "true",
-              type: "linear",
-              position: "right",
-              id: "2",
+              display: 'true',
+              type: 'linear',
+              position: 'right',
+              id: '2',
               startValue: 0,
               stacked: true,
             }]
@@ -247,9 +248,9 @@
           },
           scales: {
             xAxes: [{
-              type: "time",
+              type: 'time',
               time: {
-                format: "MMM YYYY",
+                format: 'MMM YYYY',
                 tooltipFormat: 'MMM YYYY',
                 unit: 'month'
               },
@@ -287,8 +288,8 @@
       },
       GetBillByCustomer() {
 
-        const url = urlBase + "/api/v1/graph/billByCustomer"
-
+        const url = urlBase + '/api/v1/graph/billByCustomer'
+        console.log(urlBase)
         axios.post(url, {
           sort: this.filter
         }).then(res => {
@@ -301,7 +302,7 @@
             data: result.map(i => i.numberInvoice),
             backgroundColor: colors.backgroundColor.slice(0, result.length),
             borderColor: colors.borderColor.slice(0, result.length),
-            yAxisID: "2",
+            yAxisID: '2',
             borderWidth: 1,
           }
           const sumData = {
@@ -309,16 +310,16 @@
             data: result.map(i => i.totalInvoice),
             backgroundColor: colors.backgroundColor.slice(0, result.length),
             borderColor: colors.borderColor.slice(0, result.length),
-            yAxisID: "1",
+            yAxisID: '1',
             borderWidth: 1,
           }
-          temp["datasets"] = [sumData, countData]
+          temp['datasets'] = [sumData, countData]
 
           this.billByCustomer = temp
         })
       },
       GetBillByCurrency() {
-        const url = urlBase + "/api/v1/graph/billByCurrency"
+        const url = urlBase + '/api/v1/graph/billByCurrency'
 
         axios.post(url, {
           sort: this.filter
@@ -341,13 +342,13 @@
             backgroundColor: colors.backgroundColor.slice(0, result.length),
             borderColor: colors.borderColor.slice(0, result.length)
           }
-          temp["datasets"] = [sumData, countData]
+          temp['datasets'] = [sumData, countData]
 
           this.billByCurrency = temp
         })
       },
       GetBillByStatus() {
-        const url = urlBase + "/api/v1/graph/billByStatus"
+        const url = urlBase + '/api/v1/graph/billByStatus'
 
         axios.post(url, {
           sort: this.filter
@@ -370,13 +371,13 @@
             backgroundColor: colors.backgroundColor.slice(0, result.length),
             borderColor: colors.borderColor.slice(0, result.length)
           }
-          temp["datasets"] = [sumData, countData]
+          temp['datasets'] = [sumData, countData]
 
           this.billByStatus = temp
         })
       },
       GetBillByType() {
-        const url = urlBase + "/api/v1/graph/billByType"
+        const url = urlBase + '/api/v1/graph/billByType'
 
         axios.post(url, {
           sort: this.filter
@@ -399,13 +400,13 @@
             backgroundColor: colors.backgroundColor.slice(0, result.length),
             borderColor: colors.borderColor.slice(0, result.length)
           }
-          temp["datasets"] = [sumData, countData]
+          temp['datasets'] = [sumData, countData]
 
           this.billByType = temp
         })
       },
       GetBillByRevenueType() {
-        const url = urlBase + "/api/v1/graph/billByRevenueType"
+        const url = urlBase + '/api/v1/graph/billByRevenueType'
 
         axios.post(url, {
           sort: this.filter
@@ -428,13 +429,13 @@
             backgroundColor: colors.backgroundColor.slice(0, result.length),
             borderColor: colors.borderColor.slice(0, result.length)
           }
-          temp["datasets"] = [sumData, countData]
+          temp['datasets'] = [sumData, countData]
 
           this.billByRevenueType = temp
         })
       },
       GetBillByClass() {
-        const url = urlBase + "/api/v1/graph/billByClass"
+        const url = urlBase + '/api/v1/graph/billByClass'
 
         axios.post(url, {
           sort: this.filter
@@ -457,13 +458,13 @@
             backgroundColor: colors.backgroundColor.slice(0, result.length),
             borderColor: colors.borderColor.slice(0, result.length)
           }
-          temp["datasets"] = [sumData, countData]
+          temp['datasets'] = [sumData, countData]
 
           this.billByClass = temp
         })
       },
       GetBillByProduct() {
-        const url = urlBase + "/api/v1/graph/billByProduct"
+        const url = urlBase + '/api/v1/graph/billByProduct'
         axios.post(url, {
           sort: this.filter
         }).then(res => {
@@ -484,13 +485,13 @@
             backgroundColor: colors.backgroundColor.slice(0, result.length),
             borderColor: colors.borderColor.slice(0, result.length)
           }
-          temp["datasets"] = [sumData, countData]
+          temp['datasets'] = [sumData, countData]
 
           this.billByProduct = temp
         })
       },
       GetBillByBillingMonth() {
-        const url = urlBase + "/api/v1/graph/billByBillingMonth"
+        const url = urlBase + '/api/v1/graph/billByBillingMonth'
         var payload = {}
         if (this.startDate != '' && this.endDate != '')
           payload = {
@@ -501,13 +502,13 @@
           console.log(res.data)
           const sumSet = res.data.map(i => {
             return {
-              x: new Date(i.billingMonth + "1"),
+              x: new Date(i.billingMonth + '1'),
               y: i.totalInvoice
             }
           })
           const countSet = res.data.map(i => {
             return {
-              x: new Date(i.billingMonth+"1"),
+              x: new Date(i.billingMonth+'1'),
               y: i.numberInvoice
             }
           })
@@ -534,7 +535,7 @@
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
   .header,
   .chart {

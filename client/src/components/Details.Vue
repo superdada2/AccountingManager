@@ -1,89 +1,89 @@
 <template>
-  <div id="sd">
-    <div class="header">
+  <div id='sd'>
+    <div class='header'>
       <h1>Details </h1>
     </div>
-    <el-dialog title="Comments and Description" :visible.sync="commentDialogVisibility" width="50%">
+    <el-dialog title='Comments and Description' :visible.sync='commentDialogVisibility' width='50%'>
       <el-row>
-        <el-col :span="11" class="input">
+        <el-col :span='11' class='input'>
           <span> Comments </span>
-          <el-input type="textarea" :rows="5" v-model="currentComment">
+          <el-input type='textarea' :rows='5' v-model='currentComment'>
           </el-input>
 
         </el-col>
-        <el-col :span="11" class="input">
+        <el-col :span='11' class='input'>
           <span> Description </span>
-          <el-input type="textarea" :rows="5" v-model="currentDescription">
+          <el-input type='textarea' :rows='5' v-model='currentDescription'>
           </el-input>
         </el-col>
       </el-row>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="commentDialogVisibility = false">Cancel</el-button>
-        <el-button type="primary" @click="updateComments">Save</el-button>
+      <span slot='footer' class='dialog-footer'>
+        <el-button @click='commentDialogVisibility = false'>Cancel</el-button>
+        <el-button type='primary' @click='updateComments'>Save</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="Modify" :visible.sync="modifyDialogVisibility" width="80%">
-      <Modify :invoice-data="currentRow" :close="closeModify" :refresh="refreshData" />
+    <el-dialog title='Modify' :visible.sync='modifyDialogVisibility' width='80%'>
+      <Modify :invoice-data='currentRow' :close='closeModify' :refresh='refreshData' />
     </el-dialog>
-    <div id="filter">
+    <div id='filter'>
 
       
 
       <br>
-      <el-select v-model="selector" placeholder="Selector" @change="selectorChange">
-        <el-option v-for="item in fieldOptions" :key="item" :label="item" :value="item">
+      <el-select v-model='selector' placeholder='Selector' @change='selectorChange'>
+        <el-option v-for='item in fieldOptions' :key='item' :label='item' :value='item'>
         </el-option>
       </el-select>
       <a> = </a>
-      <el-autocomplete v-if="isCustomer" placeholder="Value" v-model="searchValue" :fetch-suggestions="querySearchCustName"></el-autocomplete>
-      <el-autocomplete v-if="isInvoice" placeholder="Value" v-model="searchValue" :fetch-suggestions="querySearchInvoice"></el-autocomplete>
-      <el-button type="primary" id="tagAdder" @click="addTagg">Search</el-button>
-      <el-button id="export" type="primary " @click="handleExport">Export</el-button>
+      <el-autocomplete v-if='isCustomer' placeholder='Value' v-model='searchValue' :fetch-suggestions='querySearchCustName'></el-autocomplete>
+      <el-autocomplete v-if='isInvoice' placeholder='Value' v-model='searchValue' :fetch-suggestions='querySearchInvoice'></el-autocomplete>
+      <el-button type='primary' id='tagAdder' @click='addTagg'>Search</el-button>
+      <el-button id='export' type='primary ' @click='handleExport'>Export</el-button>
     </div>
     <el-row>
-      <div id="dataTable" v-if="invoices.length > 0">
-        <el-table :data="invoices" style="width: 100%" @row-click="openComments" @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
-          <el-table-column prop="type_enum.data" label="Type">
+      <div id='dataTable' v-if='invoices.length > 0'>
+        <el-table :data='invoices' style='width: 100%' @row-click='openComments' @row-contextmenu='(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}'>
+          <el-table-column prop='type_enum.data' label='Type'>
           </el-table-column>
-          <el-table-column prop="invoiceDate" label="Date" sortable>
+          <el-table-column prop='invoiceDate' label='Date' sortable>
           </el-table-column>
-          <el-table-column prop="invoiceNumber" label="Number" sortable>
+          <el-table-column prop='invoiceNumber' label='Number' sortable>
           </el-table-column>
-          <el-table-column prop="customerName" label="Name" sortable>
+          <el-table-column prop='customerName' label='Name' sortable>
           </el-table-column>
-          <el-table-column prop="class_enum.data" label="Class" sortable>
+          <el-table-column prop='class_enum.data' label='Class' sortable>
           </el-table-column>
-          <el-table-column prop="currency_enum.data" label="Currency" sortable>
+          <el-table-column prop='currency_enum.data' label='Currency' sortable>
           </el-table-column>
-          <el-table-column prop="subscription_enum.data" label="Subscription" sortable>
+          <el-table-column prop='subscription_enum.data' label='Subscription' sortable>
           </el-table-column>
-          <el-table-column prop="status_enum.data" label="Status" sortable>
+          <el-table-column prop='status_enum.data' label='Status' sortable>
           </el-table-column>
-          <el-table-column prop="revenue_type_enum.data" label="Revenue Type" sortable>
+          <el-table-column prop='revenue_type_enum.data' label='Revenue Type' sortable>
           </el-table-column>
-          <el-table-column prop="product_enum.data" label="Product" sortable>
+          <el-table-column prop='product_enum.data' label='Product' sortable>
           </el-table-column>
-          <el-table-column prop="recognitionStartMonth" label="RecStart" sortable>
+          <el-table-column prop='recognitionStartMonth' label='RecStart' sortable>
           </el-table-column>
-          <el-table-column prop="lengthMonth" label="length" sortable>
+          <el-table-column prop='lengthMonth' label='length' sortable>
           </el-table-column>
-          <el-table-column prop="invoiceAmountUSD" label="amountUSD" sortable>
+          <el-table-column prop='invoiceAmountUSD' label='amountUSD' sortable>
           </el-table-column>
         </el-table>
       </div>
     </el-row>
     <el-row>
 
-      <el-col :span="6" v-for="detail in details" :key="detail.id">
-        <el-table :data="detail" style="width: 100%; height:758px;" class="detailTable">
-          <el-table-column :label="detail.customerName + ': '+ detail.invoiceNumber">
-            <el-table-column prop="year" label="Year">
+      <el-col :span='6' v-for='detail in details' :key='detail.id'>
+        <el-table :data='detail' style='width: 100%; height:758px;' class='detailTable'>
+          <el-table-column :label='detail.customerName + ': '+ detail.invoiceNumber'>
+            <el-table-column prop='year' label='Year'>
             </el-table-column>
-            <el-table-column prop="month" label="Month">
+            <el-table-column prop='month' label='Month'>
             </el-table-column>
-            <el-table-column prop="income" label="Income">
+            <el-table-column prop='income' label='Income'>
             </el-table-column>
-            <el-table-column prop="deferred" label="Deferred">
+            <el-table-column prop='deferred' label='Deferred'>
             </el-table-column>
           </el-table-column>
         </el-table>
@@ -97,7 +97,7 @@
   import _ from 'lodash'
   import Modify from './Modify'
   import * as jsonexport from 'jsonexport/dist'
-  const urlBase = "http://" + window.location.hostname + ":3030"
+  import {urlBase} from '../settings.js'
   export default {
     name: 'details',
     components: {
@@ -106,8 +106,8 @@
     data() {
       return {
         currentRow: {},
-        currentDescription: "",
-        currentComment: "",
+        currentDescription: '',
+        currentComment: '',
         commentDialogVisibility: false,
         modifyDialogVisibility: false,
         invoices: [],
@@ -136,18 +136,18 @@
         this.details.forEach(i => {
           jsonexport(i, (err, csv) => {
             if (err) return console.log(err)
-            var uriContent = "data:application/octet-stream," + encodeURIComponent(csv);
-            var link = document.createElement("a");
-            link.setAttribute("href", uriContent);
-            link.setAttribute("download", i.customerName +"_"+i.invoiceNumber +  ".csv");
+            var uriContent = 'data:application/octet-stream,' + encodeURIComponent(csv);
+            var link = document.createElement('a');
+            link.setAttribute('href', uriContent);
+            link.setAttribute('download', i.customerName +'_'+i.invoiceNumber +  '.csv');
             document.body.appendChild(link); // Required for FF          
             link.click();
           })
         })
 
         this.$message({
-          type: "success",
-          message: "Success"
+          type: 'success',
+          message: 'Success'
         })
 
 
@@ -166,9 +166,10 @@
         axios.post(url2, param).then((res) => {
           var details = []
           res.data.forEach(entry => {
+            console.log(res.data)
             var temp = this.merge(entry.incomes, entry.deferred_balances)
-            temp["invoiceNumber"] = entry.invoiceNumber
-            temp["customerName"] = entry.customerName
+            temp['invoiceNumber'] = entry.invoiceNumber
+            temp['customerName'] = entry.customerName
             details.push(temp)
             loading.close();
           })
@@ -244,12 +245,12 @@
 
       selectorChange(value) {
 
-        if (value == "customerName") {
+        if (value == 'customerName') {
           this.isSelect = false
           this.isCustomer = true
           this.isInvoice = false
         }
-        if (value == "invoiceNumber") {
+        if (value == 'invoiceNumber') {
           this.isSelect = false
           this.isCustomer = false
           this.isInvoice = true
@@ -261,8 +262,8 @@
 
         this.queryParam.where = currentParam
         this.getInvoice(this.queryParam)
-        this.selector = ""
-        this.searchValue = ""
+        this.selector = ''
+        this.searchValue = ''
       },
       querySearchCustName(queryString, cb) {
         var list = this.customerNameList
@@ -332,7 +333,7 @@
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
   .header,
   .submit,
