@@ -165,14 +165,12 @@
             temp["invoiceNumber"] = entry.invoiceNumber
             temp["customerName"] = entry.customerName
             details.push(temp)
-            console.log(temp)
           })
           this.details = details
         })
       },
 
       merge(income, deferred) {
-        console.log(income, deferred)
         var output = []
         var incomeIndex = 0
         var deferredIndex = 0
@@ -211,7 +209,6 @@
               deferredIndex++
               break;
           }
-          console.log(output)
         }
         return output
       },
@@ -314,7 +311,6 @@
       modifyInvoice(row, e) {
         this.modifyDialogVisibility = true
         this.currentRow = row
-        console.log(e)
         e.stopPropagation()
       },
       closeModify() {

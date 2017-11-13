@@ -8,7 +8,7 @@ export const router = express.Router();
 router.use('/api/v1', apiRouter);
 
 router.use('*', (req, res) => {
-  console.log("test")
+  console.log("Route Not Found", req.baseUrl)
   res.status(404).json({
     error: 'route not found'
   })

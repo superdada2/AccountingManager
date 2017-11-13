@@ -287,7 +287,6 @@
 
       deleteInvoice() {
         const url = urlBase + "/api/v1/reports/deleteInvoice"
-        console.log(this.invoiceData.id, url)
         try {
           axios.post(url, {
             id: this.invoiceData.id
@@ -319,7 +318,6 @@
             const message = { id: this.invoiceData.id, ...formValues}
             try {
               const data = axios.post(url, message).then(i => {
-                console.log("test")
                 this.$message({
                   type: 'success',
                   message: "Success!"

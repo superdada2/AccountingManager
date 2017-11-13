@@ -169,7 +169,6 @@
           tempInvoice = (await axios.post(url, {
             all: true
           })).data
-          console.log("test", tempInvoice)
         } else {
           tempInvoice = [...this.invoices]
         }
@@ -373,7 +372,6 @@
       modifyInvoice(row, e) {
         this.modifyDialogVisibility = true
         this.currentRow = row
-        console.log(e)
         e.stopPropagation()
       },
       closeModify() {
