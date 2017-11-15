@@ -71,14 +71,21 @@ export function loadData2() {
   })
 }
 
-export function ModifyIncomeDeferred({data=[], invoiceId = 0}){
-  return new Promise(async (res, rej)=>{    
-    try{
-      await DeleteIncome({id: invoiceId})
-      await DeleteDeferred({id:invoiceId})
-      data.forEach(value=>{
-        if(value.income != 0){
-  
+export function ModifyIncomeDeferred({
+  data = [],
+  invoiceId = 0
+}) {
+  return new Promise(async(res, rej) => {
+    try {
+      await DeleteIncome({
+        id: invoiceId
+      })
+      await DeleteDeferred({
+        id: invoiceId
+      })
+      data.forEach(value => {
+        if (value.income != 0) {
+
           income.create({
             invoiceId: invoiceId,
             amount: value.income,
@@ -86,8 +93,8 @@ export function ModifyIncomeDeferred({data=[], invoiceId = 0}){
             month: value.month
           })
         }
-        if(value.deferred != 0){
-  
+        if (value.deferred != 0) {
+
           deferred_balance.create({
             invoiceId: invoiceId,
             amount: value.deferred,
@@ -97,25 +104,28 @@ export function ModifyIncomeDeferred({data=[], invoiceId = 0}){
         }
       })
       res("success")
-    }
-    catch(err){
+    } catch (err) {
       rej(err)
     }
   })
 }
 
-export function DeleteIncome({id=0}){
+export function DeleteIncome({
+  id = 0
+}) {
   return income.destroy({
-    where:{
-      invoiceId:id
+    where: {
+      invoiceId: id
     }
   })
 }
 
-export function DeleteDeferred({id=0}){
+export function DeleteDeferred({
+  id = 0
+}) {
   return deferred_balance.destroy({
-    where:{
-      invoiceId:id
+    where: {
+      invoiceId: id
     }
   })
 }

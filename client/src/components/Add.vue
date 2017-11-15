@@ -331,7 +331,7 @@ export default {
                 type: "success",
                 message: "Success!"
               });
-              this.$refs[formName].resetFields();
+              this.resetForm(formName);
             });
           } catch (err) {
             this.$message({
