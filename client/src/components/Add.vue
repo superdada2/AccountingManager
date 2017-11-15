@@ -111,6 +111,7 @@
       <el-row>
         <div class="submit">
           <el-button type="primary" @click="submit('formValue')">Add Invoice</el-button>
+          <el-button type="success" @click="SaveForm">Save</el-button>
           <el-button @click="resetForm('formValue')">Reset</el-button>
         </div>
       </el-row>
@@ -275,7 +276,19 @@
         return true;
       },
       resetForm(formName) {
+        
+        const result = JSON.parse(this.$cookie.get('blankForm'))
+        this.formValue = result
+        console.log(result)
         this.$refs[formName].resetFields();
+        this.$cookie.delete('form')
+      },
+      SaveForm(){
+        console.log("Saving", {...this.formValue})
+        const save = JSON.stringify({...this.formValue})
+        this.$cookie.set('form', save)
+        
+        
       },
       async submit(formName) {
         const url = urlBase + "/api/v1/reports/createInvoice"
@@ -361,8 +374,16 @@
       }
 
     },
-    created() {
+    created() {      
       this.loadData()
+      if(this.$cookie.get('blankForm')== undefined){
+        const save = JSON.stringify({...this.formValue})
+        this.$cookie.set('blankForm', save)
+      }
+      if(this.$cookie.get('form')!= undefined){
+        const result = JSON.parse(this.$cookie.get('form'))
+        this.formValue = result
+      }
     }
   }
 

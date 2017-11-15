@@ -25,6 +25,9 @@
     <el-dialog title='Modify' :visible.sync='modifyDialogVisibility' width='80%'>
       <Modify :invoice-data='currentRow' :close='closeModify' :refresh='refreshData' />
     </el-dialog>
+    <el-dialog title='Modify' :visible.sync='detailVisibility' width='50%'>
+      <ModifyDetail :detail-data='currentDetail' :close='()=>{this.detailVisibility = false}' :refresh='refreshData' />
+    </el-dialog>
     <div id='filter'>
 
       
@@ -75,8 +78,8 @@
     <el-row>
 
       <el-col :span='6' v-for='detail in details' :key='detail.id'>
-        <el-table :data='detail' style='width: 100%; height:758px;' class='detailTable'>
-          <el-table-column :label='detail.customerName + ': '+ detail.invoiceNumber'>
+        <el-table :data='detail' @header-click="()=>handleHeaderClick(detail)"  style='width: 95%; height:900px;' class='detailTable' border >
+          <el-table-column :label="detail.customerName + ': '+ detail.product + ': '+detail.invoiceNumber">
             <el-table-column prop='year' label='Year'>
             </el-table-column>
             <el-table-column prop='month' label='Month'>
@@ -96,13 +99,16 @@
   import axios from 'Axios'
   import _ from 'lodash'
   import Modify from './Modify'
+  import ModifyDetail from './ModifyDetail'
   import * as jsonexport from 'jsonexport/dist'
   import {urlBase} from '../settings.js'
   export default {
     name: 'details',
     components: {
-      Modify
+      Modify,
+      ModifyDetail
     },
+    props:['test'],
     data() {
       return {
         currentRow: {},
@@ -112,6 +118,7 @@
         modifyDialogVisibility: false,
         invoices: [],
         selector: '',
+        currentDetail:{},
         searchValue: '',
         fieldOptions: ['customerName', 'invoiceNumber'],
         searchValueOptions: [],
@@ -125,13 +132,22 @@
         customerNameList: [],
         invoiceNumberList: [],
         isNumber: true,
+        detailVisibility:false,
       }
     },
     methods: {
-
+      handleHeaderClick(data){
+    
+        this.currentDetail["data"] = data
+        this.currentDetail["id"] = data.id
+        this.currentDetail["customerName"] = data.customerName
+        this.currentDetail["product"] = data.product
+        this.detailVisibility=true
+      },
       refreshData() {
         this.getInvoice(this.queryParam)
       },
+
       async handleExport(command) {
         this.details.forEach(i => {
           jsonexport(i, (err, csv) => {
@@ -170,6 +186,8 @@
             var temp = this.merge(entry.incomes, entry.deferred_balances)
             temp['invoiceNumber'] = entry.invoiceNumber
             temp['customerName'] = entry.customerName
+            temp['product'] = entry.product_enum.data
+            temp['id']=entry.id
             details.push(temp)
             loading.close();
           })
@@ -178,10 +196,13 @@
         })
       },
 
-      merge(income, deferred) {
+      merge(income1, deferred1) {
         var output = []
         var incomeIndex = 0
         var deferredIndex = 0
+        var income = _.sortBy(income1,['year', 'month'] )
+        var deferred = _.sortBy(deferred1,['year', 'month'] )       
+
         while (incomeIndex < income.length || deferredIndex < deferred.length) {
           switch (this.compareDate(income[incomeIndex], deferred[deferredIndex])) {
             case 0:
@@ -328,6 +349,10 @@
     created() {
       this.getCustomerName()
       this.getInvoiceNumber()
+      if(this.$route.params.invoiceId != undefined){
+        this.getInvoice({where:{id:this.$route.params.invoiceId}})
+        this.queryParam = {where:{id:this.$route.params.invoiceId}}
+      }
     }
   }
 

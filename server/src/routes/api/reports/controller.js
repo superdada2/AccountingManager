@@ -32,15 +32,15 @@ function random(min, max) {
 function randomDate(start, end) {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
 }
-export async function loadData(){
-  for(var i = 0; i < 100; i++){
+export async function loadData() {
+  for (var i = 0; i < 100; i++) {
     await loadData2()
   }
 }
 
-function loadData2() {
+export function loadData2() {
   return new Promise(async(res, rej) => {
-    var month =  random(1, 12)
+    var month = random(1, 12)
     var year = (random(2014, 2017))
     var billingMonth = new Date(year, month)
     var recStartMonth = new Date(year, month + 2)
@@ -54,20 +54,69 @@ function loadData2() {
       companyName: companies[random(1, companies.length)],
       invoiceNumber: random(1, 90000),
       invoiceDate: randomDate(new Date(2014, 1), new Date(2017, 11)),
-      invoiceAmount: random(0, 100000)/random(1,1000),
+      invoiceAmount: random(0, 100000) / random(1, 1000),
       billMonth: billingMonth,
       recognitionStrMonth: recStartMonth,
       lengthRec: random(10, 12),
       fxRate: random(1, 5),
-      monthlyRec: random(1, 10000)/random(1,1000),
+      monthlyRec: random(1, 10000) / random(1, 1000),
       dateLastIncrease: randomDate(new Date(2014, 1), new Date(2017, 11)),
       increasePerc: random(1, 5),
       cancelationDate: randomDate(new Date(2014, 1), new Date(2017, 11)),
-      invoiceAmountUsd: random(1, 50000)/random(1,1000),
+      invoiceAmountUsd: random(1, 50000) / random(1, 1000),
       annualIncreaseBool: true,
       subscription: random(1, 2)
     })
     res(result)
+  })
+}
+
+export function ModifyIncomeDeferred({data=[], invoiceId = 0}){
+  return new Promise(async (res, rej)=>{    
+    try{
+      await DeleteIncome({id: invoiceId})
+      await DeleteDeferred({id:invoiceId})
+      data.forEach(value=>{
+        if(value.income != 0){
+  
+          income.create({
+            invoiceId: invoiceId,
+            amount: value.income,
+            year: value.year,
+            month: value.month
+          })
+        }
+        if(value.deferred != 0){
+  
+          deferred_balance.create({
+            invoiceId: invoiceId,
+            amount: value.deferred,
+            year: value.year,
+            month: value.month
+          })
+        }
+      })
+      res("success")
+    }
+    catch(err){
+      rej(err)
+    }
+  })
+}
+
+export function DeleteIncome({id=0}){
+  return income.destroy({
+    where:{
+      invoiceId:id
+    }
+  })
+}
+
+export function DeleteDeferred({id=0}){
+  return deferred_balance.destroy({
+    where:{
+      invoiceId:id
+    }
   })
 }
 
@@ -244,18 +293,17 @@ function createDeferred({
   var currentYr = year
   var currentMonth = startMonth
   var remainingAmount = invoiceAmount
-  const amountPerMonth = invoiceAmount / length  
+  const amountPerMonth = invoiceAmount / length
 
   for (var i = 0; i < length + 1; i++) {
-    if(i == 0 || i == 1){
+    if (i == 0 || i == 1) {
       incomeList.push({
         invoiceId: id,
         amount: remainingAmount,
         year: currentYr,
         month: currentMonth
       })
-    }
-    else{
+    } else {
       remainingAmount -= amountPerMonth
       incomeList.push({
         invoiceId: id,
@@ -263,7 +311,7 @@ function createDeferred({
         year: currentYr,
         month: currentMonth
       })
-    }    
+    }
     if (currentMonth == 12) {
       currentMonth = 0
       currentYr++
@@ -288,19 +336,23 @@ export function UpdateInvoiceDescription({
   })
 }
 
-export function GetIncomeDeferred({where}) {
+export function GetIncomeDeferred({
+  where
+}) {
+  console.log(where)
   return invoice.findAll({
     where,
-    include: [
-      {
+    include: [{
         model: income
       },
       {
-        model:deferred_balance
+        model: deferred_balance
+      },
+      {
+        model: product_enum
       }
     ]
-  },
-  )
+  }, )
 }
 
 export function GetInvoice({

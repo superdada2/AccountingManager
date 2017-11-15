@@ -158,7 +158,7 @@
       }
     },
     methods: {
-
+      
       refreshData() {
         this.getInvoice(this.queryParam)
       },

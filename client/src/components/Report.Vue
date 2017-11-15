@@ -5,45 +5,71 @@
         <h1> Reports</h1>
       </div>
     </el-row>
-    <el-row>
-      <a id="inputRow">
-        <el-select v-model="groupBy" placeholder="Group By">
-          <el-option v-for="item in groupByEnum" :key="item.id" :label="item.data" :value="item.id">
-          </el-option>
-        </el-select>
-        <el-select v-model="balanceType" placeholder="Income Type">
-          <el-option v-for="item in balanceTypeEnum" :key="item.id" :label="item.data" :value="item.id">
-          </el-option>
-        </el-select>
-        <el-date-picker v-model="startM" type="month" placeholder="Start Month">
+    <el-tabs value='default'>
+      <el-tab-pane label="Default" name='default'>
+        <el-row>
+          <a class="inputRow">
+            <el-select v-model="groupBy" placeholder="Group By">
+              <el-option v-for="item in groupByEnum" :key="item.id" :label="item.data" :value="item.id">
+              </el-option>
+            </el-select>
+            <el-select v-model="balanceType" placeholder="Income Type">
+              <el-option v-for="item in balanceTypeEnum" :key="item.id" :label="item.data" :value="item.id">
+              </el-option>
+            </el-select>
+            <el-date-picker v-model="startM" type="month" placeholder="Start Month">
+            </el-date-picker>
+
+
+            <el-date-picker v-model="endM" type="month" placeholder="End Month">
+            </el-date-picker>
+
+            <el-button id="submit" type="primary " @click="GetReport">Submit</el-button>
+            <el-button id="export" type="primary " @click="()=>handleExport(this.tableData)">Export</el-button>
+          </a>
+        </el-row>
+
+        <el-row>
+          <line-chart v-if="showChart" :chartData="chartData" :options="chartOptions"></line-chart>
+        </el-row>
+        <el-row>
+          <line-chart v-if="showChart" :chartData="chartDataCount" :options="chartOptions"></line-chart>
+        </el-row>
+        <el-row>
+          <div class="dataTable">
+            <el-table :data="tableData" style="width: 100%" v-if="tableVisibility">
+              <el-table-column prop="year" label="Year" />
+              <el-table-column prop="month" label="Month" />
+              <el-table-column prop="count" label="Count" />
+              <el-table-column v-for="item in columnEnum" :key="item.id" :prop="item.data" :label="item.data" />
+              <el-table-column prop="total" label="Total" />"
+            </el-table>
+          </div>
+        </el-row>
+      </el-tab-pane>
+      <el-tab-pane label='Customers' name="customer">
+        <a class="inputRow">
+        <el-autocomplete placeholder="Customer"  v-model="customerSearchValue" :fetch-suggestions="querySearchCustName"></el-autocomplete>
+        <el-date-picker v-model="customerQueryDate" type="month" placeholder="Month">
         </el-date-picker>
-
-
-        <el-date-picker v-model="endM" type="month" placeholder="End Month">
-        </el-date-picker>
-
-        <el-button id="submit" type="primary "@click="GetReport">Submit</el-button>
-        <el-button id="export" type="primary "@click="handleExport">Export</el-button>
-      </a>
-    </el-row>
-    <el-row>
-      <line-chart v-if="showChart" :chartData="chartData" :options="chartOptions"></line-chart>
-    </el-row>
-    <el-row>
-      <line-chart v-if="showChart" :chartData="chartDataCount" :options="chartOptions"></line-chart>
-    </el-row>
-    <el-row>
-      <div id="dataTable">
-        <el-table :data="tableData" style="width: 100%" v-if="tableVisibility">
-          <el-table-column prop="year" label="Year" />
+        <el-button type="primary" id="tagAdder" @click="GetCustomerReport">Go</el-button>
+        <el-button id="export" type="primary " @click="()=>handleExport(this.customerDetails)">Export</el-button>
+        <br>
+        </a>
+        <el-table class="dataTable" @row-click="ToDetail" v-if="customerTableVisibility" v-loading="customerLoading" :data="customerDetails" style="width: 100%" show-summary>
+          <el-table-column prop="customerName" label="Customer Name" />
+          <el-table-column prop="invoiceNumber" label="Invoice Number" />
+          <el-table-column prop="product_enum.data" label="Product" />
+          <el-table-column prop="income" label="Income" />
+          <el-table-column prop="deferred" label="Deferred" />
           <el-table-column prop="month" label="Month" />
-          <el-table-column prop="count" label="Count" />
-          <el-table-column v-for="item in columnEnum" :key="item.id" :prop="item.data" :label="item.data" />
-          <el-table-column prop="total" label="Total" />"
+          <el-table-column prop="year" label="Year" />
+
         </el-table>
-      </div>
-    </el-row>
+      </el-tab-pane>
+    </el-tabs>
   </div>
+
 </template>
 
 <script>
@@ -108,6 +134,8 @@
           }
         ],
         tableData: [],
+        customerLoading: false,
+        customerTableVisibility: false,
         startM: '',
         endM: '',
         startY: '',
@@ -115,11 +143,14 @@
         columnEnum: [],
         tableVisibility: false,
         monthEnum: [],
+        customerNameList: [],
+        customerSearchValue: "",
         showChart: false,
         chartData: {},
         chartDataCount: {},
+        customerQueryDate: "",
+        customerDetails: [],
         chartOptions: {
-
           responsive: true,
           maintainAspectRatio: false,
           scales: {
@@ -147,6 +178,56 @@
 
     },
     methods: {
+      ToDetail(row){
+        this.$router.push({ name: 'Details', params: { invoiceId: row.id }})
+      },
+      GetCustomerReport() {
+        const url = urlBase + '/api/v1/reports/getIncomeDeferred'
+        this.customerTableVisibility = true
+        this.customerLoading = true
+        axios.post(url, {
+          where: this.customerSearchValue == "" ? null : {
+            customerName: this.customerSearchValue
+          }
+        }).then((res) => {
+
+          const month = this.customerQueryDate.getMonth() + 1
+          const year = this.customerQueryDate.getFullYear()
+          var temp = [...res.data]
+          var customerDetails = temp.filter(i => {
+            const income = i.incomes.find(j => {
+              return j.month == month && j.year == year
+            })
+            const deferred = i.deferred_balances.find(j => {
+              return j.month == month && j.year == year
+            })
+            // console.log(income, deferred, temp)
+            if (income != undefined || deferred != undefined) {
+              return true
+            } else {
+              return false
+            }
+          })
+          // console.log(customerDetails)
+          customerDetails.forEach((k, index) => {
+            var temp2 = { ...k
+            }
+            temp2["month"] = month
+            temp2["year"] = year
+            const holder = temp2.incomes.find(j => {
+              return j.month == month && j.year == year
+            })
+            temp2["income"] = holder != undefined ? holder.amount : 0
+            const holder2 = temp2.deferred_balances.find(j => {
+              return j.month == month && j.year == year
+            })
+            temp2["deferred"] = holder2 != undefined ? holder2.amount : 0
+            customerDetails[index] = temp2
+          })
+          this.customerDetails = customerDetails
+          this.customerLoading = false
+        })
+      },
 
       GetReport() {
         var url = urlBase
@@ -243,8 +324,8 @@
           this.columnEnum = res.data
         })
       },
-      handleExport(){
-        jsonexport(this.tableData, (err, csv) => {
+      handleExport(data) {
+        jsonexport(data, (err, csv) => {
           if (err) return console.log(err)
           var uriContent = "data:application/octet-stream," + encodeURIComponent(csv);
           var link = document.createElement("a");
@@ -258,12 +339,28 @@
             message: "Success"
           })
         })
-      }
-
-
-
+      },
+      getCustomerName() {
+        const url = urlBase + '/api/v1/reports/getCustomerName'
+        axios.get(url).then(res => {
+          this.customerNameList = res.data
+        })
+      },
+      querySearchCustName(queryString, cb) {
+        var list = this.customerNameList
+        var results = queryString ? list.filter((this.createFilter(queryString))) : list;
+        cb(results)
+      },
+      createFilter(queryString) {
+        return (link) => {
+          return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
     },
-    created() {}
+    created() {
+      // this.GetCustomerReport()
+      this.getCustomerName()
+    }
   }
 
 </script>
@@ -274,8 +371,8 @@
     width: 150px
   }
 
-  #inputRow,
-  #dataTable,
+  .inputRow,
+  .dataTable,
   .header {
     margin: 10px;
     margin-left: 20px;
@@ -285,8 +382,9 @@
   #submit {
     margin-left: 40px
   }
-  #export{
-    float:right;
+
+  #export {
+    float: right;
   }
 
 </style>

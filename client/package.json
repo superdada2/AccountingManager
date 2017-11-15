@@ -17,8 +17,10 @@
     "element-ui": "^2.0.2",
     "jsonexport": "^2.0.11",
     "lodash": "^4.17.4",
+    "tiny-cookie": "^2.0.2",
     "vue": "^2.5.2",
     "vue-chartjs": "^3.0.0",
+    "vue-cookie": "^1.1.4",
     "vue-i18n": "^7.3.2",
     "vue-router": "^3.0.1"
   },

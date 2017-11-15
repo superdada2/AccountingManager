@@ -110,6 +110,7 @@
       <el-row>
         <div class="submit">
           <el-button type="primary" @click="submit('formValue')">Modify Invoice</el-button>
+          <el-button type="success" @click="ToDetail">Details</el-button>
           <el-button type="danger" @click="deleteInvoice">Delete Invoice</el-button>
           <!-- <router-link to="/details">
             <el-button type="info"  :v-link='{name:Details}'>Details </el-button>
@@ -261,7 +262,9 @@
       }
     },
     methods: {
-      //TODO: auto fill fx rate, and usd fields
+      ToDetail(){
+        this.$router.push({ name: 'Details', params: { invoiceId: this.formValue.id }})
+      },
       loadData() {
         const url = urlBase + "/api/v1/enum/all"
 
