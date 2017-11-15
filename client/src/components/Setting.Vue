@@ -93,6 +93,63 @@
             </el-col>
           </el-row>
         </el-tab-pane>
+        <el-tab-pane label='Delete' name='delete'>
+          <el-row>
+            <el-col :span='12'>
+              <el-select v-model='idClass' placeholder='Class'>
+                <el-option v-for='item in classEnum' :key='item.id' :label='item.data' :value='item.id'>
+                </el-option>
+              </el-select>
+              
+              <el-button type='primary' @click="()=>deleteClick('class')">Delete</el-button>
+              <br>
+              <el-select v-model='idCurrency' placeholder='Currency'>
+                <el-option v-for='item in currencyEnum' :key='item.id' :label='item.data' :value='item.id'>
+                </el-option>
+              </el-select>
+              
+              <el-button type='primary' @click="()=>deleteClick('currency')">Delete</el-button>
+              <br>
+              <el-select v-model='idProduct' placeholder='Product'>
+                <el-option v-for='item in productEnum' :key='item.id' :label='item.data' :value='item.id'>
+                </el-option>
+              </el-select>
+              
+              <el-button type='primary' @click="()=>deleteClick('product')">Delete</el-button>
+              <br>
+              <el-select v-model='idType' placeholder='Type'>
+                <el-option v-for='item in typeEnum' :key='item.id' :label='item.data' :value='item.id'>
+                </el-option>
+              </el-select>
+              
+              <el-button type='primary' @click="()=>deleteClick('type')">Delete</el-button>
+              <br>
+            </el-col>
+            <el-col :span='12'>
+              <el-select v-model='idRevenueType' placeholder='Revenue Type'>
+                <el-option v-for='item in classEnum' :key='item.id' :label='item.data' :value='item.id'>
+                </el-option>
+              </el-select>
+              
+              <el-button type='primary' @click="()=>deleteClick('revenueType')">Delete</el-button>
+              <br>
+              <el-select v-model='idStatus' placeholder='Status'>
+                <el-option v-for='item in statusEnum' :key='item.id' :label='item.data' :value='item.id'>
+                </el-option>
+              </el-select>
+              
+              <el-button type='primary' @click="()=>deleteClick('status')">Delete</el-button>
+              <br>
+              <el-select v-model='idSubscription' placeholder='Subscription'>
+                <el-option v-for='item in subscriptionEnum' :key='item.id' :label='item.data' :value='item.id'>
+                </el-option>
+              </el-select>
+              
+              <el-button type='primary' @click="()=>deleteClick('subscription')">Delete</el-button>
+              <br>
+            </el-col>
+          </el-row>
+        </el-tab-pane>
       </el-tabs>
 
     </div>
@@ -268,6 +325,70 @@ export default {
         });
       }
     },
+    deleteClick(value) {
+      const url = urlBase + "/api/v1/enum/delete";
+      var payLoad = {};
+      switch (value) {
+        case "class":
+          payLoad = {
+            type: value,
+            id: this.idClass
+          };
+          break;
+        case "currency":
+          payLoad = {
+            type: value,
+            id: this.idCurrency
+          };
+          break;
+        case "product":
+          payLoad = {
+            type: value,
+            id: this.idProduct
+          };
+          break;
+        case "revenueType":
+          payLoad = {
+            type: value,
+            id: this.idRevenueType
+          };
+          break;
+        case "status":
+          payLoad = {
+            type: value,
+            id: this.idStatus
+          };
+          break;
+        case "subscription":
+          payLoad = {
+            type: value,
+            id: this.idSubscription
+          };
+          break;
+        case "type":
+          payLoad = {
+            type: value,
+            id: this.idType
+          };
+          break;
+      }
+      try {
+        axios.post(url, payLoad).then(res => {
+          this.$message({
+            showClose: true,
+            message: "Success!",
+            type: "success"
+          });
+        });
+      } catch (err) {
+        console.log(err);
+        this.$message({
+          showClose: true,
+          message: err.message,
+          type: "error"
+        });
+      }
+    },
     loadData() {
       const url = urlBase + "/api/v1/enum/all";
 
@@ -296,7 +417,8 @@ export default {
   margin-right: 20px;
 }
 
-.el-input {
+.el-input,
+.el-select {
   width: 300px;
   margin: 20px;
   margin-top: 10px;

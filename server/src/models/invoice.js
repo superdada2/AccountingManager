@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('invoice', {
     id: {
       type: DataTypes.INTEGER(11),
@@ -20,13 +20,13 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    comments:{
-      type:DataTypes.STRING(255),
-      allowNull:true,
+    comments: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
     },
-    description:{
-      type:DataTypes.STRING(255),
-      allowNull:true,
+    description: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
     },
     product: {
       type: DataTypes.INTEGER(11),
@@ -38,18 +38,18 @@ module.exports = function(sequelize, DataTypes) {
     },
     class: {
       type: DataTypes.INTEGER(11),
-      allowNull: false,
-      references: {
-        model: 'class_enum',
-        key: 'id'
-      }
+        allowNull: false,
+        references: {
+          model: 'class_enum',
+          key: 'id'
+        }
     },
     invoiceNumber: {
       type: DataTypes.INTEGER(11),
       allowNull: false
     },
     invoiceAmount: {
-      type: DataTypes.DECIMAL(10,3),
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false
     },
     invoiceDate: {
@@ -94,7 +94,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     FXRate: {
-      type: DataTypes.DECIMAL(10,3),
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       defaultValue: '1'
     },
@@ -115,21 +115,21 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       defaultValue: '0'
     },
-    dateLastIncrease:{
+    dateLastIncrease: {
       type: DataTypes.DATEONLY,
-      allowNull:true,
+      allowNull: true,
     },
-    increasePercentage:{
-      type: DataTypes.DECIMAL(10,3),
+    increasePercentage: {
+      type: DataTypes.DECIMAL(10, 2),
       alowNull: true,
       defaultValue: 0
     },
     invoiceAmountUSD: {
-      type: DataTypes.DECIMAL(10,3),
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: true
     },
     MonthlyRecoginitionAmountUSD: {
-      type: DataTypes.DECIMAL(10,3),
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false
     }
   }, {

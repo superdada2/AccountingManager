@@ -35,6 +35,16 @@ export function updateClass({
   })
 }
 
+export function deleteClass({
+  id = 0
+}) {
+  return class_enum.destroy({
+    where: {
+      id: id
+    }
+  })
+}
+
 export function getCurrency() {
   return currency_enum.findAll()
 }
@@ -54,6 +64,16 @@ export function updateCurrency({
   return currency_enum.update({
     data: data
   }, {
+    where: {
+      id: id
+    }
+  })
+}
+
+export function deleteCurrency({
+  id = 0
+}) {
+  return currency_enum.destroy({
     where: {
       id: id
     }
@@ -86,6 +106,16 @@ export function updateProduct({
   })
 }
 
+export function deleteProduct({
+  id = 0
+}) {
+  return product_enum.destroy({
+    where: {
+      id: id
+    }
+  })
+}
+
 
 export function getRevenueType() {
   return revenue_type_enum.findAll()
@@ -106,6 +136,16 @@ export function updateRevenueType({
   return revenue_type_enum.update({
     data: data
   }, {
+    where: {
+      id: id
+    }
+  })
+}
+
+export function deleteRevenueType({
+  id = 0
+}) {
+  return revenue_type_enum.destroy({
     where: {
       id: id
     }
@@ -138,6 +178,16 @@ export function updateStatus({
   })
 }
 
+export function deleteStatus({
+  id = 0
+}) {
+  return status_enum.destroy({
+    where: {
+      id: id
+    }
+  })
+}
+
 
 export function getSubscription() {
   return subscription_enum.findAll()
@@ -158,6 +208,16 @@ export function updateSubscription({
   return subscription_enum.update({
     data: data
   }, {
+    where: {
+      id: id
+    }
+  })
+}
+
+export function deleteSubscription({
+  id = 0
+}) {
+  return subscription_enum.destroy({
     where: {
       id: id
     }
@@ -190,6 +250,15 @@ export function updateType({
   })
 }
 
+export function deleteType({
+  id = 0
+}) {
+  return type_enum.destroy({
+    where: {
+      id: id
+    }
+  })
+}
 
 export function getMonth() {
   return month_enum.findAll()
@@ -241,6 +310,50 @@ export function update({
       return updateType({
         id: id,
         data: data
+      })
+      break;
+  }
+}
+
+export function deleteEnum({
+  type = 'class',
+  id = 0,
+  data = 'Updated'
+}) {
+  switch (type) {
+    case 'class':
+      return deleteClass({
+        id: id,
+      })
+      break;
+    case 'currency':
+      return deleteCurrency({
+        id: id,
+      })
+      break;
+    case 'product':
+      return deleteProduct({
+        id: id,
+      })
+      break;
+    case 'revenueType':
+      return deleteRevenueType({
+        id: id,
+      })
+      break;
+    case 'status':
+      return deleteStatus({
+        id: id,
+      })
+      break;
+    case 'subscription':
+      return deleteSubscription({
+        id: id,
+      })
+      break;
+    case 'type':
+      return deleteType({
+        id: id,
       })
       break;
   }

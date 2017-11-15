@@ -23,7 +23,8 @@ import {
   updateSubscription,
   updateType,
   update,
-  add
+  add,
+  deleteEnum
 } from './controller';
 
 export const router = express.Router();
@@ -31,6 +32,19 @@ export const router = express.Router();
 router.post('/update', async(req, res) => {
   try {
     const result = await update(req.body)
+    res.status(200).json(result)
+  } catch (err) {
+    const message = err.message;
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
+
+router.post('/delete', async(req, res) => {
+  try {
+    const result = await deleteEnum(req.body)
     res.status(200).json(result)
   } catch (err) {
     const message = err.message;
