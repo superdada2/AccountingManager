@@ -78,7 +78,7 @@
     <el-row>
 
       <el-col :span='6' v-for='detail in details' :key='detail.id'>
-        <el-table :data='detail' @header-click="()=>handleHeaderClick(detail)"  style='width: 95%; height:900px;' class='detailTable' border >
+        <el-table :data='detail' @header-click="()=>handleHeaderClick(detail)"  max-height="900" style='width: 95%;' class='detailTable' border >
           <el-table-column :label="detail.customerName + ': '+ detail.product + ': '+detail.invoiceNumber">
             <el-table-column prop='year' label='Year'>
             </el-table-column>
@@ -201,6 +201,7 @@ export default {
       var deferredIndex = 0;
       var income = _.sortBy(income1, ["year", "month"]);
       var deferred = _.sortBy(deferred1, ["year", "month"]);
+      console.log(income, deferred);
 
       while (incomeIndex < income.length || deferredIndex < deferred.length) {
         switch (this.compareDate(

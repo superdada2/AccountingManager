@@ -406,6 +406,10 @@ export default {
     }
     if (this.$cookie.get("form") != undefined) {
       const result = JSON.parse(this.$cookie.get("form"));
+      result.invoiceDate = new Date(result.invoiceDate);
+      result.billMonth = new Date(result.billMonth);
+      result.recognitionStrMonth = new Date(result.recognitionStrMonth);
+      result.dateLastIncrease = new Date(result.dateLastIncrease);
       this.formValue = result;
     }
   }
