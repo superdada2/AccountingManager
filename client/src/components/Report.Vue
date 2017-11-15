@@ -209,14 +209,12 @@ export default {
             const deferred = i.deferred_balances.find(j => {
               return j.month == month && j.year == year;
             });
-            // console.log(income, deferred, temp)
             if (income != undefined || deferred != undefined) {
               return true;
             } else {
               return false;
             }
           });
-          // console.log(customerDetails)
           customerDetails.forEach((k, index) => {
             var temp2 = {
               ...k

@@ -183,7 +183,6 @@ export default {
       axios.post(url2, param).then(res => {
         var details = [];
         res.data.forEach(entry => {
-          console.log(res.data);
           var temp = this.merge(entry.incomes, entry.deferred_balances);
           temp["invoiceNumber"] = entry.invoiceNumber;
           temp["customerName"] = entry.customerName;

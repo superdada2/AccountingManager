@@ -349,7 +349,6 @@ export function UpdateInvoiceDescription({
 export function GetIncomeDeferred({
   where
 }) {
-  console.log(where)
   return invoice.findAll({
     where,
     include: [{

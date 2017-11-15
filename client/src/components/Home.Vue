@@ -301,7 +301,6 @@ export default {
     },
     GetBillByCustomer() {
       const url = urlBase + "/api/v1/graph/billByCustomer";
-      console.log(urlBase);
       axios
         .post(url, {
           sort: this.filter
@@ -429,7 +428,6 @@ export default {
           sort: this.filter
         })
         .then(res => {
-          console.log(res.data);
           const result = res.data;
           var temp = {};
           temp["labels"] = result.map(i => i.revenue_type_enum.data);
@@ -520,7 +518,6 @@ export default {
           endM: new Date(this.endDate)
         };
       axios.post(url, payload).then(res => {
-        console.log(res.data);
         const sumSet = res.data.map(i => {
           return {
             x: new Date(i.billingMonth + "1"),

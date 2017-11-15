@@ -308,7 +308,6 @@ export default {
     resetForm(formName) {
       const result = JSON.parse(this.$cookie.get("blankForm"));
       this.formValue = result;
-      console.log(result);
       this.$refs[formName].resetFields();
       this.$cookie.delete("form");
     },

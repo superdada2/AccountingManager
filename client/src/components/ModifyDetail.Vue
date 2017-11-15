@@ -70,7 +70,6 @@ export default {
       this.detail.data = temp;
     },
     DeleteRow(index) {
-      console.log(index);
       var temp = [...this.detail.data];
       temp.splice(index, 1);
       this.detail.data = temp;
