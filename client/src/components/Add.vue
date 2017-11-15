@@ -120,296 +120,313 @@
 </template>
 
 <script>
-  import axios from 'Axios'
-  const urlBase = "http://" + window.location.hostname + ":3030"
-  export default {
-    name: 'add',
-    data() {
-      return {
-        classEnum: [],
-        productEnum: [],
-        typeEnum: [],
-        currencyEnum: [],
-        monthEnum: [],
-        statusEnum: [],
-        revenueEnum: [],
-        subscriptionEnum: [],
-        formValue: {
-          Class: '',
-          product: '',
-          type: '',
-          currency: '',
-          status: '',
-          revenueType: '',
-          companyName: '',
-          invoiceNumber: '',
-          invoiceAmount: '',
-          invoiceDate: '',
-          billMonth: '',
-          description: '',
-          recognitionStrMonth: '',
-          lengthRec: '',
-          invoiceAmount: '',
-          fxRate: '',
-          monthlyRec: '',
-          dateLastIncrease: '',
-          increasePerc: '',
-          cancelationDate: '',
-          comments: '',
-          invoiceAmountUsd: '',
-          annualIncreaseBool: true,
-          subscription: ''
-        },
-        rules: {
-          companyName: [{
+import axios from "Axios";
+const urlBase = "http://" + window.location.hostname + ":3030";
+export default {
+  name: "add",
+  data() {
+    return {
+      classEnum: [],
+      productEnum: [],
+      typeEnum: [],
+      currencyEnum: [],
+      monthEnum: [],
+      statusEnum: [],
+      revenueEnum: [],
+      subscriptionEnum: [],
+      formValue: {
+        Class: "",
+        product: "",
+        type: "",
+        currency: "",
+        status: "",
+        revenueType: "",
+        companyName: "",
+        invoiceNumber: "",
+        invoiceAmount: "",
+        invoiceDate: "",
+        billMonth: "",
+        description: "",
+        recognitionStrMonth: "",
+        lengthRec: "",
+        invoiceAmount: "",
+        fxRate: "",
+        monthlyRec: "",
+        dateLastIncrease: "",
+        increasePerc: "",
+        cancelationDate: "",
+        comments: "",
+        invoiceAmountUsd: "",
+        annualIncreaseBool: true,
+        subscription: ""
+      },
+      rules: {
+        companyName: [
+          {
             required: true,
-            message: 'Please input Company Name',
-            trigger: 'blur'
-          }],
-          product: [{
+            message: "Please input Company Name",
+            trigger: "blur"
+          }
+        ],
+        product: [
+          {
             required: true,
-            type: 'number',
-            message: 'Please select a product',
-            trigger: 'change'
-          }],
-          Class: [{
+            type: "number",
+            message: "Please select a product",
+            trigger: "change"
+          }
+        ],
+        Class: [
+          {
             required: true,
-            type: 'number',
-            message: 'Please select a class',
-            trigger: 'change'
-          }],
-          invoiceNumber: [{
+            type: "number",
+            message: "Please select a class",
+            trigger: "change"
+          }
+        ],
+        invoiceNumber: [
+          {
             required: true,
-            message: 'Please input an invoice number',
-            trigger: 'blur'
-          }],
-          invoiceAmount: [{
+            message: "Please input an invoice number",
+            trigger: "blur"
+          }
+        ],
+        invoiceAmount: [
+          {
             required: true,
-            message: 'Please input an invoice amount',
-            trigger: 'blur'
-          }],
-          invoiceDate: [{
+            message: "Please input an invoice amount",
+            trigger: "blur"
+          }
+        ],
+        invoiceDate: [
+          {
             required: true,
-            type: 'date',
-            message: 'Please select an invoice date',
-            trigger: 'change'
-          }],
-          type: [{
+            type: "date",
+            message: "Please select an invoice date",
+            trigger: "change"
+          }
+        ],
+        type: [
+          {
             required: true,
-            type: 'number',
-            message: 'Please select a type',
-            trigger: 'change'
-          }],
-          currency: [{
+            type: "number",
+            message: "Please select a type",
+            trigger: "change"
+          }
+        ],
+        currency: [
+          {
             required: true,
-            type: 'number',
-            message: 'Please select a currency',
-            trigger: 'change'
-          }],
-          billMonth: [{
+            type: "number",
+            message: "Please select a currency",
+            trigger: "change"
+          }
+        ],
+        billMonth: [
+          {
             required: true,
-            type: 'date',
-            message: 'Please select a billingMonth',
-            trigger: 'change'
-          }],
-          status: [{
+            type: "date",
+            message: "Please select a billingMonth",
+            trigger: "change"
+          }
+        ],
+        status: [
+          {
             required: true,
-            type: 'number',
-            message: 'Please select a status',
-            trigger: 'change'
-          }],
-          description: [{
+            type: "number",
+            message: "Please select a status",
+            trigger: "change"
+          }
+        ],
+        description: [
+          {
             max: 500,
-            message: 'Description too long',
-            trigger: 'blur'
-          }],
-          recognitionStrMonth: [{
+            message: "Description too long",
+            trigger: "blur"
+          }
+        ],
+        recognitionStrMonth: [
+          {
             required: true,
-            type: 'date',
-            message: 'Please select a Recognition Start Month',
-            trigger: 'blur'
-          }],
-          // lengthRec: [{
-          //   required: false,
-          //   message: 'Please input a recognition length',
-          //   trigger: 'blur'
-          // }],
-          subscription: [{
+            type: "date",
+            message: "Please select a Recognition Start Month",
+            trigger: "blur"
+          }
+        ],
+        // lengthRec: [{
+        //   required: false,
+        //   message: 'Please input a recognition length',
+        //   trigger: 'blur'
+        // }],
+        subscription: [
+          {
             required: true,
-            type: 'number',
-            message: 'Please select a subscription',
-            trigger: 'change'
-          }],
-          revenueType: [{
+            type: "number",
+            message: "Please select a subscription",
+            trigger: "change"
+          }
+        ],
+        revenueType: [
+          {
             required: true,
-            type: 'number',
-            message: 'Please select a revenue type',
-            trigger: 'change'
-          }],
-          comments: [{
+            type: "number",
+            message: "Please select a revenue type",
+            trigger: "change"
+          }
+        ],
+        comments: [
+          {
             max: 500,
-            message: 'Comments too long',
-            trigger: 'blur'
-          }]
-        }
+            message: "Comments too long",
+            trigger: "blur"
+          }
+        ]
       }
+    };
+  },
+  methods: {
+    //TODO: auto fill fx rate, and usd fields
+    loadData() {
+      const url = urlBase + "/api/v1/enum/all";
+
+      axios.get(url).then(res => {
+        this.classEnum = res.data.Class;
+        this.productEnum = res.data.product;
+        this.typeEnum = res.data.type;
+        this.currencyEnum = res.data.currency;
+        this.monthEnum = res.data.month;
+        this.statusEnum = res.data.status;
+        this.revenueEnum = res.data.revenueType;
+        this.monthEnum = res.data.month;
+        this.subscriptionEnum = res.data.subscription;
+      });
     },
-    methods: {
-      //TODO: auto fill fx rate, and usd fields
-      loadData() {
-        const url = urlBase + "/api/v1/enum/all"
 
-        axios.get(url).then((res) => {
-          this.classEnum = res.data.Class
-          this.productEnum = res.data.product
-          this.typeEnum = res.data.type
-          this.currencyEnum = res.data.currency
-          this.monthEnum = res.data.month
-          this.statusEnum = res.data.status
-          this.revenueEnum = res.data.revenueType
-          this.monthEnum = res.data.month
-          this.subscriptionEnum = res.data.subscription
-        })
-      },
-
-      validate() {
-        return true;
-      },
-      resetForm(formName) {
-        
-        const result = JSON.parse(this.$cookie.get('blankForm'))
-        this.formValue = result
-        console.log(result)
-        this.$refs[formName].resetFields();
-        this.$cookie.delete('form')
-      },
-      SaveForm(){
-        console.log("Saving", {...this.formValue})
-        const save = JSON.stringify({...this.formValue})
-        this.$cookie.set('form', save)
-        
-        
-      },
-      async submit(formName) {
-        const url = urlBase + "/api/v1/reports/createInvoice"
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            const formValues = this.formValue
-            const message = { ...formValues
-            }
-            try {
-              const data = axios.post(url, message).then(i => {
-                this.$message({
-                  type: 'success',
-                  message: "Success!"
-                })
-                this.$refs[formName].resetFields();
-              })
-
-            } catch (err) {
+    validate() {
+      return true;
+    },
+    resetForm(formName) {
+      const result = JSON.parse(this.$cookie.get("blankForm"));
+      this.formValue = result;
+      console.log(result);
+      this.$refs[formName].resetFields();
+      this.$cookie.delete("form");
+    },
+    SaveForm() {
+      console.log("Saving", { ...this.formValue });
+      const save = JSON.stringify({ ...this.formValue });
+      this.$cookie.set("form", save);
+    },
+    async submit(formName) {
+      const url = urlBase + "/api/v1/reports/createInvoice";
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          const formValues = this.formValue;
+          const message = {
+            ...formValues
+          };
+          try {
+            const data = axios.post(url, message).then(i => {
               this.$message({
-                message: err.message,
-                type: 'error'
-              })
-            }
-          } else {
+                type: "success",
+                message: "Success!"
+              });
+              this.$refs[formName].resetFields();
+            });
+          } catch (err) {
             this.$message({
-              type: 'error',
-              message: 'Invalid Inputs'
-            })
-            return false;
+              message: err.message,
+              type: "error"
+            });
           }
-        });
-
-
-
-      },
-      invoiceAmountOnChange(value) {
-        if (this.formValue.lengthRec == '') {
-          this.formValue.lengthRec = 12
+        } else {
+          this.$message({
+            type: "error",
+            message: "Invalid Inputs"
+          });
+          return false;
         }
-        if (this.formValue.fxRate != '') {
-          this.formValue.invoiceAmountUsd = this.formValue.fxRate * value
-        }
-        if (this.formValue.increasePerc == '') {
-          this.formValue.increasePerc = 0.05
-        }
-        this.lengthRecOnChange(this.formValue.lengthRec)
-      },
-      currencyOnchange(value, value2) {
-        var url = 'http://apilayer.net/api/live?access_key=a85aa84971650d26dc61c8932a548e31&currencies=AUD'
-        const currency = this.currencyEnum.find(i => i.id == value).data
-        url = url.replace('AUD', currency)
-        axios.get(url).then(res => {
-          this.formValue.fxRate = 1 / res.data.quotes["USD" + currency]
-
-          if (this.formValue.invoiceAmount != '') {
-            this.formValue.invoiceAmountUsd = this.formValue.fxRate * this.formValue.invoiceAmount
-          }
-          if (this.formValue.lengthRec == '') {
-            this.formValue.lengthRec = 12
-          }
-          this.lengthRecOnChange(this.formValue.lengthRec)
-        })
-      },
-      fxRateOnChange(value) {
-        if (this.formValue.invoiceAmount != '') {
-          this.formValue.invoiceAmountUsd = this.formValue.invoiceAmount * value
-        }
-        if (this.formValue.lengthRec == '') {
-          this.formValue.lengthRec = 12
-        }
-        this.lengthRecOnChange(this.formValue.lengthRec)
-      },
-      lengthRecOnChange(value) {
-        if (this.formValue.invoiceAmountUsd != '') {
-          this.formValue.monthlyRec = this.formValue.invoiceAmountUsd / value
-        }
-      },
-      invoiceAmountUsdOnChange(value) {
-        if (this.formValue.lengthRec == '') {
-          this.formValue.lengthRec = 12
-        }
-        this.lengthRecOnChange(this.formValue.lengthRec)
-      }
-
+      });
     },
-    created() {      
-      this.loadData()
-      if(this.$cookie.get('blankForm')== undefined){
-        const save = JSON.stringify({...this.formValue})
-        this.$cookie.set('blankForm', save)
+    invoiceAmountOnChange(value) {
+      if (this.formValue.lengthRec == "") {
+        this.formValue.lengthRec = 12;
       }
-      if(this.$cookie.get('form')!= undefined){
-        const result = JSON.parse(this.$cookie.get('form'))
-        this.formValue = result
+      if (this.formValue.fxRate != "") {
+        this.formValue.invoiceAmountUsd = this.formValue.fxRate * value;
       }
+      if (this.formValue.increasePerc == "") {
+        this.formValue.increasePerc = 0.05;
+      }
+      this.lengthRecOnChange(this.formValue.lengthRec);
+    },
+    currencyOnchange(value, value2) {
+      var url =
+        "http://apilayer.net/api/live?access_key=a85aa84971650d26dc61c8932a548e31&currencies=AUD";
+      const currency = this.currencyEnum.find(i => i.id == value).data;
+      url = url.replace("AUD", currency);
+      axios.get(url).then(res => {
+        this.formValue.fxRate = 1 / res.data.quotes["USD" + currency];
+
+        if (this.formValue.invoiceAmount != "") {
+          this.formValue.invoiceAmountUsd =
+            this.formValue.fxRate * this.formValue.invoiceAmount;
+        }
+        if (this.formValue.lengthRec == "") {
+          this.formValue.lengthRec = 12;
+        }
+        this.lengthRecOnChange(this.formValue.lengthRec);
+      });
+    },
+    fxRateOnChange(value) {
+      if (this.formValue.invoiceAmount != "") {
+        this.formValue.invoiceAmountUsd = this.formValue.invoiceAmount * value;
+      }
+      if (this.formValue.lengthRec == "") {
+        this.formValue.lengthRec = 12;
+      }
+      this.lengthRecOnChange(this.formValue.lengthRec);
+    },
+    lengthRecOnChange(value) {
+      if (this.formValue.invoiceAmountUsd != "") {
+        this.formValue.monthlyRec = this.formValue.invoiceAmountUsd / value;
+      }
+    },
+    invoiceAmountUsdOnChange(value) {
+      if (this.formValue.lengthRec == "") {
+        this.formValue.lengthRec = 12;
+      }
+      this.lengthRecOnChange(this.formValue.lengthRec);
+    }
+  },
+  created() {
+    this.loadData();
+    if (this.$cookie.get("blankForm") == undefined) {
+      const save = JSON.stringify({ ...this.formValue });
+      this.$cookie.set("blankForm", save);
+    }
+    if (this.$cookie.get("form") != undefined) {
+      const result = JSON.parse(this.$cookie.get("form"));
+      this.formValue = result;
     }
   }
-
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.el-select,
+.el-input,
+.el-textarea {
+  width: 80%;
+}
 
-  
-  .el-select,
-  .el-input,
-  .el-textarea{
-    width: 80%;
-  }  
-
-
-  .header,
-  .el-switch,
-  .submit {
-    margin: 10px;
-    margin-left: 10px;
-    width: 70%;
-    border: 10px;
-  }
-
-  
-
-
+.header,
+.el-switch,
+.submit {
+  margin: 10px;
+  margin-left: 10px;
+  width: 70%;
+  border: 10px;
+}
 </style>

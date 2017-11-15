@@ -124,338 +124,368 @@
 </template>
 
 <script>
-  import axios from 'Axios'
-  const urlBase = "http://" + window.location.hostname + ":3030"
-  export default {
-    name: 'modify',
-    props: ['invoiceData', 'close', 'refresh'],
-    data() {
-      return {
-        classEnum: [],
-        productEnum: [],
-        typeEnum: [],
-        currencyEnum: [],
-        monthEnum: [],
-        statusEnum: [],
-        revenueEnum: [],
-        subscriptionEnum: [],
-        formValue: {
-          Class: '',
-          product: '',
-          type: '',
-          currency: '',
-          status: '',
-          revenueType: '',
-          companyName: '',
-          invoiceNumber: '',
-          invoiceAmount: '',
-          invoiceDate: '',
-          billMonth: '',
-          description: '',
-          recognitionStrMonth: '',
-          lengthRec: '',
-          invoiceAmount: '',
-          fxRate: '',
-          monthlyRec: '',
-          dateLastIncrease: '',
-          increasePerc: '',
-          cancelationDate: '',
-          comments: '',
-          invoiceAmountUsd: '',
-          annualIncreaseBool: true,
-          subscription: ''
-        },
-        rules: {
-          companyName: [{
+import axios from "Axios";
+const urlBase = "http://" + window.location.hostname + ":3030";
+export default {
+  name: "modify",
+  props: ["invoiceData", "close", "refresh"],
+  data() {
+    return {
+      classEnum: [],
+      productEnum: [],
+      typeEnum: [],
+      currencyEnum: [],
+      monthEnum: [],
+      statusEnum: [],
+      revenueEnum: [],
+      subscriptionEnum: [],
+      formValue: {
+        Class: "",
+        product: "",
+        type: "",
+        currency: "",
+        status: "",
+        revenueType: "",
+        companyName: "",
+        invoiceNumber: "",
+        invoiceAmount: "",
+        invoiceDate: "",
+        billMonth: "",
+        description: "",
+        recognitionStrMonth: "",
+        lengthRec: "",
+        invoiceAmount: "",
+        fxRate: "",
+        monthlyRec: "",
+        dateLastIncrease: "",
+        increasePerc: "",
+        cancelationDate: "",
+        comments: "",
+        invoiceAmountUsd: "",
+        annualIncreaseBool: true,
+        subscription: ""
+      },
+      rules: {
+        companyName: [
+          {
             required: true,
-            message: 'Please input Company Name',
-            trigger: 'blur'
-          }],
-          product: [{
+            message: "Please input Company Name",
+            trigger: "blur"
+          }
+        ],
+        product: [
+          {
             required: true,
-            type: 'number',
-            message: 'Please select a product',
-            trigger: 'change'
-          }],
-          Class: [{
+            type: "number",
+            message: "Please select a product",
+            trigger: "change"
+          }
+        ],
+        Class: [
+          {
             required: true,
-            type: 'number',
-            message: 'Please select a class',
-            trigger: 'change'
-          }],
-          invoiceNumber: [{
+            type: "number",
+            message: "Please select a class",
+            trigger: "change"
+          }
+        ],
+        invoiceNumber: [
+          {
             required: true,
-            type: 'number',
-            message: 'Please input an invoice number',
-            trigger: 'blur'
-          }],
-          invoiceAmount: [{
+            type: "number",
+            message: "Please input an invoice number",
+            trigger: "blur"
+          }
+        ],
+        invoiceAmount: [
+          {
             required: true,
-            message: 'Please input an invoice amount',
-            trigger: 'blur'
-          }],
-          invoiceDate: [{
-            required: true,
-
-            message: 'Please select an invoice date',
-            trigger: 'change'
-          }],
-          type: [{
-            required: true,
-            type: 'number',
-            message: 'Please select a type',
-            trigger: 'change'
-          }],
-          currency: [{
-            required: true,
-            type: 'number',
-            message: 'Please select a currency',
-            trigger: 'change'
-          }],
-          billMonth: [{
+            message: "Please input an invoice amount",
+            trigger: "blur"
+          }
+        ],
+        invoiceDate: [
+          {
             required: true,
 
-            message: 'Please select a billingMonth',
-            trigger: 'change'
-          }],
-          status: [{
+            message: "Please select an invoice date",
+            trigger: "change"
+          }
+        ],
+        type: [
+          {
             required: true,
-            type: 'number',
-            message: 'Please select a status',
-            trigger: 'change'
-          }],
-          description: [{
+            type: "number",
+            message: "Please select a type",
+            trigger: "change"
+          }
+        ],
+        currency: [
+          {
+            required: true,
+            type: "number",
+            message: "Please select a currency",
+            trigger: "change"
+          }
+        ],
+        billMonth: [
+          {
+            required: true,
+
+            message: "Please select a billingMonth",
+            trigger: "change"
+          }
+        ],
+        status: [
+          {
+            required: true,
+            type: "number",
+            message: "Please select a status",
+            trigger: "change"
+          }
+        ],
+        description: [
+          {
             max: 500,
-            message: 'Description too long',
-            trigger: 'blur'
-          }],
-          recognitionStrMonth: [{
+            message: "Description too long",
+            trigger: "blur"
+          }
+        ],
+        recognitionStrMonth: [
+          {
             required: true,
 
-            message: 'Please select a Recognition Start Month',
-            trigger: 'blur'
-          }],
-          // lengthRec: [{
-          //   type: 'number',
-          //   required: false,
-          //   message: 'Please input a recognition length',
-          //   trigger: 'blur'
-          // }],
-          subscription: [{
+            message: "Please select a Recognition Start Month",
+            trigger: "blur"
+          }
+        ],
+        // lengthRec: [{
+        //   type: 'number',
+        //   required: false,
+        //   message: 'Please input a recognition length',
+        //   trigger: 'blur'
+        // }],
+        subscription: [
+          {
             required: true,
-            type: 'number',
-            message: 'Please select a subscription',
-            trigger: 'change'
-          }],
-          revenueType: [{
+            type: "number",
+            message: "Please select a subscription",
+            trigger: "change"
+          }
+        ],
+        revenueType: [
+          {
             required: true,
-            type: 'number',
-            message: 'Please select a revenue type',
-            trigger: 'change'
-          }],
-          comments: [{
+            type: "number",
+            message: "Please select a revenue type",
+            trigger: "change"
+          }
+        ],
+        comments: [
+          {
             max: 500,
-            message: 'Comments too long',
-            trigger: 'blur'
-          }]
-        }
+            message: "Comments too long",
+            trigger: "blur"
+          }
+        ]
       }
+    };
+  },
+  methods: {
+    ToDetail() {
+      this.$router.push({
+        name: "Details",
+        params: { invoiceId: this.formValue.id }
+      });
     },
-    methods: {
-      ToDetail(){
-        this.$router.push({ name: 'Details', params: { invoiceId: this.formValue.id }})
-      },
-      loadData() {
-        const url = urlBase + "/api/v1/enum/all"
+    loadData() {
+      const url = urlBase + "/api/v1/enum/all";
 
-        axios.get(url).then((res) => {
-          this.classEnum = res.data.Class
-          this.productEnum = res.data.product
-          this.typeEnum = res.data.type
-          this.currencyEnum = res.data.currency
-          this.monthEnum = res.data.month
-          this.statusEnum = res.data.status
-          this.revenueEnum = res.data.revenueType
-          this.monthEnum = res.data.month
-          this.subscriptionEnum = res.data.subscription
-        })
-      },
+      axios.get(url).then(res => {
+        this.classEnum = res.data.Class;
+        this.productEnum = res.data.product;
+        this.typeEnum = res.data.type;
+        this.currencyEnum = res.data.currency;
+        this.monthEnum = res.data.month;
+        this.statusEnum = res.data.status;
+        this.revenueEnum = res.data.revenueType;
+        this.monthEnum = res.data.month;
+        this.subscriptionEnum = res.data.subscription;
+      });
+    },
 
-      validate() {
-        return true;
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
-      },
+    validate() {
+      return true;
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
 
-      deleteInvoice() {
-        const url = urlBase + "/api/v1/reports/deleteInvoice"
-        try {
-          axios.post(url, {
+    deleteInvoice() {
+      const url = urlBase + "/api/v1/reports/deleteInvoice";
+      try {
+        axios
+          .post(url, {
             id: this.invoiceData.id
-          }).then((res) => {
-            this.$message({
-              type: 'success',
-              message: 'Success!'
-            })
-            this.refresh()
-            this.close()
           })
-        }
-        catch(err){
-          this.$message({
-            type:'error',
-            message:err
-          })
-        }
-      },
-
-      cancel() {
-        this.close()
-      },
-      async submit(formName) {
-        const url = urlBase + "/api/v1/reports/modifyInvoice"
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            const formValues = this.formValue
-            const message = { id: this.invoiceData.id, ...formValues}
-            try {
-              const data = axios.post(url, message).then(i => {
-                this.$message({
-                  type: 'success',
-                  message: "Success!"
-                })
-                this.$refs[formName].resetFields();
-                this.refresh()
-                this.close()
-              })
-
-            } catch (err) {
-              this.$message({
-                message: err.message,
-                type: 'error'
-              })
-            }
-          } else {
+          .then(res => {
             this.$message({
-              type: 'error',
-              message: 'Invalid Inputs'
-            })
-            return false;
-          }
+              type: "success",
+              message: "Success!"
+            });
+            this.refresh();
+            this.close();
+          });
+      } catch (err) {
+        this.$message({
+          type: "error",
+          message: err
         });
-      },
-      invoiceAmountOnChange(value) {
-        if (this.formValue.lengthRec == '') {
-          this.formValue.lengthRec = 12
-        }
-        if (this.formValue.fxRate != '') {
-          this.formValue.invoiceAmountUsd = this.formValue.fxRate * value
-        }
-        if (this.formValue.increasePerc == '') {
-          this.formValue.increasePerc = 0.05
-        }
-        this.lengthRecOnChange(this.formValue.lengthRec)
-      },
-      currencyOnchange(value, value2) {
-        var url = 'http://apilayer.net/api/live?access_key=a85aa84971650d26dc61c8932a548e31&currencies=AUD'
-        const currency = this.currencyEnum.find(i => i.id == value).data
-        url = url.replace('AUD', currency)
-        axios.get(url).then(res => {
-          this.formValue.fxRate = 1 / res.data.quotes["USD" + currency]
-
-          if (this.formValue.invoiceAmount != '') {
-            this.formValue.invoiceAmountUsd = this.formValue.fxRate * this.formValue.invoiceAmount
-          }
-          if (this.formValue.lengthRec == '') {
-            this.formValue.lengthRec = 12
-          }
-          this.lengthRecOnChange(this.formValue.lengthRec)
-        })
-      },
-      fxRateOnChange(value) {
-        if (this.formValue.invoiceAmount != '') {
-          this.formValue.invoiceAmountUsd = this.formValue.invoiceAmount * value
-        }
-        if (this.formValue.lengthRec == '') {
-          this.formValue.lengthRec = 12
-        }
-        this.lengthRecOnChange(this.formValue.lengthRec)
-      },
-      lengthRecOnChange(value) {
-        if (this.formValue.invoiceAmountUsd != '') {
-          this.formValue.monthlyRec = this.formValue.invoiceAmountUsd / value
-        }
-      },
-      invoiceAmountUsdOnChange(value) {
-        if (this.formValue.lengthRec == '') {
-          this.formValue.lengthRec = 12
-        }
-        this.lengthRecOnChange(this.formValue.lengthRec)
-      }
-
-    },
-    watch: {
-      invoiceData: function (newVal, old) {
-
-        newVal["companyName"] = newVal.customerName
-        newVal["Class"] = newVal.class
-        newVal["billMonth"] = newVal.billingMonth
-        newVal["recognitionStrMonth"] = newVal.recognitionStartMonth
-        newVal["lengthRec"] = newVal.lengthMonth
-        newVal["invoiceAmountUsd"] = newVal.invoiceAmountUSD
-        newVal["fxRate"] = newVal.FXRate
-        newVal['monthlyRec'] = newVal.MonthlyRecoginitionAmountUSD
-        newVal['increasePerc'] = newVal.increasePercentage
-        newVal['annualIncreaseBool'] = newVal.annualIncreaseEli
-        newVal['subscription'] = newVal.subscriptionType
-
-        this.formValue = { ...newVal
-        }
-
       }
     },
-    created() {
-      this.loadData()
-      var newVal = { ...this.invoiceData
+
+    cancel() {
+      this.close();
+    },
+    async submit(formName) {
+      const url = urlBase + "/api/v1/reports/modifyInvoice";
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          const formValues = this.formValue;
+          const message = { id: this.invoiceData.id, ...formValues };
+          try {
+            const data = axios.post(url, message).then(i => {
+              this.$message({
+                type: "success",
+                message: "Success!"
+              });
+              this.$refs[formName].resetFields();
+              this.refresh();
+              this.close();
+            });
+          } catch (err) {
+            this.$message({
+              message: err.message,
+              type: "error"
+            });
+          }
+        } else {
+          this.$message({
+            type: "error",
+            message: "Invalid Inputs"
+          });
+          return false;
+        }
+      });
+    },
+    invoiceAmountOnChange(value) {
+      if (this.formValue.lengthRec == "") {
+        this.formValue.lengthRec = 12;
       }
-      newVal["companyName"] = newVal.customerName
-      newVal["Class"] = newVal.class
-      newVal["billMonth"] = newVal.billingMonth
-      newVal["recognitionStrMonth"] = newVal.recognitionStartMonth
-      newVal["lengthRec"] = newVal.lengthMonth
-      newVal["invoiceAmountUsd"] = newVal.invoiceAmountUSD
-      newVal["fxRate"] = newVal.FXRate
-      newVal['monthlyRec'] = newVal.MonthlyRecoginitionAmountUSD
-      newVal['increasePerc'] = newVal.increasePercentage
-      newVal['annualIncreaseBool'] = newVal.annualIncreaseEli
-      newVal['subscription'] = newVal.subscriptionType
-
-      this.formValue = { ...newVal
+      if (this.formValue.fxRate != "") {
+        this.formValue.invoiceAmountUsd = this.formValue.fxRate * value;
       }
+      if (this.formValue.increasePerc == "") {
+        this.formValue.increasePerc = 0.05;
+      }
+      this.lengthRecOnChange(this.formValue.lengthRec);
+    },
+    currencyOnchange(value, value2) {
+      var url =
+        "http://apilayer.net/api/live?access_key=a85aa84971650d26dc61c8932a548e31&currencies=AUD";
+      const currency = this.currencyEnum.find(i => i.id == value).data;
+      url = url.replace("AUD", currency);
+      axios.get(url).then(res => {
+        this.formValue.fxRate = 1 / res.data.quotes["USD" + currency];
 
-
+        if (this.formValue.invoiceAmount != "") {
+          this.formValue.invoiceAmountUsd =
+            this.formValue.fxRate * this.formValue.invoiceAmount;
+        }
+        if (this.formValue.lengthRec == "") {
+          this.formValue.lengthRec = 12;
+        }
+        this.lengthRecOnChange(this.formValue.lengthRec);
+      });
+    },
+    fxRateOnChange(value) {
+      if (this.formValue.invoiceAmount != "") {
+        this.formValue.invoiceAmountUsd = this.formValue.invoiceAmount * value;
+      }
+      if (this.formValue.lengthRec == "") {
+        this.formValue.lengthRec = 12;
+      }
+      this.lengthRecOnChange(this.formValue.lengthRec);
+    },
+    lengthRecOnChange(value) {
+      if (this.formValue.invoiceAmountUsd != "") {
+        this.formValue.monthlyRec = this.formValue.invoiceAmountUsd / value;
+      }
+    },
+    invoiceAmountUsdOnChange(value) {
+      if (this.formValue.lengthRec == "") {
+        this.formValue.lengthRec = 12;
+      }
+      this.lengthRecOnChange(this.formValue.lengthRec);
     }
-  }
+  },
+  watch: {
+    invoiceData: function(newVal, old) {
+      newVal["companyName"] = newVal.customerName;
+      newVal["Class"] = newVal.class;
+      newVal["billMonth"] = newVal.billingMonth;
+      newVal["recognitionStrMonth"] = newVal.recognitionStartMonth;
+      newVal["lengthRec"] = newVal.lengthMonth;
+      newVal["invoiceAmountUsd"] = newVal.invoiceAmountUSD;
+      newVal["fxRate"] = newVal.FXRate;
+      newVal["monthlyRec"] = newVal.MonthlyRecoginitionAmountUSD;
+      newVal["increasePerc"] = newVal.increasePercentage;
+      newVal["annualIncreaseBool"] = newVal.annualIncreaseEli;
+      newVal["subscription"] = newVal.subscriptionType;
 
+      this.formValue = {
+        ...newVal
+      };
+    }
+  },
+  created() {
+    this.loadData();
+    var newVal = {
+      ...this.invoiceData
+    };
+    newVal["companyName"] = newVal.customerName;
+    newVal["Class"] = newVal.class;
+    newVal["billMonth"] = newVal.billingMonth;
+    newVal["recognitionStrMonth"] = newVal.recognitionStartMonth;
+    newVal["lengthRec"] = newVal.lengthMonth;
+    newVal["invoiceAmountUsd"] = newVal.invoiceAmountUSD;
+    newVal["fxRate"] = newVal.FXRate;
+    newVal["monthlyRec"] = newVal.MonthlyRecoginitionAmountUSD;
+    newVal["increasePerc"] = newVal.increasePercentage;
+    newVal["annualIncreaseBool"] = newVal.annualIncreaseEli;
+    newVal["subscription"] = newVal.subscriptionType;
+
+    this.formValue = {
+      ...newVal
+    };
+  }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .el-select,
-  .el-input,
-  .el-textarea {
-    width: 80%;
-  }
+.el-select,
+.el-input,
+.el-textarea {
+  width: 80%;
+}
 
-
-  .header,
-  .el-switch,
-  .submit {
-    margin: 10px;
-    margin-left: 10px;
-    width: 70%;
-    border: 10px;
-  }
-
+.header,
+.el-switch,
+.submit {
+  margin: 10px;
+  margin-left: 10px;
+  width: 70%;
+  border: 10px;
+}
 </style>

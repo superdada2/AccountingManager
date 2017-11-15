@@ -37,86 +37,84 @@
 </template>
 
 <script>
-  import axios from 'Axios'
-  import {
-    urlBase
-  } from '../settings.js'
-  export default {
-    name: 'ModifyDetail',
-    props: ['detailData', 'close', 'refresh'],
-    data() {
-      return {
-        detail: {},
-      }
+import axios from "Axios";
+import { urlBase } from "../settings.js";
+export default {
+  name: "ModifyDetail",
+  props: ["detailData", "close", "refresh"],
+  data() {
+    return {
+      detail: {}
+    };
+  },
+  methods: {
+    AddTop() {
+      var temp = [...this.detail.data];
+
+      temp.unshift({
+        year: 0,
+        month: 0,
+        income: 0,
+        deferred: 0
+      });
+      this.detail.data = temp;
     },
-    methods: {
-      AddTop() {
-        var temp = [...this.detail.data]
-
-        temp.unshift({
-          year: 0,
-          month: 0,
-          income: 0,
-          deferred: 0
-        })
-        this.detail.data = temp
-      },
-      AddBottom() {
-        var temp = [...this.detail.data]
-        temp.push({
-          year: 0,
-          month: 0,
-          income: 0,
-          deferred: 0
-        })
-        this.detail.data = temp
-      },
-      DeleteRow(index) {
-        console.log(index)
-        var temp = [...this.detail.data]
-        temp.splice(index, 1)
-        this.detail.data = temp
-      },
-      Save() {
-        const url = urlBase + '/api/v1/reports/modifyIncomeDeferred'
-        try {
-
-          axios.post(url, {
+    AddBottom() {
+      var temp = [...this.detail.data];
+      temp.push({
+        year: 0,
+        month: 0,
+        income: 0,
+        deferred: 0
+      });
+      this.detail.data = temp;
+    },
+    DeleteRow(index) {
+      console.log(index);
+      var temp = [...this.detail.data];
+      temp.splice(index, 1);
+      this.detail.data = temp;
+    },
+    Save() {
+      const url = urlBase + "/api/v1/reports/modifyIncomeDeferred";
+      try {
+        axios
+          .post(url, {
             invoiceId: this.detail.id,
             data: this.detail.data
-          }).then(res => {
+          })
+          .then(res => {
             this.$message({
-              type: 'success',
+              type: "success",
               message: "Saved!"
-            })
-            this.refresh()
-            this.close()
-          })
-        } catch (err) {
-          this.$message({
-            type: 'error',
-            message: 'Something went wrong!'
-          })
-        }
-      }
-    },
-    created() {
-      this.detail = { ...this.detailData
+            });
+            this.refresh();
+            this.close();
+          });
+      } catch (err) {
+        this.$message({
+          type: "error",
+          message: "Something went wrong!"
+        });
       }
     }
+  },
+  created() {
+    this.detail = {
+      ...this.detailData
+    };
   }
-
+};
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
-  .table{
-    margin:10px;
-  }
-  .add{
-    margin:10px;
-    margin-left: 0px;
-    margin-top:0px;
-  }
-
+.table {
+  margin: 10px;
+}
+.add {
+  margin: 10px;
+  margin-left: 0px;
+  margin-top: 0px;
+}
 </style>

@@ -100,209 +100,205 @@
 </template>
 
 <script>
-  import axios from 'Axios'
-  import {urlBase} from '../settings.js'
-  export default {
-    name: 'Settings',
-    props:['id'],
-    data() {
-      return {
-        temp: '',
-        tab: 'Add',
-        Class: '',
-        currency: '',
-        product: '',
-        revenueType: '',
-        status: '',
-        subscription: '',
-        type: '',
-        idClass: '',
-        idCurrency: '',
-        idProduct: '',
-        idRevenueType: '',
-        idStatus: '',
-        idSubscription: '',
-        idType: '',
-        classEnum: [],
-        currencyEnum: [],
-        productEnum: [],
-        revenueEnum: [],
-        statusEnum: [],
-        subscriptionEnum: [],
-        typeEnum: [],
+import axios from "Axios";
+import { urlBase } from "../settings.js";
+export default {
+  name: "Settings",
+  props: ["id"],
+  data() {
+    return {
+      temp: "",
+      tab: "Add",
+      Class: "",
+      currency: "",
+      product: "",
+      revenueType: "",
+      status: "",
+      subscription: "",
+      type: "",
+      idClass: "",
+      idCurrency: "",
+      idProduct: "",
+      idRevenueType: "",
+      idStatus: "",
+      idSubscription: "",
+      idType: "",
+      classEnum: [],
+      currencyEnum: [],
+      productEnum: [],
+      revenueEnum: [],
+      statusEnum: [],
+      subscriptionEnum: [],
+      typeEnum: []
+    };
+  },
+  methods: {
+    addClick(value) {
+      const url = urlBase + "/api/v1/enum/add";
+      var payLoad = {};
+      switch (value) {
+        case "class":
+          payLoad = {
+            type: value,
+            data: this.Class
+          };
+          break;
+        case "currency":
+          payLoad = {
+            type: value,
+            data: this.currency
+          };
+          break;
+        case "product":
+          payLoad = {
+            type: value,
+            data: this.product
+          };
+          break;
+        case "revenueType":
+          payLoad = {
+            type: value,
+            data: this.revenueType
+          };
+          break;
+        case "status":
+          payLoad = {
+            type: value,
+            data: this.status
+          };
+          break;
+        case "subscription":
+          payLoad = {
+            type: value,
+            data: this.subscription
+          };
+          break;
+        case "type":
+          payLoad = {
+            type: value,
+            data: this.type
+          };
+          break;
+      }
+      try {
+        axios.post(url, payLoad).then(res => {
+          this.$message({
+            showClose: true,
+            message: "Success!",
+            type: "success"
+          });
+        });
+      } catch (err) {
+        console.log(err);
+        this.$message({
+          showClose: true,
+          message: "Failed...",
+          type: "error"
+        });
       }
     },
-    methods: {
-      addClick(value) {
-        const url = urlBase + '/api/v1/enum/add'
-        var payLoad = {}
-        switch (value) {
-          case 'class':
-            payLoad = {
-              type: value,
-              data: this.Class
-            }
-            break;
-          case 'currency':
-            payLoad = {
-              type: value,
-              data: this.currency
-            }
-            break;
-          case 'product':
-            payLoad = {
-              type: value,
-              data: this.product
-            }
-            break;
-          case 'revenueType':
-            payLoad = {
-              type: value,
-              data: this.revenueType
-            }
-            break;
-          case 'status':
-            payLoad = {
-              type: value,
-              data: this.status
-            }
-            break;
-          case 'subscription':
-            payLoad = {
-              type: value,
-              data: this.subscription
-            }
-            break;
-          case 'type':
-            payLoad = {
-              type: value,
-              data: this.type
-            }
-            break;
-        }
-        try {
-
-          axios.post(url, payLoad).then(res => {
-            this.$message({
-              showClose: true,
-              message: 'Success!',
-              type: 'success'
-            })
-          })
-        } catch (err) {
-          console.log(err)
+    updateClick(value) {
+      const url = urlBase + "/api/v1/enum/update";
+      var payLoad = {};
+      switch (value) {
+        case "class":
+          payLoad = {
+            type: value,
+            id: this.idClass,
+            data: this.Class
+          };
+          break;
+        case "currency":
+          payLoad = {
+            type: value,
+            id: this.idCurrency,
+            data: this.currency
+          };
+          break;
+        case "product":
+          payLoad = {
+            type: value,
+            id: this.idProduct,
+            data: this.product
+          };
+          break;
+        case "revenueType":
+          payLoad = {
+            type: value,
+            id: this.idRevenueType,
+            data: this.revenueType
+          };
+          break;
+        case "status":
+          payLoad = {
+            type: value,
+            id: this.idStatus,
+            data: this.status
+          };
+          break;
+        case "subscription":
+          payLoad = {
+            type: value,
+            id: this.idSubscription,
+            data: this.subscription
+          };
+          break;
+        case "type":
+          payLoad = {
+            type: value,
+            id: this.idType,
+            data: this.type
+          };
+          break;
+      }
+      try {
+        axios.post(url, payLoad).then(res => {
           this.$message({
             showClose: true,
-            message: 'Failed...',
-            type: 'error'
-          })
-        }
-      },
-      updateClick(value) {
-        const url = urlBase + '/api/v1/enum/update'
-        var payLoad = {}
-        switch (value) {
-          case 'class':
-            payLoad = {
-              type: value,
-              id: this.idClass,
-              data: this.Class
-            }
-            break;
-          case 'currency':
-            payLoad = {
-              type: value,
-              id: this.idCurrency,
-              data: this.currency
-            }
-            break;
-          case 'product':
-            payLoad = {
-              type: value,
-              id: this.idProduct,
-              data: this.product
-            }
-            break;
-          case 'revenueType':
-            payLoad = {
-              type: value,
-              id: this.idRevenueType,
-              data: this.revenueType
-            }
-            break;
-          case 'status':
-            payLoad = {
-              type: value,
-              id: this.idStatus,
-              data: this.status
-            }
-            break;
-          case 'subscription':
-            payLoad = {
-              type: value,
-              id: this.idSubscription,
-              data: this.subscription
-            }
-            break;
-          case 'type':
-            payLoad = {
-              type: value,
-              id: this.idType,
-              data: this.type
-            }
-            break;
-        }
-        try {
-
-          axios.post(url, payLoad).then(res => {
-            this.$message({
-              showClose: true,
-              message: 'Success!',
-              type: 'success'
-            })
-          })
-        } catch (err) {
-          console.log(err)
-          this.$message({
-            showClose: true,
-            message: 'Failed...',
-            type: 'error'
-          })
-        }
-      },
-      loadData() {
-        const url = urlBase + '/api/v1/enum/all'
-
-        axios.get(url).then((res) => {
-          this.classEnum = res.data.Class
-          this.productEnum = res.data.product
-          this.typeEnum = res.data.type
-          this.currencyEnum = res.data.currency
-          this.statusEnum = res.data.status
-          this.revenueEnum = res.data.revenueType
-          this.subscriptionEnum = res.data.subscription
-        })
-      },
+            message: "Success!",
+            type: "success"
+          });
+        });
+      } catch (err) {
+        console.log(err);
+        this.$message({
+          showClose: true,
+          message: "Failed...",
+          type: "error"
+        });
+      }
     },
-    created() {
-      this.loadData()
-    }
-  }
+    loadData() {
+      const url = urlBase + "/api/v1/enum/all";
 
+      axios.get(url).then(res => {
+        this.classEnum = res.data.Class;
+        this.productEnum = res.data.product;
+        this.typeEnum = res.data.type;
+        this.currencyEnum = res.data.currency;
+        this.statusEnum = res.data.status;
+        this.revenueEnum = res.data.revenueType;
+        this.subscriptionEnum = res.data.subscription;
+      });
+    }
+  },
+  created() {
+    this.loadData();
+  }
+};
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
-  .header {
-    margin: 10px;
-    margin-left: 20px;
-    margin-right: 20px;
-  }
+.header {
+  margin: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
 
-  .el-input {
-    width: 300px;
-    margin: 20px;
-    margin-top: 10px;
-  }
-
+.el-input {
+  width: 300px;
+  margin: 20px;
+  margin-top: 10px;
+}
 </style>

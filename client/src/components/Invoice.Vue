@@ -113,318 +113,345 @@
 </template>
 
 <script>
-  import axios from 'Axios'
-  import _ from 'lodash'
-  import Modify from './Modify'
-  import * as jsonexport from 'jsonexport/dist'
-  const urlBase = "http://" + window.location.hostname + ":3030"
-  export default {
-    name: 'invoice',
-    components: {
-      Modify
-    },
-    data() {
-      return {
-        currentRow: {},
-        currentDescription: "",
-        currentComment: "",
-        commentDialogVisibility: false,
-        modifyDialogVisibility: false,
-        tags: [
-
-        ],
-        invoices: [],
-        selector: '',
-        searchValue: '',
-        fieldOptions: [{
+import axios from "Axios";
+import _ from "lodash";
+import Modify from "./Modify";
+import * as jsonexport from "jsonexport/dist";
+const urlBase = "http://" + window.location.hostname + ":3030";
+export default {
+  name: "invoice",
+  components: {
+    Modify
+  },
+  data() {
+    return {
+      currentRow: {},
+      currentDescription: "",
+      currentComment: "",
+      commentDialogVisibility: false,
+      modifyDialogVisibility: false,
+      tags: [],
+      invoices: [],
+      selector: "",
+      searchValue: "",
+      fieldOptions: [
+        {
           id: 1,
           data: 12
-        }],
-        searchValueOptions: [],
-        enumList: {},
-        isSelect: true,
-        isCustomer: false,
-        isInvoice: false,
-        queryParam: {
-          where: {}
-        },
-        customerNameList: [],
-        invoiceNumberList: [],
-        isNumber: true,
-        selector2: "",
-        min: "",
-        max: "",
-        loading: true,
+        }
+      ],
+      searchValueOptions: [],
+      enumList: {},
+      isSelect: true,
+      isCustomer: false,
+      isInvoice: false,
+      queryParam: {
+        where: {}
+      },
+      customerNameList: [],
+      invoiceNumberList: [],
+      isNumber: true,
+      selector2: "",
+      min: "",
+      max: "",
+      loading: true
+    };
+  },
+  methods: {
+    refreshData() {
+      this.getInvoice(this.queryParam);
+    },
+    async handleExport(command) {
+      var tempInvoice = [];
+      if (command == "all") {
+        const url = urlBase + "/api/v1/reports/getInvoice";
+        tempInvoice = (await axios.post(url, {
+          all: true
+        })).data;
+      } else {
+        tempInvoice = [...this.invoices];
+      }
+      const tempInvoice2 = tempInvoice.map(temp => {
+        var invoice = {
+          ...temp
+        };
+        invoice.class = temp.class_enum.data;
+        invoice.currency = temp.currency_enum.data;
+        invoice.product = temp.product_enum.data;
+        invoice.revenueType = temp.revenue_type_enum.data;
+        invoice.status = temp.status_enum.data;
+        invoice.subscriptionType = temp.subscription_enum.data;
+        invoice.type = temp.type_enum.data;
+        delete invoice.class_enum;
+        delete invoice.currency_enum;
+        delete invoice.product_enum;
+        delete invoice.revenue_type_enum;
+        delete invoice.status_enum;
+        delete invoice.subscription_enum;
+        delete invoice.type_enum;
+        return invoice;
+      });
+      jsonexport(tempInvoice2, (err, csv) => {
+        if (err) return console.log(err);
+        var uriContent =
+          "data:application/octet-stream," + encodeURIComponent(csv);
+        var link = document.createElement("a");
+        link.setAttribute("href", uriContent);
+        link.setAttribute("download", "Invoices.csv");
+        document.body.appendChild(link); // Required for FF
+
+        link.click();
+        this.$message({
+          type: "success",
+          message: command
+        });
+      });
+    },
+    getInvoice(param) {
+      const url = urlBase + "/api/v1/reports/getInvoice";
+      this.loading = true;
+      axios.post(url, param).then(res => {
+        this.invoices = res.data;
+        this.loading = false;
+      });
+    },
+    getEnum() {
+      const url = urlBase + "/api/v1/enum/all";
+
+      axios.get(url).then(res => {
+        this.enumList = res.data;
+        const keys = Object.keys(this.enumList);
+        var enumListTemp = keys;
+        enumListTemp.push("customerName");
+        enumListTemp.push("invoiceNumber");
+        this.fieldOptions = enumListTemp;
+      });
+    },
+
+    selector2Change(value) {
+      if (value == "invoiceAmountUSD" || value == "invoiceAmount") {
+        this.isNumber = true;
+      } else {
+        this.isNumber = false;
       }
     },
-    methods: {
-      
-      refreshData() {
-        this.getInvoice(this.queryParam)
-      },
-      async handleExport(command) {
+    selectorChange(value) {
+      if (this.enumList[value] != undefined) {
+        this.searchValueOptions = this.enumList[value];
+        this.isSelect = true;
+        this.isCustomer = false;
+        this.isInvoice = false;
+      }
+      if (value == "customerName") {
+        this.isSelect = false;
+        this.isCustomer = true;
+        this.isInvoice = false;
+      }
+      if (value == "invoiceNumber") {
+        this.isSelect = false;
+        this.isCustomer = false;
+        this.isInvoice = true;
+      }
+    },
 
-        var tempInvoice = []
-        if (command == "all") {
-          const url = urlBase + '/api/v1/reports/getInvoice'
-          tempInvoice = (await axios.post(url, {
-            all: true
-          })).data
-        } else {
-          tempInvoice = [...this.invoices]
-        }
-        const tempInvoice2 = tempInvoice.map(temp => {
-          var invoice = { ...temp
-          }
-          invoice.class = temp.class_enum.data
-          invoice.currency = temp.currency_enum.data
-          invoice.product = temp.product_enum.data
-          invoice.revenueType = temp.revenue_type_enum.data
-          invoice.status = temp.status_enum.data
-          invoice.subscriptionType = temp.subscription_enum.data
-          invoice.type = temp.type_enum.data
-          delete invoice.class_enum
-          delete invoice.currency_enum
-          delete invoice.product_enum
-          delete invoice.revenue_type_enum
-          delete invoice.status_enum
-          delete invoice.subscription_enum
-          delete invoice.type_enum
-          return invoice
-        })
-        jsonexport(tempInvoice2, (err, csv) => {
-          if (err) return console.log(err)
-          var uriContent = "data:application/octet-stream," + encodeURIComponent(csv);
-          var link = document.createElement("a");
-          link.setAttribute("href", uriContent);
-          link.setAttribute("download", "Invoices.csv");
-          document.body.appendChild(link); // Required for FF
-
-          link.click();
-          this.$message({
-            type: "success",
-            message: command
-          })
-        })
-
-
-      },
-      getInvoice(param) {
-        const url = urlBase + '/api/v1/reports/getInvoice'
-        this.loading = true
-        axios.post(url, param).then((res) => {
-          this.invoices = res.data
-          this.loading = false
-        })
-      },
-      getEnum() {
-        const url = urlBase + "/api/v1/enum/all"
-
-        axios.get(url).then((res) => {
-          this.enumList = res.data
-          const keys = Object.keys(this.enumList)
-          var enumListTemp = keys
-          enumListTemp.push("customerName")
-          enumListTemp.push("invoiceNumber")
-          this.fieldOptions = enumListTemp
-        })
-      },
-
-      selector2Change(value) {
-        if (value == "invoiceAmountUSD" || value == "invoiceAmount") {
-          this.isNumber = true
-        } else {
-          this.isNumber = false
-        }
-
-      },
-      selectorChange(value) {
-        if (this.enumList[value] != undefined) {
-          this.searchValueOptions = this.enumList[value]
-          this.isSelect = true
-          this.isCustomer = false
-          this.isInvoice = false
-        }
-        if (value == "customerName") {
-          this.isSelect = false
-          this.isCustomer = true
-          this.isInvoice = false
-        }
-        if (value == "invoiceNumber") {
-          this.isSelect = false
-          this.isCustomer = false
-          this.isInvoice = true
-        }
-
-
-      },
-
-      addTagg2() {
-        // if(this.selector2 == "" || (this.))
-        var currentParam = { ...this.queryParam.where
-        }
-        if (this.max == "") {
-          currentParam[this.selector2] = {
+    addTagg2() {
+      // if(this.selector2 == "" || (this.))
+      var currentParam = {
+        ...this.queryParam.where
+      };
+      if (this.max == "") {
+        currentParam[this.selector2] = {
+          $gte: this.min
+        };
+      } else {
+        currentParam[this.selector2] = {
+          $and: {
             $gte: this.min,
+            $lte: this.max
           }
-        } else {
-          currentParam[this.selector2] = {
-            $and: {
-              $gte: this.min,
-              $lte: this.max
-            }
-          }
-        }
-
-        this.queryParam.where = currentParam
-        this.getInvoice(this.queryParam)
-        if (_.findIndex(this.tags, i => {
-            return i.id == this.selector2
-          }) != -1) {
-          this.tags[_.findIndex(this.tags, i => {
-            return i.id == this.selector2
-          })].value = (((this.min.toString().length == 57) ? this.min.toString().slice(8, 15) : this.min) + "<" +
-            this.selector2 + "<" + ((this.max.toString().length == 57) ? this.min.toString().slice(8, 15) : this.max)
-          )
-        } else {
-          this.tags.push({
-            id: this.selector2,
-            value: (((this.min.toString().length == 57) ? this.min.toString().slice(8, 15) : this.min) + "<" + this
-              .selector2 + "<" + ((this.max.toString().length == 57) ? this.min.toString().slice(8, 15) : this.max)
-            )
-          })
-        }
-        this.selector2 = ""
-        this.min = ""
-        this.max = ""
-      },
-      addTagg() {
-        const currentParam = { ...this.queryParam.where
-        }
-        currentParam[this.selector] = this.searchValue
-
-        this.queryParam.where = currentParam
-        this.getInvoice(this.queryParam)
-        if (_.findIndex(this.tags, i => {
-            return i.id == this.selector
-          }) != -1) {
-          this.tags[_.findIndex(this.tags, i => {
-            return i.id == this.selector
-          })].value = (this.selector + " = " + this.searchValue)
-        } else {
-          this.tags.push({
-            id: this.selector,
-            value: (this.selector + " = " + this.searchValue)
-          })
-        }
-        this.selector = ""
-        this.searchValue = ""
-      },
-      removeTagg(tag) {
-        this.tags.splice(this.tags.indexOf(tag), 1)
-        delete this.queryParam.where[tag.id]
-        this.getInvoice(this.queryParam)
-      },
-      querySearchCustName(queryString, cb) {
-        var list = this.customerNameList
-        var results = queryString ? list.filter((this.createFilter(queryString))) : list;
-        cb(results)
-      },
-      querySearchInvoice(queryString, cb) {
-        var list = this.invoiceNumberList
-        var results = queryString ? list.filter((this.createFilterNumber(queryString))) : list;
-        cb(results)
-      },
-      createFilter(queryString) {
-        return (link) => {
-          return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
         };
-      },
-      createFilterNumber(queryString) {
-        return (link) => {
-          return (link.value.toString().indexOf(queryString.toLowerCase()) === 0);
-        };
-      },
-      getCustomerName() {
-        const url = urlBase + '/api/v1/reports/getCustomerName'
-        axios.get(url).then(res => {
-          this.customerNameList = res.data
-        })
-      },
-      getInvoiceNumber() {
-        const url = urlBase + '/api/v1/reports/getInvoiceNumber'
-        axios.get(url).then(res => {
-          this.invoiceNumberList = res.data
-        })
-      },
-      openComments(row) {
-        this.commentDialogVisibility = true
-        this.currentDescription = row.description
-        this.currentComment = row.comments
-        this.currentRow = row
-      },
-      updateComments() {
-        if (this.currentComment != this.currentRow.comments || this.currentDescription != this.currentRow.description) {
-          const url = urlBase + '/api/v1/reports/updateDescription'
-
-          axios.post(url, {
-            description: this.currentDescription,
-            comments: this.currentComment,
-            id: this.currentRow.id
-          })
-        }
-        this.commentDialogVisibility = false
-        this.refreshData()
-      },
-      modifyInvoice(row, e) {
-        this.modifyDialogVisibility = true
-        this.currentRow = row
-        e.stopPropagation()
-      },
-      closeModify() {
-        this.modifyDialogVisibility = false
       }
-    },
-    created() {
-      this.getInvoice()
-      this.getEnum()
-      this.getCustomerName()
-      this.getInvoiceNumber()
-    }
-  }
 
+      this.queryParam.where = currentParam;
+      this.getInvoice(this.queryParam);
+      if (
+        _.findIndex(this.tags, i => {
+          return i.id == this.selector2;
+        }) != -1
+      ) {
+        this.tags[
+          _.findIndex(this.tags, i => {
+            return i.id == this.selector2;
+          })
+        ].value =
+          (this.min.toString().length == 57
+            ? this.min.toString().slice(8, 15)
+            : this.min) +
+          "<" +
+          this.selector2 +
+          "<" +
+          (this.max.toString().length == 57
+            ? this.min.toString().slice(8, 15)
+            : this.max);
+      } else {
+        this.tags.push({
+          id: this.selector2,
+          value:
+            (this.min.toString().length == 57
+              ? this.min.toString().slice(8, 15)
+              : this.min) +
+            "<" +
+            this.selector2 +
+            "<" +
+            (this.max.toString().length == 57
+              ? this.min.toString().slice(8, 15)
+              : this.max)
+        });
+      }
+      this.selector2 = "";
+      this.min = "";
+      this.max = "";
+    },
+    addTagg() {
+      const currentParam = {
+        ...this.queryParam.where
+      };
+      currentParam[this.selector] = this.searchValue;
+
+      this.queryParam.where = currentParam;
+      this.getInvoice(this.queryParam);
+      if (
+        _.findIndex(this.tags, i => {
+          return i.id == this.selector;
+        }) != -1
+      ) {
+        this.tags[
+          _.findIndex(this.tags, i => {
+            return i.id == this.selector;
+          })
+        ].value =
+          this.selector + " = " + this.searchValue;
+      } else {
+        this.tags.push({
+          id: this.selector,
+          value: this.selector + " = " + this.searchValue
+        });
+      }
+      this.selector = "";
+      this.searchValue = "";
+    },
+    removeTagg(tag) {
+      this.tags.splice(this.tags.indexOf(tag), 1);
+      delete this.queryParam.where[tag.id];
+      this.getInvoice(this.queryParam);
+    },
+    querySearchCustName(queryString, cb) {
+      var list = this.customerNameList;
+      var results = queryString
+        ? list.filter(this.createFilter(queryString))
+        : list;
+      cb(results);
+    },
+    querySearchInvoice(queryString, cb) {
+      var list = this.invoiceNumberList;
+      var results = queryString
+        ? list.filter(this.createFilterNumber(queryString))
+        : list;
+      cb(results);
+    },
+    createFilter(queryString) {
+      return link => {
+        return (
+          link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+        );
+      };
+    },
+    createFilterNumber(queryString) {
+      return link => {
+        return link.value.toString().indexOf(queryString.toLowerCase()) === 0;
+      };
+    },
+    getCustomerName() {
+      const url = urlBase + "/api/v1/reports/getCustomerName";
+      axios.get(url).then(res => {
+        this.customerNameList = res.data;
+      });
+    },
+    getInvoiceNumber() {
+      const url = urlBase + "/api/v1/reports/getInvoiceNumber";
+      axios.get(url).then(res => {
+        this.invoiceNumberList = res.data;
+      });
+    },
+    openComments(row) {
+      this.commentDialogVisibility = true;
+      this.currentDescription = row.description;
+      this.currentComment = row.comments;
+      this.currentRow = row;
+    },
+    updateComments() {
+      if (
+        this.currentComment != this.currentRow.comments ||
+        this.currentDescription != this.currentRow.description
+      ) {
+        const url = urlBase + "/api/v1/reports/updateDescription";
+
+        axios.post(url, {
+          description: this.currentDescription,
+          comments: this.currentComment,
+          id: this.currentRow.id
+        });
+      }
+      this.commentDialogVisibility = false;
+      this.refreshData();
+    },
+    modifyInvoice(row, e) {
+      this.modifyDialogVisibility = true;
+      this.currentRow = row;
+      e.stopPropagation();
+    },
+    closeModify() {
+      this.modifyDialogVisibility = false;
+    }
+  },
+  created() {
+    this.getInvoice();
+    this.getEnum();
+    this.getCustomerName();
+    this.getInvoiceNumber();
+  }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .header,
-  .submit,
-  .el-table,
-  #filter,
-  #tags {
-    margin: 10px;
-    margin-left: 20px;
-    border: 10px;
-  }
+.header,
+.submit,
+.el-table,
+#filter,
+#tags {
+  margin: 10px;
+  margin-left: 20px;
+  border: 10px;
+}
 
-  .el-input,
-  .el-select,
-  .el-autocomplete {
-    width: 250px;
-    margin: 10px;
-    margin-left: 0px;
-  }
+.el-input,
+.el-select,
+.el-autocomplete {
+  width: 250px;
+  margin: 10px;
+  margin-left: 0px;
+}
 
-  a {
-    margin-right: 10px;
-  }
+a {
+  margin-right: 10px;
+}
 
-  .el-tag {
-    margin-right: 10px
-  }
+.el-tag {
+  margin-right: 10px;
+}
 
-  .el-dropdown {
-    float: right;
-  }
-
+.el-dropdown {
+  float: right;
+}
 </style>

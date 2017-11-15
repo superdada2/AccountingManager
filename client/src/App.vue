@@ -28,8 +28,7 @@
             <el-menu-item index="Report">
               <i class="el-icon-search"></i>Reports</el-menu-item>
             <el-menu-item index="Add">
-              <i class="el-icon-circle-check"></i>Add Invoice</el-menu-item>
-
+              <i class="el-icon-circle-check"></i>Add Invoice</el-menu-item>      
           </el-menu>
         </el-aside>
         <el-main id="content">
