@@ -66,17 +66,17 @@
             <el-date-picker v-model="formValue.recognitionStrMonth" type="month" placeholder="Recognition Start Month">
             </el-date-picker>
           </el-form-item>
-          <el-form-item prop="lengthRec" label='Recognition Length'>
+          <el-form-item prop="lengthRec" label='* Recognition Length'>
             <el-input placeholder="Length of Recognition(Months)" @change="lengthRecOnChange" type="number" v-model="formValue.lengthRec"
               ref="lengthRec"></el-input>
           </el-form-item>
-          <el-form-item prop="invoiceAmountUsd" label='Invoice Amount USD'>
+          <el-form-item prop="invoiceAmountUsd" label='* Invoice Amount USD'>
             <el-input placeholder="Invoice Amount(USD)" @change="invoiceAmountUsdOnChange" type="number" v-model="formValue.invoiceAmountUsd"></el-input>
           </el-form-item>
-          <el-form-item prop="fxRate" label='FxRate'>
+          <el-form-item prop="fxRate" label='* FxRate'>
             <el-input placeholder="Fx rate" type="number" @change="fxRateOnChange" v-model="formValue.fxRate"></el-input>
           </el-form-item>
-          <el-form-item prop="monthlyRec"  label='Monthly Recognition USD'>
+          <el-form-item prop="monthlyRec"  label='* Monthly Recognition USD'>
             <el-input placeholder="Monthly Recognition(USD)" type="number" v-model="formValue.monthlyRec"></el-input>
           </el-form-item>
           <el-form-item prop="annualIncreaseBool" label="Annual Increase Eligible">            
