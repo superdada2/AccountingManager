@@ -3,13 +3,17 @@
     <el-dialog title="Modify" :visible.sync="modifyDialogVisibility" width="80%">
       <Modify :invoice-data="currentRow" :close="()=>{this.modifyDialogVisibility = false}" :refresh="GetInvoice" />
     </el-dialog>
+    <el-dialog title="Modify Comments" :visible.sync="commentDialogVisibility" width="70%">
+      <ModifyComments :currentRow="currentRow" :close="()=>{this.commentDialogVisibility = false}" :refresh="GetInvoice"
+      />
+    </el-dialog>
     <el-row>
-    <el-date-picker v-model="billingMonth" type="month" placeholder="Billing Month">
-    </el-date-picker>
-    <el-button type="primary"  @click="GetInvoice">Go</el-Button>
+      <el-date-picker v-model="billingMonth" type="month" placeholder="Billing Month">
+      </el-date-picker>
+      <el-button type="primary" @click="GetInvoice">Go</el-Button>
     </el-row>
     <el-row>
-      <el-table v-if="tableData.length > 0?true:false" :data="tableData" v-loading="tableLoading" style="width: 100%" @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
+      <el-table v-if="tableData.length > 0?true:false" :data="tableData" v-loading="tableLoading" style="width: 100%" @row-click="openComments" @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
         <el-table-column prop="customerName" label="CustomerName" sortable>
         </el-table-column>
         <el-table-column prop="invoiceNumber" label="Invoice Number" sortable>
@@ -17,7 +21,7 @@
         <el-table-column prop="invoiceDate" label="InvoiceDate" sortable>
         </el-table-column>
         <el-table-column prop="billingMonth" label="BillingMonth" sortable>
-        </el-table-column>        
+        </el-table-column>
         <el-table-column prop="status_enum.data" label="Status" sortable>
         </el-table-column>
         <el-table-column prop="product_enum.data" label="Product" sortable>
@@ -25,6 +29,9 @@
         <el-table-column prop="recognitionStartMonth" label="RecStart" sortable>
         </el-table-column>
         <el-table-column align="right" prop="invoiceAmountUSD" label="amountUSD" sortable>
+          <template slot-scope="scope">
+            {{(scope.row.invoiceAmountUSD * 1).toLocaleString()}}
+          </template>
         </el-table-column>
         <el-table-column prop="increasePercentage" label="Percentage" sortable>
         </el-table-column>
@@ -33,7 +40,7 @@
             <el-tag>{{scope.row.annualIncreaseEli}}</el-tag>
           </template>
         </el-table-column>
-        
+
       </el-table>
     </el-row>
 
@@ -45,6 +52,7 @@ import axios from "Axios";
 import * as jsonexport from "jsonexport/dist";
 import _ from "lodash";
 import Modify from "../SubComponents/Modify";
+import ModifyComments from "../SubComponents/ModifyComments";
 const urlBase = "http://" + window.location.hostname + ":3030";
 export default {
   name: "billiingReport",
@@ -54,11 +62,15 @@ export default {
       tableData: [],
       tableLoading: false,
       modifyDialogVisibility: false,
-      currentRow: {}
+      currentRow: {},
+      currentComment: "",
+      currentDescription: "",
+      commentDialogVisibility: false
     };
   },
   components: {
-    Modify
+    Modify,
+    ModifyComments
   },
   methods: {
     GetInvoice() {
@@ -89,6 +101,10 @@ export default {
     },
     modifyInvoice(row, e) {
       this.modifyDialogVisibility = true;
+      this.currentRow = row;
+    },
+    openComments(row) {
+      this.commentDialogVisibility = true;
       this.currentRow = row;
     }
   },

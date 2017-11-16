@@ -30,7 +30,7 @@
     </el-dialog>
     <div id='filter'>
 
-      
+
 
       <br>
       <el-select v-model='selector' placeholder='Selector' @change='selectorChange'>
@@ -71,6 +71,9 @@
           <el-table-column prop='lengthMonth' label='length' sortable>
           </el-table-column>
           <el-table-column align="right" prop='invoiceAmountUSD' label='amountUSD' sortable>
+            <template slot-scope="scope">
+              {{(scope.row.invoiceAmountUSD * 1).toLocaleString()}}
+            </template>
           </el-table-column>
         </el-table>
       </div>
@@ -78,15 +81,22 @@
     <el-row>
 
       <el-col :span='6' v-for='detail in details' :key='detail.id'>
-        <el-table :data='detail' @header-click="()=>handleHeaderClick(detail)"  max-height="780" style='width: 95%; height:780px;' class='detailTable' border >
+        <el-table :data='detail' @header-click="()=>handleHeaderClick(detail)" max-height="780" style='width: 95%; height:780px;'
+          class='detailTable' border>
           <el-table-column :label="detail.customerName + ': '+ detail.product + ': '+detail.invoiceNumber">
             <el-table-column prop='year' label='Year'>
             </el-table-column>
             <el-table-column prop='month' label='Month'>
             </el-table-column>
             <el-table-column align="right" prop='income' label='Income'>
+              <template slot-scope="scope">
+                {{(scope.row.income * 1).toLocaleString()}}
+              </template>
             </el-table-column>
             <el-table-column align="right" prop='deferred' label='Deferred'>
+              <template slot-scope="scope">
+                {{(scope.row.deferred * 1).toLocaleString()}}
+              </template>
             </el-table-column>
           </el-table-column>
         </el-table>
@@ -362,8 +372,16 @@ export default {
     this.getCustomerName();
     this.getInvoiceNumber();
     if (this.$route.params.invoiceId != undefined) {
-      this.getInvoice({ where: { id: this.$route.params.invoiceId } });
-      this.queryParam = { where: { id: this.$route.params.invoiceId } };
+      this.getInvoice({
+        where: {
+          id: this.$route.params.invoiceId
+        }
+      });
+      this.queryParam = {
+        where: {
+          id: this.$route.params.invoiceId
+        }
+      };
     }
   }
 };
@@ -400,6 +418,7 @@ a {
 .el-dropdown {
   float: right;
 }
+
 #export {
   float: right;
 }

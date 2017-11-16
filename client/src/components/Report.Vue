@@ -41,8 +41,16 @@
               <el-table-column prop="year" label="Year" />
               <el-table-column prop="month" label="Month" />
               <el-table-column prop="count" label="Count" />
-              <el-table-column v-for="item in columnEnum" :key="item.id" :prop="item.data" :label="item.data" align="right" />
-              <el-table-column prop="total" label="Total" align="right" />"
+              <el-table-column v-for="item in columnEnum" :key="item.id" :prop="item.data" :label="item.data" align="right">
+                <template slot-scope="scope">
+                  {{(scope.row[item.data] * 1).toLocaleString()}}
+                </template>
+              </el-table-column>
+              <el-table-column prop="total" label="Total" align="right">
+                <template slot-scope="scope">
+                  {{(scope.row.total * 1).toLocaleString()}}
+                </template>
+              </el-table-column>
             </el-table>
           </div>
         </el-row>
@@ -61,13 +69,21 @@
           <br>
         </a>
         <div class="dataTable">
-          <el-table v-for="detail in customerDetails" :key="detail.id" @row-click="ToDetail"  v-loading="customerLoading" :data="detail" style="width: 100%"
-            show-summary>
+          <el-table v-for="detail in customerDetails" :key="detail.id" @row-click="ToDetail" v-loading="customerLoading" :data="detail"
+            style="width: 100%" show-summary>
             <el-table-column prop="customerName" label="Customer Name" sortable />
             <el-table-column prop="invoiceNumber" label="Invoice Number" sortable />
             <el-table-column prop="product_enum.data" label="Product" sortable/>
-            <el-table-column prop="income" label="Income" align="right" sortable/>
-            <el-table-column prop="deferred" label="Deferred" align="right" sortable/>
+            <el-table-column prop="income" label="Income" align="right" sortable>
+              <template slot-scope="scope">
+                {{(scope.row.income * 1).toLocaleString()}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="deferred" label="Deferred" align="right" sortable>
+              <template slot-scope="scope">
+                {{(scope.row.deferred * 1).toLocaleString()}}
+              </template>
+            </el-table-column>
             <el-table-column prop="month" label="Month" />
             <el-table-column prop="year" label="Year" />
           </el-table>
