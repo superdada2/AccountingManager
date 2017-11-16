@@ -24,6 +24,14 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: true,
     },
+    country: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      references: {
+        model: 'country_enum',
+        key: 'id'
+      }
+    },
     description: {
       type: DataTypes.STRING(255),
       allowNull: true,
@@ -45,7 +53,7 @@ module.exports = function (sequelize, DataTypes) {
         }
     },
     invoiceNumber: {
-      type: DataTypes.INTEGER(11),
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     invoiceAmount: {

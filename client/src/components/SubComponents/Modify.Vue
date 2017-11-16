@@ -20,8 +20,14 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item prop="country" label='Country'>
+            <el-select v-model="formValue.country" placeholder="Country">
+              <el-option v-for="item in countryEnum" :key="item.id" :label="item.data" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item prop="invoiceNumber" label='Invoice Number'>
-            <el-input placeholder="Invoice Number" type="number" v-model="formValue.invoiceNumber"></el-input>
+            <el-input placeholder="Invoice Number" v-model="formValue.invoiceNumber"></el-input>
           </el-form-item>
           <el-form-item prop="invoiceAmount" label='Invoice Amount'>
             <el-input @change="invoiceAmountOnChange" placeholder="Invoice Amount" type="number" v-model="formValue.invoiceAmount"></el-input>
@@ -137,6 +143,7 @@ export default {
       currencyEnum: [],
       monthEnum: [],
       statusEnum: [],
+      countryEnum: [],
       revenueEnum: [],
       subscriptionEnum: [],
       formValue: {
@@ -163,9 +170,18 @@ export default {
         comments: "",
         invoiceAmountUsd: "",
         annualIncreaseBool: true,
-        subscription: ""
+        subscription: "",
+        country: ""
       },
       rules: {
+        country: [
+          {
+            required: true,
+            type: "number",
+            message: "Please Input a Country",
+            trigger: "change"
+          }
+        ],
         companyName: [
           {
             required: true,
@@ -311,6 +327,7 @@ export default {
         this.revenueEnum = res.data.revenueType;
         this.monthEnum = res.data.month;
         this.subscriptionEnum = res.data.subscription;
+        this.countryEnum = res.data.country;
       });
     },
 
@@ -323,25 +340,27 @@ export default {
 
     deleteInvoice() {
       const url = urlBase + "/api/v1/reports/deleteInvoice";
-      try {
-        axios
-          .post(url, {
-            id: this.invoiceData.id
-          })
-          .then(res => {
-            this.$message({
-              type: "success",
-              message: "Success!"
+      this.$confirm("Are you sure to Delete this Invoice?").then(_ => {
+        try {
+          axios
+            .post(url, {
+              id: this.invoiceData.id
+            })
+            .then(res => {
+              this.$message({
+                type: "success",
+                message: "Success!"
+              });
+              this.refresh();
+              this.close();
             });
-            this.refresh();
-            this.close();
+        } catch (err) {
+          this.$message({
+            type: "error",
+            message: err
           });
-      } catch (err) {
-        this.$message({
-          type: "error",
-          message: err
-        });
-      }
+        }
+      });
     },
 
     cancel() {

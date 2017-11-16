@@ -65,7 +65,8 @@ export function loadData2() {
       cancelationDate: randomDate(new Date(2014, 1), new Date(2017, 11)),
       invoiceAmountUsd: random(1, 50000) / random(1, 1000),
       annualIncreaseBool: true,
-      subscription: random(1, 2)
+      subscription: random(1, 2),
+      country: random(1, 40)
     })
     res(result)
   })
@@ -198,7 +199,8 @@ export function CreateInvoice({
   comments = '1',
   invoiceAmountUsd = 1,
   annualIncreaseBool = 1,
-  subscription = 1
+  subscription = 1,
+  country = 1,
 }) {
   return new Promise(async(res, rej) => {
     try {
@@ -225,7 +227,8 @@ export function CreateInvoice({
         dateLastIncrease: dateLastIncrease,
         increasePercentage: increasePerc,
         invoiceAmountUSD: invoiceAmountUsd,
-        MonthlyRecoginitionAmountUSD: monthlyRec
+        MonthlyRecoginitionAmountUSD: monthlyRec,
+        country: country
       })
 
       Date.prototype.addDays = function (days) {

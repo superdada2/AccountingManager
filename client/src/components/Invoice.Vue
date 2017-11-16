@@ -105,7 +105,7 @@
         </el-table-column>
         <el-table-column prop="lengthMonth" label="length" sortable>
         </el-table-column>
-        <el-table-column prop="invoiceAmountUSD" label="amountUSD" sortable>
+        <el-table-column align="right" prop="invoiceAmountUSD" label="amountUSD" sortable>
         </el-table-column>
       </el-table>
     </div>
@@ -115,7 +115,7 @@
 <script>
 import axios from "Axios";
 import _ from "lodash";
-import Modify from "./Modify";
+import Modify from "./SubComponents/Modify";
 import * as jsonexport from "jsonexport/dist";
 const urlBase = "http://" + window.location.hostname + ":3030";
 export default {
@@ -408,7 +408,6 @@ export default {
     modifyInvoice(row, e) {
       this.modifyDialogVisibility = true;
       this.currentRow = row;
-      e.stopPropagation();
     },
     closeModify() {
       this.modifyDialogVisibility = false;

@@ -192,7 +192,7 @@ router.post('/getClassTable', async(req, res) => {
 
 router.get('/loadData', async(req, res) => {
   try {
-    const result = await loadData2(req.body)
+    const result = await loadData(req.body)
 
     res.status(200).json(result)
   } catch (err) {

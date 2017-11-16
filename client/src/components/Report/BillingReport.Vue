@@ -1,0 +1,101 @@
+<template>
+  <div className="billingReport">
+    <el-dialog title="Modify" :visible.sync="modifyDialogVisibility" width="80%">
+      <Modify :invoice-data="currentRow" :close="()=>{this.modifyDialogVisibility = false}" :refresh="GetInvoice" />
+    </el-dialog>
+    <el-row>
+    <el-date-picker v-model="billingMonth" type="month" placeholder="Billing Month">
+    </el-date-picker>
+    <el-button type="primary"  @click="GetInvoice">Go</el-Button>
+    </el-row>
+    <el-row>
+      <el-table v-if="tableData.length > 0?true:false" :data="tableData" v-loading="tableLoading" style="width: 100%" @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
+        <el-table-column prop="customerName" label="CustomerName" sortable>
+        </el-table-column>
+        <el-table-column prop="invoiceNumber" label="Invoice Number" sortable>
+        </el-table-column>
+        <el-table-column prop="invoiceDate" label="InvoiceDate" sortable>
+        </el-table-column>
+        <el-table-column prop="billingMonth" label="BillingMonth" sortable>
+        </el-table-column>        
+        <el-table-column prop="status_enum.data" label="Status" sortable>
+        </el-table-column>
+        <el-table-column prop="product_enum.data" label="Product" sortable>
+        </el-table-column>
+        <el-table-column prop="recognitionStartMonth" label="RecStart" sortable>
+        </el-table-column>
+        <el-table-column align="right" prop="invoiceAmountUSD" label="amountUSD" sortable>
+        </el-table-column>
+        <el-table-column prop="increasePercentage" label="Percentage" sortable>
+        </el-table-column>
+        <el-table-column prop='annualIncreaseEli' label="Eligible">
+          <template slot-scope="scope">
+            <el-tag>{{scope.row.annualIncreaseEli}}</el-tag>
+          </template>
+        </el-table-column>
+        
+      </el-table>
+    </el-row>
+
+  </div>
+</template>
+
+<script>
+import axios from "Axios";
+import * as jsonexport from "jsonexport/dist";
+import _ from "lodash";
+import Modify from "../SubComponents/Modify";
+const urlBase = "http://" + window.location.hostname + ":3030";
+export default {
+  name: "billiingReport",
+  data() {
+    return {
+      billingMonth: "",
+      tableData: [],
+      tableLoading: false,
+      modifyDialogVisibility: false,
+      currentRow: {}
+    };
+  },
+  components: {
+    Modify
+  },
+  methods: {
+    GetInvoice() {
+      const url = urlBase + "/api/v1/reports/getInvoice";
+      this.tableLoading = true;
+      try {
+        axios
+          .post(url, {
+            where: {
+              billingMonth: this.billingMonth
+            }
+          })
+          .then(res => {
+            this.tableData = res.data;
+            this.$message({
+              type: "success",
+              message: "Success"
+            });
+            this.tableLoading = false;
+          });
+      } catch (err) {
+        this.tableLoading = false;
+        this.$message({
+          type: "error",
+          message: err.message
+        });
+      }
+    },
+    modifyInvoice(row, e) {
+      this.modifyDialogVisibility = true;
+      this.currentRow = row;
+    }
+  },
+  created() {}
+};
+</script>
+
+<style scoped>
+
+</style>

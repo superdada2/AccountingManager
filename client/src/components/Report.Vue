@@ -41,31 +41,40 @@
               <el-table-column prop="year" label="Year" />
               <el-table-column prop="month" label="Month" />
               <el-table-column prop="count" label="Count" />
-              <el-table-column v-for="item in columnEnum" :key="item.id" :prop="item.data" :label="item.data" />
-              <el-table-column prop="total" label="Total" />"
+              <el-table-column v-for="item in columnEnum" :key="item.id" :prop="item.data" :label="item.data" align="right" />
+              <el-table-column prop="total" label="Total" align="right" />"
             </el-table>
           </div>
         </el-row>
       </el-tab-pane>
       <el-tab-pane label='Customers' name="customer">
         <a class="inputRow">
-        <el-autocomplete placeholder="Customer"  v-model="customerSearchValue" :fetch-suggestions="querySearchCustName"></el-autocomplete>
-        <el-date-picker v-model="customerQueryDate" type="month" placeholder="Month">
-        </el-date-picker>
-        <el-button type="primary" id="tagAdder" @click="GetCustomerReport">Go</el-button>
-        <el-button id="export" type="primary " @click="()=>handleExport(this.customerDetails)">Export</el-button>
-        <br>
+          <el-autocomplete placeholder="Customer" v-model="customerSearchValue" :fetch-suggestions="querySearchCustName"></el-autocomplete>
+          <el-date-picker v-model="customerQueryDate" type="month" placeholder="Month">
+          </el-date-picker>
+          <el-select v-model="productFilter" placeholder="Product">
+            <el-option v-for="item in productEnum" :key="item.id" :label="item.data" :value="item.id">
+            </el-option>
+          </el-select>
+          <el-button type="primary" id="tagAdder" @click="GetCustomerReport">Go</el-button>
+          <el-button id="export" type="primary " @click="()=>handleExport(this.customerDetails)">Export</el-button>
+          <br>
         </a>
-        <el-table class="dataTable" @row-click="ToDetail" v-if="customerTableVisibility" v-loading="customerLoading" :data="customerDetails" style="width: 100%" show-summary>
-          <el-table-column prop="customerName" label="Customer Name" />
-          <el-table-column prop="invoiceNumber" label="Invoice Number" />
-          <el-table-column prop="product_enum.data" label="Product" />
-          <el-table-column prop="income" label="Income" />
-          <el-table-column prop="deferred" label="Deferred" />
-          <el-table-column prop="month" label="Month" />
-          <el-table-column prop="year" label="Year" />
-
-        </el-table>
+        <div class="dataTable">
+          <el-table v-for="detail in customerDetails" :key="detail.id" @row-click="ToDetail"  v-loading="customerLoading" :data="detail" style="width: 100%"
+            show-summary>
+            <el-table-column prop="customerName" label="Customer Name" sortable />
+            <el-table-column prop="invoiceNumber" label="Invoice Number" sortable />
+            <el-table-column prop="product_enum.data" label="Product" sortable/>
+            <el-table-column prop="income" label="Income" align="right" sortable/>
+            <el-table-column prop="deferred" label="Deferred" align="right" sortable/>
+            <el-table-column prop="month" label="Month" />
+            <el-table-column prop="year" label="Year" />
+          </el-table>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label='Billing' name='billing'>
+        <BillingReport/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -74,8 +83,11 @@
 
 <script>
 import axios from "Axios";
+import BillingReport from "./Report/BillingReport";
 import LineChart from "../charts/LineChart.js";
 import * as jsonexport from "jsonexport/dist";
+import _ from "lodash";
+
 const urlBase = "http://" + window.location.hostname + ":3030";
 const colors = {
   backgroundColor: [
@@ -108,7 +120,8 @@ const colors = {
 export default {
   name: "report",
   components: {
-    LineChart
+    LineChart,
+    BillingReport
   },
   data() {
     return {
@@ -134,6 +147,7 @@ export default {
           data: "Product"
         }
       ],
+      productFilter: "",
       tableData: [],
       customerLoading: false,
       customerTableVisibility: false,
@@ -183,20 +197,25 @@ export default {
   },
   methods: {
     ToDetail(row) {
-      this.$router.push({ name: "Details", params: { invoiceId: row.id } });
+      this.$router.push({
+        name: "Details",
+        params: {
+          invoiceId: row.id
+        }
+      });
     },
     GetCustomerReport() {
       const url = urlBase + "/api/v1/reports/getIncomeDeferred";
       this.customerTableVisibility = true;
       this.customerLoading = true;
+      var where = {};
+      this.customerSearchValue != ""
+        ? (where["customerName"] = this.customerSearchValue)
+        : null;
+      this.productFilter != "" ? (where["product"] = this.productFilter) : null;
       axios
         .post(url, {
-          where:
-            this.customerSearchValue == ""
-              ? null
-              : {
-                  customerName: this.customerSearchValue
-                }
+          where: where
         })
         .then(res => {
           const month = this.customerQueryDate.getMonth() + 1;
@@ -231,8 +250,22 @@ export default {
             temp2["deferred"] = holder2 != undefined ? holder2.amount : 0;
             customerDetails[index] = temp2;
           });
-          this.customerDetails = customerDetails;
+
+          //split detail into smaller tables
+          const customerDetails2 = this.productEnum.map(l => {
+            const detail = customerDetails.filter(f => {
+              return f.product == l.id;
+            });
+            if (detail.length == 0) {
+              return undefined;
+            }
+            return detail;
+          });
+          this.customerDetails = _.compact(customerDetails2);
           this.customerLoading = false;
+          this.customerQueryDate = "";
+          this.customerSearchValue = "";
+          this.productFilter = "";
         });
     },
 
@@ -240,10 +273,10 @@ export default {
       var url = urlBase;
       if (this.groupBy == 2) {
         url += "/api/v1/reports/getProductTable";
-        this.GetProductEnum();
+        this.columnEnum = [...this.productEnum];
       } else {
         url += "/api/v1/reports/getClassTable";
-        this.GetClassEnum();
+        this.columnEnum = [...this.classEnum];
       }
       if (new Date(this.startM) > new Date(this.endM)) {
         this.$message({
@@ -320,14 +353,14 @@ export default {
     GetProductEnum() {
       const url = urlBase + "/api/v1/enum/product";
       axios.get(url).then(res => {
-        this.columnEnum = res.data;
+        this.productEnum = res.data;
       });
     },
 
     GetClassEnum() {
       const url = urlBase + "/api/v1/enum/class";
       axios.get(url).then(res => {
-        this.columnEnum = res.data;
+        this.classEnum = res.data;
       });
     },
     handleExport(data) {
@@ -371,6 +404,8 @@ export default {
   created() {
     // this.GetCustomerReport()
     this.getCustomerName();
+    this.GetClassEnum();
+    this.GetProductEnum();
   }
 };
 </script>

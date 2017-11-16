@@ -38,7 +38,7 @@
 
 <script>
 import axios from "Axios";
-import { urlBase } from "../settings.js";
+import { urlBase } from "../../settings.js";
 export default {
   name: "ModifyDetail",
   props: ["detailData", "close", "refresh"],

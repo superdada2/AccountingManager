@@ -70,7 +70,7 @@
           </el-table-column>
           <el-table-column prop='lengthMonth' label='length' sortable>
           </el-table-column>
-          <el-table-column prop='invoiceAmountUSD' label='amountUSD' sortable>
+          <el-table-column align="right" prop='invoiceAmountUSD' label='amountUSD' sortable>
           </el-table-column>
         </el-table>
       </div>
@@ -78,15 +78,15 @@
     <el-row>
 
       <el-col :span='6' v-for='detail in details' :key='detail.id'>
-        <el-table :data='detail' @header-click="()=>handleHeaderClick(detail)"  max-height="900" style='width: 95%;' class='detailTable' border >
+        <el-table :data='detail' @header-click="()=>handleHeaderClick(detail)"  max-height="780" style='width: 95%; height:780px;' class='detailTable' border >
           <el-table-column :label="detail.customerName + ': '+ detail.product + ': '+detail.invoiceNumber">
             <el-table-column prop='year' label='Year'>
             </el-table-column>
             <el-table-column prop='month' label='Month'>
             </el-table-column>
-            <el-table-column prop='income' label='Income'>
+            <el-table-column align="right" prop='income' label='Income'>
             </el-table-column>
-            <el-table-column prop='deferred' label='Deferred'>
+            <el-table-column align="right" prop='deferred' label='Deferred'>
             </el-table-column>
           </el-table-column>
         </el-table>
@@ -98,8 +98,9 @@
 <script>
 import axios from "Axios";
 import _ from "lodash";
-import Modify from "./Modify";
-import ModifyDetail from "./ModifyDetail";
+import Modify from "./SubComponents/Modify";
+import ModifyDetail from "./SubComponents/ModifyDetail";
+
 import * as jsonexport from "jsonexport/dist";
 import { urlBase } from "../settings.js";
 export default {

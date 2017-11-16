@@ -9,7 +9,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item prop="companyName" label='Company Name'>
-            <el-input placeholder="Company Name" v-model="formValue.companyName"></el-input>
+            <el-autocomplete placeholder="Company Name"  v-model="formValue.companyName" :fetch-suggestions="querySearchCustName"></el-autocomplete>            
             <br>
           </el-form-item>
           <el-form-item prop="product" label='Product'>
@@ -24,8 +24,14 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item prop="country" label='Country'>
+            <el-select v-model="formValue.country" placeholder="Country">
+              <el-option v-for="item in countryEnum" :key="item.id" :label="item.data" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item prop="invoiceNumber" label='Invoice Number'>
-            <el-input placeholder="Invoice Number" type="number" v-model="formValue.invoiceNumber"></el-input>
+            <el-input placeholder="Invoice Number" v-model="formValue.invoiceNumber"></el-input>
           </el-form-item>
           <el-form-item prop="invoiceAmount" label='Invoice Amount'>
             <el-input @change="invoiceAmountOnChange" placeholder="Invoice Amount" type="number" v-model="formValue.invoiceAmount"></el-input>
@@ -132,8 +138,10 @@ export default {
       currencyEnum: [],
       monthEnum: [],
       statusEnum: [],
+      countryEnum: [],
       revenueEnum: [],
       subscriptionEnum: [],
+      customerNameList: [],
       formValue: {
         Class: "",
         product: "",
@@ -158,9 +166,18 @@ export default {
         comments: "",
         invoiceAmountUsd: "",
         annualIncreaseBool: true,
-        subscription: ""
+        subscription: "",
+        country: ""
       },
       rules: {
+        country: [
+          {
+            required: true,
+            type: "number",
+            message: "Please select a Country",
+            trigger: "change"
+          }
+        ],
         companyName: [
           {
             required: true,
@@ -288,7 +305,7 @@ export default {
     //TODO: auto fill fx rate, and usd fields
     loadData() {
       const url = urlBase + "/api/v1/enum/all";
-
+      this.getCustomerName();
       axios.get(url).then(res => {
         this.classEnum = res.data.Class;
         this.productEnum = res.data.product;
@@ -299,6 +316,7 @@ export default {
         this.revenueEnum = res.data.revenueType;
         this.monthEnum = res.data.month;
         this.subscriptionEnum = res.data.subscription;
+        this.countryEnum = res.data.country;
       });
     },
 
@@ -310,6 +328,20 @@ export default {
       this.formValue = result;
       this.$refs[formName].resetFields();
       this.$cookie.delete("form");
+    },
+    querySearchCustName(queryString, cb) {
+      var list = this.customerNameList;
+      var results = queryString
+        ? list.filter(this.createFilter(queryString))
+        : list;
+      cb(results);
+    },
+    createFilter(queryString) {
+      return link => {
+        return (
+          link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+        );
+      };
     },
     SaveForm() {
       console.log("Saving", { ...this.formValue });
@@ -330,7 +362,7 @@ export default {
                 type: "success",
                 message: "Success!"
               });
-              this.resetForm(formName);
+              // this.resetForm(formName);
             });
           } catch (err) {
             this.$message({
@@ -396,6 +428,12 @@ export default {
         this.formValue.lengthRec = 12;
       }
       this.lengthRecOnChange(this.formValue.lengthRec);
+    },
+    getCustomerName() {
+      const url = urlBase + "/api/v1/reports/getCustomerName";
+      axios.get(url).then(res => {
+        this.customerNameList = res.data;
+      });
     }
   },
   created() {
@@ -420,6 +458,7 @@ export default {
 <style scoped>
 .el-select,
 .el-input,
+.el-autocomplete,
 .el-textarea {
   width: 80%;
 }
