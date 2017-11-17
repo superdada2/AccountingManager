@@ -110,6 +110,14 @@ export default {
       };
     },
     GetCustomerReport() {
+      var loading = {};
+      if (this.customerDetails.length == 0) {
+        loading = this.$loading({
+          lock: true,
+          text: "Loading",
+          spinner: "el-icon-loading"
+        });
+      }
       const url = urlBase + "/api/v1/reports/getIncomeDeferred";
       this.customerTableVisibility = true;
       this.customerLoading = true;
@@ -176,6 +184,7 @@ export default {
                 type: "success",
                 message: "Success"
               });
+              loading.close();
             } catch (err) {
               this.customerLoading = false;
             }
