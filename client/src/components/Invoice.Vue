@@ -311,9 +311,6 @@ export default {
               : this.max)
         });
       }
-      this.selector2 = "";
-      this.min = "";
-      this.max = "";
     },
     addTagg() {
       const currentParam = {
@@ -340,8 +337,6 @@ export default {
           value: this.selector + " = " + this.searchValue
         });
       }
-      this.selector = "";
-      this.searchValue = "";
     },
     removeTagg(tag) {
       this.tags.splice(this.tags.indexOf(tag), 1);

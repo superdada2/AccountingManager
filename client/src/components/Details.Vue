@@ -188,22 +188,26 @@ export default {
         text: "Loading",
         spinner: "el-icon-loading"
       });
-      axios.post(url, param).then(res => {
-        this.invoices = res.data;
-      });
-      axios.post(url2, param).then(res => {
-        var details = [];
-        res.data.forEach(entry => {
-          var temp = this.merge(entry.incomes, entry.deferred_balances);
-          temp["invoiceNumber"] = entry.invoiceNumber;
-          temp["customerName"] = entry.customerName;
-          temp["product"] = entry.product_enum.data;
-          temp["id"] = entry.id;
-          details.push(temp);
+      try {
+        axios.post(url, param).then(res => {
+          this.invoices = res.data;
+        });
+        axios.post(url2, param).then(res => {
+          var details = [];
+          res.data.forEach(entry => {
+            var temp = this.merge(entry.incomes, entry.deferred_balances);
+            temp["invoiceNumber"] = entry.invoiceNumber;
+            temp["customerName"] = entry.customerName;
+            temp["product"] = entry.product_enum.data;
+            temp["id"] = entry.id;
+            details.push(temp);
+          });
+          this.details = details;
           loading.close();
         });
-        this.details = details;
-      });
+      } catch (err) {
+        loading.close();
+      }
     },
 
     merge(income1, deferred1) {
@@ -294,8 +298,6 @@ export default {
 
       this.queryParam.where = currentParam;
       this.getInvoice(this.queryParam);
-      this.selector = "";
-      this.searchValue = "";
     },
     querySearchCustName(queryString, cb) {
       var list = this.customerNameList;
