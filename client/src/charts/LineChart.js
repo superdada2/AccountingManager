@@ -8,7 +8,7 @@ export default {
   extends: Line,
   props: ['options'],
   mixins: [mixins.reactiveProp],
-  mounted() {
+  mounted () {
     this.renderChart(this.chartData, this.options)
   }
 }
