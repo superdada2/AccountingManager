@@ -70,7 +70,7 @@
           </el-table-column>
           <el-table-column prop='lengthMonth' label='length' sortable>
           </el-table-column>
-          <el-table-column align="right" prop='invoiceAmountUSD' label='amountUSD' sortable>
+          <el-table-column align="right" prop='invoiceAmountUSD' label='amountUSD'>
             <template slot-scope="scope">
               {{(scope.row.invoiceAmountUSD * 1).toLocaleString()}}
             </template>

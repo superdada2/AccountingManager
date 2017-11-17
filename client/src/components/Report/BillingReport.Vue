@@ -30,7 +30,7 @@
         </el-table-column>
         <el-table-column prop="recognitionStartMonth" label="RecStart" sortable>
         </el-table-column>
-        <el-table-column align="right" prop="invoiceAmountUSD" label="amountUSD" sortable>
+        <el-table-column align="right" prop="invoiceAmountUSD" label="amountUSD">
           <template slot-scope="scope">
             {{(scope.row.invoiceAmountUSD * 1).toLocaleString()}}
           </template>
@@ -83,6 +83,14 @@ export default {
       console.log(billingMonth);
       console.log(this.input);
       this.input.billingMonth = billingMonth;
+    },
+    ToDetail(row) {
+      this.$router.push({
+        name: "Details",
+        params: {
+          invoiceId: row.id
+        }
+      });
     },
     handleExport(data) {
       jsonexport(data, (err, csv) => {
