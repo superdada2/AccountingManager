@@ -65,7 +65,7 @@
             </el-option>
           </el-select>
           <el-button type="primary" id="tagAdder" @click="GetCustomerReport">Go</el-button>
-          <el-button id="export" type="primary " @click="()=>handleExport(this.customerDetails)">Export</el-button>
+          <el-button id="export" type="primary " @click="()=>{handleExport([].concat.apply([],this.customerDetails))}">Export</el-button>
           <br>
         </a>
         <div class="dataTable">

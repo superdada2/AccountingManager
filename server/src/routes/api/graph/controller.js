@@ -11,240 +11,567 @@ import {
   subscription_enum,
   type_enum,
   month_enum,
+  country_enum,
   sequelize,
   Sequelize,
 } from '../../../models';
 export function BillByCustomer({
-  sort = 'active'
+  filter = 'active',
+  startMonth = new Date(2015, 1),
+  endMonth = new Date()
 }) {
-  if (sort == 'active') {
-    return invoice.findAll({
-      attributes: ["customerName", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
-        [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
-      ],
-      group: ['customerName'],
-      where: {
-        recognitionStartMonth: {
-          $between: [sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000, 1)]
-        },
-        status: {
-          $ne: 3
-        }
-      }
-    })
+  switch (filter) {
+    case "active":
+      return invoice.findAll({
+        attributes: ["customerName", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['customerName'],
 
-  } else {
-    return invoice.findAll({
-      attributes: ["customerName", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
-        [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
-      ],
-      group: ['customerName'],
-    })
+        where: {
+          recognitionStartMonth: {
+            $between: [sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000, 1)]
+          },
+          status: {
+            $ne: 3
+          }
+        }
+      })
+      break;
+    case "total":
+      return invoice.findAll({
+        attributes: ["customerName", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['customerName'],
+
+      })
+      break;
+    case "billingMonth":
+      return invoice.findAll({
+        attributes: ["customerName", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['customerName'],
+        where: {
+          billingMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
+        }
+      })
+      break;
+    case "recognitionStartMonth":
+      return invoice.findAll({
+        attributes: ["customerName", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['customerName'],
+        where: {
+          recognitionStartMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
+        }
+      })
+      break;
   }
 }
 
 export function BillByCurrency({
-  sort = 'active'
+  filter = 'active',
+  startMonth = new Date(2015, 1),
+  endMonth = new Date()
+
 }) {
-  if (sort == 'active') {
-    return invoice.findAll({
-      attributes: ["currency", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
-        [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
-      ],
-      group: ['currency'],
-      include: [{
-        model: currency_enum
-      }],
-      where: {
-        recognitionStartMonth: {
-          $between: [sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000, 1)]
-        },
-        status: {
-          $ne: 3
+  switch (filter) {
+    case "active":
+      return invoice.findAll({
+        attributes: ["currency", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['currency'],
+        include: [{
+          model: currency_enum
+        }],
+        where: {
+          recognitionStartMonth: {
+            $between: [sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000, 1)]
+          },
+          status: {
+            $ne: 3
+          }
         }
-      }
-    })
+      })
+      break;
+    case "total":
+      return invoice.findAll({
+        attributes: ["currency", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['currency'],
+        include: [{
+          model: currency_enum
+        }]
+      })
+      break;
+    case "billingMonth":
+      return invoice.findAll({
+        attributes: ["currency", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['currency'],
+        include: [{
+          model: currency_enum
+        }],
+        where: {
+          billingMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
+        }
+      })
+      break;
+    case "recognitionStartMonth":
+      return invoice.findAll({
+        attributes: ["currency", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['currency'],
+        include: [{
+          model: currency_enum
+        }],
+        where: {
+          recognitionStartMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
+        }
+      })
+      break;
   }
-  return invoice.findAll({
-    attributes: ["currency", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
-      [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
-    ],
-    group: ['currency'],
-    include: [{
-      model: currency_enum
-    }]
-  })
 }
 
 export function BillByClass({
-  sort = 'active'
+  filter = 'active',
+  startMonth = new Date(2015, 1),
+  endMonth = new Date()
 }) {
-  if (sort == 'active') {
-
-    return invoice.findAll({
-      attributes: ["class", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
-        [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
-      ],
-      group: ['class'],
-      include: [{
-        model: class_enum
-      }],
-      where: {
-        recognitionStartMonth: {
-          $between: [sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000, 1)]
-        },
-        status: {
-          $ne: 3
+  switch (filter) {
+    case "active":
+      return invoice.findAll({
+        attributes: ["class", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['class'],
+        include: [{
+          model: class_enum
+        }],
+        where: {
+          recognitionStartMonth: {
+            $between: [sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000, 1)]
+          },
+          status: {
+            $ne: 3
+          }
         }
-      }
-    })
+      })
+      break;
+    case "total":
+      return invoice.findAll({
+        attributes: ["class", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['class'],
+        include: [{
+          model: class_enum
+        }]
+      })
+      break;
+    case "billingMonth":
+      return invoice.findAll({
+        attributes: ["class", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['class'],
+        include: [{
+          model: class_enum
+        }],
+        where: {
+          billingMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
+        }
+      })
+      break;
+    case "recognitionStartMonth":
+      return invoice.findAll({
+        attributes: ["class", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['class'],
+        include: [{
+          model: class_enum
+        }],
+        where: {
+          recognitionStartMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
+        }
+      })
+      break;
   }
-
-  return invoice.findAll({
-    attributes: ["class", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
-      [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
-    ],
-    group: ['class'],
-    include: [{
-      model: class_enum
-    }]
-  })
 }
 
 export function BillByProduct({
-  sort = 'active'
+  filter = 'active',
+  startMonth = new Date(2015, 1),
+  endMonth = new Date()
 }) {
-  if (sort == 'active') {
-    return invoice.findAll({
-      attributes: ["product", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
-        [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
-      ],
-      group: ['product'],
-      include: [{
-        model: product_enum
-      }],
-      where: {
-        recognitionStartMonth: {
-          $between: [sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000, 1)]
-        },
-        status: {
-          $ne: 3
+  switch (filter) {
+    case "active":
+      return invoice.findAll({
+        attributes: ["product", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['product'],
+        include: [{
+          model: product_enum
+        }],
+        where: {
+          recognitionStartMonth: {
+            $between: [sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000, 1)]
+          },
+          status: {
+            $ne: 3
+          }
         }
-      }
-    })
+      })
+      break;
+    case "total":
+      return invoice.findAll({
+        attributes: ["product", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['product'],
+        include: [{
+          model: product_enum
+        }]
+      })
+      break;
+    case "billingMonth":
+      return invoice.findAll({
+        attributes: ["product", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['product'],
+        include: [{
+          model: product_enum
+        }],
+        where: {
+          billingMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
+        }
+      })
+      break;
+    case "recognitionStartMonth":
+      return invoice.findAll({
+        attributes: ["product", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['product'],
+        include: [{
+          model: product_enum
+        }],
+        where: {
+          recognitionStartMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
+        }
+      })
+      break;
   }
-
-  return invoice.findAll({
-    attributes: ["product", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
-      [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
-    ],
-    group: ['product'],
-    include: [{
-      model: product_enum
-    }],
-  })
 }
 
 export function BillByRevenueType({
-  sort = 'active'
+  filter = 'active',
+  startMonth = new Date(2015, 1),
+  endMonth = new Date()
 }) {
-  if (sort == 'active') {
-    return invoice.findAll({
-      attributes: ["revenueType", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
-        [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
-      ],
-      group: ['revenueType'],
-      include: [{
-        model: revenue_type_enum
-      }],
-      where: {
-        recognitionStartMonth: {
-          $between: [sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000, 1)]
-        },
-        status: {
-          $ne: 3
+  switch (filter) {
+    case "active":
+      return invoice.findAll({
+        attributes: ["revenueType", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['revenueType'],
+        include: [{
+          model: revenue_type_enum
+        }],
+        where: {
+          recognitionStartMonth: {
+            $between: [sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000, 1)]
+          },
+          status: {
+            $ne: 3
+          }
         }
-      }
-    })
-  }
-
-  return invoice.findAll({
-    attributes: ["revenueType", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
-      [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
-    ],
-    group: ['revenueType'],
-    include: [{
-      model: revenue_type_enum
-    }],
-  })
-}
-
-export function BillByType({
-  sort = 'active'
-}) {
-  if (sort == 'active') {
-    return invoice.findAll({
-      attributes: ["type", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
-        [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
-      ],
-      group: ['type'],
-      include: [{
-        model: type_enum
-      }],
-      where: {
-        recognitionStartMonth: {
-          $between: [sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000, 1)]
-        },
-        status: {
-          $ne: 3
+      })
+      break;
+    case "total":
+      return invoice.findAll({
+        attributes: ["revenueType", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['revenueType'],
+        include: [{
+          model: revenue_type_enum
+        }]
+      })
+      break;
+    case "billingMonth":
+      return invoice.findAll({
+        attributes: ["revenueType", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['revenueType'],
+        include: [{
+          model: revenue_type_enum
+        }],
+        where: {
+          billingMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
         }
-      }
-    })
+      })
+      break;
+    case "recognitionStartMonth":
+      return invoice.findAll({
+        attributes: ["revenueType", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['revenueType'],
+        include: [{
+          model: revenue_type_enum
+        }],
+        where: {
+          recognitionStartMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
+        }
+      })
+      break;
   }
-
-  return invoice.findAll({
-    attributes: ["type", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
-      [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
-    ],
-    group: ['type'],
-    include: [{
-      model: type_enum
-    }],
-  })
 }
 
 export function BillByStatus({
-  sort = 'active'
+  filter = 'active',
+  startMonth = new Date(2015, 1),
+  endMonth = new Date()
 }) {
-  if (sort == 'active') {
-    return invoice.findAll({
-      attributes: ["status", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
-        [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
-      ],
-      group: ['status'],
-      include: [{
-        model: status_enum
-      }],
-      where: {
-        recognitionStartMonth: {
-          $between: [sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000, 1)]
-        },
-        status: {
-          $ne: 3
+  switch (filter) {
+    case "active":
+      return invoice.findAll({
+        attributes: ["status", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['status'],
+        include: [{
+          model: status_enum
+        }],
+        where: {
+          recognitionStartMonth: {
+            $between: [sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000, 1)]
+          },
+          status: {
+            $ne: 3
+          }
         }
-      }
-    })
+      })
+      break;
+    case "total":
+      return invoice.findAll({
+        attributes: ["status", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['status'],
+        include: [{
+          model: status_enum
+        }]
+      })
+      break;
+    case "billingMonth":
+      return invoice.findAll({
+        attributes: ["status", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['status'],
+        include: [{
+          model: status_enum
+        }],
+        where: {
+          billingMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
+        }
+      })
+      break;
+    case "recognitionStartMonth":
+      return invoice.findAll({
+        attributes: ["status", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['status'],
+        include: [{
+          model: status_enum
+        }],
+        where: {
+          recognitionStartMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
+        }
+      })
+      break;
   }
+}
 
-  return invoice.findAll({
-    attributes: ["status", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
-      [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
-    ],
-    group: ['status'],
-    include: [{
-      model: status_enum
-    }],
-  })
+export function BillByType({
+  filter = 'active',
+  startMonth = new Date(2015, 1),
+  endMonth = new Date()
+}) {
+  switch (filter) {
+    case "active":
+      return invoice.findAll({
+        attributes: ["type", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['type'],
+        include: [{
+          model: type_enum
+        }],
+        where: {
+          recognitionStartMonth: {
+            $between: [sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000, 1)]
+          },
+          status: {
+            $ne: 3
+          }
+        }
+      })
+      break;
+    case "total":
+      return invoice.findAll({
+        attributes: ["type", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['type'],
+        include: [{
+          model: type_enum
+        }]
+      })
+      break;
+    case "billingMonth":
+      return invoice.findAll({
+        attributes: ["type", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['type'],
+        include: [{
+          model: type_enum
+        }],
+        where: {
+          billingMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
+        }
+      })
+      break;
+    case "recognitionStartMonth":
+      return invoice.findAll({
+        attributes: ["type", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['type'],
+        include: [{
+          model: type_enum
+        }],
+        where: {
+          recognitionStartMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
+        }
+      })
+      break;
+  }
+}
+
+export function BillByCountry({
+  filter = 'active',
+  startMonth = new Date(2015, 1),
+  endMonth = new Date()
+}) {
+  switch (filter) {
+    case "active":
+      return invoice.findAll({
+        attributes: ["country", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['country'],
+        include: [{
+          model: country_enum
+        }],
+        where: {
+          recognitionStartMonth: {
+            $between: [sequelize.fn('DATE_SUB', sequelize.fn('NOW'), sequelize.literal(`INTERVAL ${sequelize.col('invoice.lengthMonth').col} MONTH`)), new Date(3000, 1)]
+          },
+          status: {
+            $ne: 3
+          }
+        }
+      })
+      break;
+    case "total":
+      return invoice.findAll({
+        attributes: ["country", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['country'],
+        include: [{
+          model: country_enum
+        }]
+      })
+      break;
+    case "billingMonth":
+      return invoice.findAll({
+        attributes: ["country", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['country'],
+        include: [{
+          model: country_enum
+        }],
+        where: {
+          billingMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
+        }
+      })
+      break;
+    case "recognitionStartMonth":
+      return invoice.findAll({
+        attributes: ["country", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+          [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
+        ],
+        group: ['country'],
+        include: [{
+          model: country_enum
+        }],
+        where: {
+          recognitionStartMonth: {
+            $between: [new Date(startMonth), new Date(endMonth)]
+          },
+        }
+      })
+      break;
+  }
 }
 
 

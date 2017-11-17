@@ -8,6 +8,7 @@ import {
   BillByProduct,
   BillByRevenueType,
   BillByType,
+  BillByCountry,
   BillByStatus
 } from './controller'
 
@@ -53,6 +54,20 @@ router.post('/billByType', async(req, res) => {
     })
   }
 })
+
+router.post('/billByStatus', async(req, res) => {
+  try {
+    console.log(req.body)
+    const result = await BillByStatus(req.body)
+    res.status(200).json(result)
+  } catch (err) {
+    const message = err.message
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
 router.post('/billByProduct', async(req, res) => {
   try {
     console.log(req.body)
@@ -67,10 +82,10 @@ router.post('/billByProduct', async(req, res) => {
   }
 })
 
-router.post('/billByStatus', async(req, res) => {
+router.post('/billByCountry', async(req, res) => {
   try {
     console.log(req.body)
-    const result = await BillByStatus(req.body)
+    const result = await BillByCountry(req.body)
     res.status(200).json(result)
   } catch (err) {
     const message = err.message

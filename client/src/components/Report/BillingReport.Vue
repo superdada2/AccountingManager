@@ -11,6 +11,7 @@
       <el-date-picker v-model="billingMonth" type="month" placeholder="Billing Month">
       </el-date-picker>
       <el-button type="primary" @click="GetInvoice">Go</el-Button>
+      <el-button id="export" type="primary " @click="()=>handleExport(this.tableData)">Export</el-button>
     </el-row>
     <el-row>
       <el-table v-if="tableData.length > 0?true:false" :data="tableData" v-loading="tableLoading" style="width: 100%" @row-click="openComments" @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
@@ -53,6 +54,7 @@ import * as jsonexport from "jsonexport/dist";
 import _ from "lodash";
 import Modify from "../SubComponents/Modify";
 import ModifyComments from "../SubComponents/ModifyComments";
+import handleExport from "../../functions/utilities";
 const urlBase = "http://" + window.location.hostname + ":3030";
 export default {
   name: "billiingReport",
@@ -73,6 +75,24 @@ export default {
     ModifyComments
   },
   methods: {
+    handleExport(data) {
+      jsonexport(data, (err, csv) => {
+        if (err) return console.log(err);
+        var uriContent =
+          "data:application/octet-stream," + encodeURIComponent(csv);
+        var link = document.createElement("a");
+        link.setAttribute("href", uriContent);
+        link.setAttribute("download", "Report.csv");
+        document.body.appendChild(link); // Required for FF
+
+        link.click();
+        this.$message({
+          type: "success",
+          message: "Success"
+        });
+      });
+    },
+
     GetInvoice() {
       const url = urlBase + "/api/v1/reports/getInvoice";
       this.tableLoading = true;
@@ -113,5 +133,7 @@ export default {
 </script>
 
 <style scoped>
-
+#export {
+  float: right;
+}
 </style>
