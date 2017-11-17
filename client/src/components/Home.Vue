@@ -19,6 +19,7 @@
       <el-date-picker v-if="form1.filter == 'recognitionStartMonth'|| form1.filter == 'billingMonth' ? true: false" v-model='form1.startMonth' type='month' placeholder='Start Date'></el-date-picker>
       <el-date-picker v-if="form1.filter == 'recognitionStartMonth'|| form1.filter == 'billingMonth' ? true: false" v-model='form1.endMonth' type='month' placeholder='End Date'></el-date-picker>
       <el-button type='primary' @click='GetPieData'>Go</el-button>
+      <SaveButton dataName="HomeGraph" :activeData="form1" :Load="LoadInput"/>
       <br>
     </el-row>
     <el-row>
@@ -81,6 +82,7 @@ import axios from "Axios";
 import _ from "lodash";
 import chartjs from "chart.piecelabel.js";
 import { urlBase } from "../settings.js";
+import SaveButton from "./SubComponents/SaveButton";
 
 const colors = {
   backgroundColor: [
@@ -117,7 +119,8 @@ export default {
     LineChart,
     DoughnutChart,
     BarChart,
-    GeoChart
+    GeoChart,
+    SaveButton
   },
   data() {
     return {
@@ -318,6 +321,11 @@ export default {
       this.GetBillByType();
       this.GetBillByStatus();
       this.GetBillByCountry();
+    },
+    LoadInput(input) {
+      this.form1 = input;
+      this.form1.startMonth = new Date(input.startMonth);
+      this.form1.endMonth = new Date(input.endMonth);
     },
     GetBillByCustomer() {
       const url = urlBase + "/api/v1/graph/billByCustomer";

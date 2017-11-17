@@ -4,17 +4,18 @@
       <Modify :invoice-data="currentRow" :close="()=>{this.modifyDialogVisibility = false}" :refresh="GetInvoice" />
     </el-dialog>
     <el-dialog title="Modify Comments" :visible.sync="commentDialogVisibility" width="70%">
-      <ModifyComments :currentRow="currentRow" :close="()=>{this.commentDialogVisibility = false}" :refresh="GetInvoice"
-      />
+      <ModifyComments :currentRow="currentRow" :close="()=>{this.commentDialogVisibility = false}" :refresh="GetInvoice" />
     </el-dialog>
     <el-row>
-      <el-date-picker v-model="billingMonth" type="month" placeholder="Billing Month">
+      <el-date-picker v-model="input.billingMonth" type="month" placeholder="Billing Month">
       </el-date-picker>
       <el-button type="primary" @click="GetInvoice">Go</el-Button>
-      <el-button id="export" type="primary " @click="()=>handleExport(this.tableData)">Export</el-button>
+      <SaveButton dataName="BillingReport" :activeData="input" :Load="LoadInput"/>
+      <el-button id="export" type="primary " @click="()=>handleExport(this.tableData)">Export</el-button>      
     </el-row>
     <el-row>
-      <el-table v-if="tableData.length > 0?true:false" :data="tableData" v-loading="tableLoading" style="width: 100%" @row-click="openComments" @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
+      <el-table v-if="tableData.length > 0?true:false" :data="tableData" v-loading="tableLoading" style="width: 100%" @row-click="openComments"
+        @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
         <el-table-column prop="customerName" label="CustomerName" sortable>
         </el-table-column>
         <el-table-column prop="invoiceNumber" label="Invoice Number" sortable>
@@ -54,13 +55,15 @@ import * as jsonexport from "jsonexport/dist";
 import _ from "lodash";
 import Modify from "../SubComponents/Modify";
 import ModifyComments from "../SubComponents/ModifyComments";
-import handleExport from "../../functions/utilities";
+import SaveButton from "../SubComponents/SaveButton";
 const urlBase = "http://" + window.location.hostname + ":3030";
 export default {
   name: "billiingReport",
   data() {
     return {
-      billingMonth: "",
+      input: {
+        billingMonth: ""
+      },
       tableData: [],
       tableLoading: false,
       modifyDialogVisibility: false,
@@ -72,9 +75,15 @@ export default {
   },
   components: {
     Modify,
-    ModifyComments
+    ModifyComments,
+    SaveButton
   },
   methods: {
+    LoadInput({ billingMonth }) {
+      console.log(billingMonth);
+      console.log(this.input);
+      this.input.billingMonth = billingMonth;
+    },
     handleExport(data) {
       jsonexport(data, (err, csv) => {
         if (err) return console.log(err);
@@ -100,7 +109,7 @@ export default {
         axios
           .post(url, {
             where: {
-              billingMonth: this.billingMonth
+              billingMonth: this.input.billingMonth
             }
           })
           .then(res => {

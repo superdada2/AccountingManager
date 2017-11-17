@@ -9,23 +9,24 @@
       <el-tab-pane label="Default" name='default'>
         <el-row>
           <a class="inputRow">
-            <el-select v-model="groupBy" placeholder="Group By">
+            <el-select v-model="input.groupBy" placeholder="Group By">
               <el-option v-for="item in groupByEnum" :key="item.id" :label="item.data" :value="item.id">
               </el-option>
             </el-select>
-            <el-select v-model="balanceType" placeholder="Income Type">
+            <el-select v-model="input.balanceType" placeholder="Income Type">
               <el-option v-for="item in balanceTypeEnum" :key="item.id" :label="item.data" :value="item.id">
               </el-option>
             </el-select>
-            <el-date-picker v-model="startM" type="month" placeholder="Start Month">
+            <el-date-picker v-model="input.startM" type="month" placeholder="Start Month">
             </el-date-picker>
 
 
-            <el-date-picker v-model="endM" type="month" placeholder="End Month">
+            <el-date-picker v-model="input.endM" type="month" placeholder="End Month">
             </el-date-picker>
 
             <el-button id="submit" type="primary " @click="GetReport">Submit</el-button>
             <el-button id="export" type="primary " @click="()=>handleExport(this.tableData)">Export</el-button>
+            <SaveButton dataName="DefaultReport" :activeData="input" :Load="LoadInput"/>
           </a>
         </el-row>
 
@@ -56,38 +57,7 @@
         </el-row>
       </el-tab-pane>
       <el-tab-pane label='Customers' name="customer">
-        <a class="inputRow">
-          <el-autocomplete placeholder="Customer" v-model="customerSearchValue" :fetch-suggestions="querySearchCustName"></el-autocomplete>
-          <el-date-picker v-model="customerQueryDate" type="month" placeholder="Month">
-          </el-date-picker>
-          <el-select v-model="productFilter" placeholder="Product">
-            <el-option v-for="item in productEnum" :key="item.id" :label="item.data" :value="item.id">
-            </el-option>
-          </el-select>
-          <el-button type="primary" id="tagAdder" @click="GetCustomerReport">Go</el-button>
-          <el-button id="export" type="primary " @click="()=>{handleExport([].concat.apply([],this.customerDetails))}">Export</el-button>
-          <br>
-        </a>
-        <div class="dataTable">
-          <el-table v-for="detail in customerDetails" :key="detail.id" @row-click="ToDetail" v-loading="customerLoading" :data="detail"
-            style="width: 100%" show-summary>
-            <el-table-column prop="customerName" label="Customer Name" sortable />
-            <el-table-column prop="invoiceNumber" label="Invoice Number" sortable />
-            <el-table-column prop="product_enum.data" label="Product" sortable/>
-            <el-table-column prop="income" label="Income" align="right" sortable>
-              <template slot-scope="scope">
-                {{(scope.row.income * 1).toLocaleString()}}
-              </template>
-            </el-table-column>
-            <el-table-column prop="deferred" label="Deferred" align="right" sortable>
-              <template slot-scope="scope">
-                {{(scope.row.deferred * 1).toLocaleString()}}
-              </template>
-            </el-table-column>
-            <el-table-column prop="month" label="Month" />
-            <el-table-column prop="year" label="Year" />
-          </el-table>
-        </div>
+        <CustomerReport/>
       </el-tab-pane>
       <el-tab-pane label='Billing' name='billing'>
         <BillingReport/>
@@ -100,8 +70,10 @@
 <script>
 import axios from "Axios";
 import BillingReport from "./Report/BillingReport";
+import CustomerReport from "./Report/CustomerReport";
 import LineChart from "../charts/LineChart.js";
 import * as jsonexport from "jsonexport/dist";
+import SaveButton from "./SubComponents/SaveButton";
 import _ from "lodash";
 
 const urlBase = "http://" + window.location.hostname + ":3030";
@@ -137,12 +109,18 @@ export default {
   name: "report",
   components: {
     LineChart,
-    BillingReport
+    BillingReport,
+    CustomerReport,
+    SaveButton
   },
   data() {
     return {
-      balanceType: "",
-      groupBy: "",
+      input: {
+        balanceType: "",
+        groupBy: "",
+        startM: "",
+        endM: ""
+      },
       balanceTypeEnum: [
         {
           id: true,
@@ -163,24 +141,16 @@ export default {
           data: "Product"
         }
       ],
-      productFilter: "",
       tableData: [],
-      customerLoading: false,
-      customerTableVisibility: false,
-      startM: "",
-      endM: "",
-      startY: "",
-      endY: "",
+
       columnEnum: [],
       tableVisibility: false,
       monthEnum: [],
-      customerNameList: [],
-      customerSearchValue: "",
+
       showChart: false,
       chartData: {},
       chartDataCount: {},
-      customerQueryDate: "",
-      customerDetails: [],
+
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
@@ -212,89 +182,21 @@ export default {
     };
   },
   methods: {
-    ToDetail(row) {
-      this.$router.push({
-        name: "Details",
-        params: {
-          invoiceId: row.id
-        }
-      });
+    LoadInput(input) {
+      this.input = input;
+      this.input.startM = new Date(input.startM);
+      this.input.endM = new Date(input.endM);
     },
-    GetCustomerReport() {
-      const url = urlBase + "/api/v1/reports/getIncomeDeferred";
-      this.customerTableVisibility = true;
-      this.customerLoading = true;
-      var where = {};
-      this.customerSearchValue != ""
-        ? (where["customerName"] = this.customerSearchValue)
-        : null;
-      this.productFilter != "" ? (where["product"] = this.productFilter) : null;
-      axios
-        .post(url, {
-          where: where
-        })
-        .then(res => {
-          const month = this.customerQueryDate.getMonth() + 1;
-          const year = this.customerQueryDate.getFullYear();
-          var temp = [...res.data];
-          var customerDetails = temp.filter(i => {
-            const income = i.incomes.find(j => {
-              return j.month == month && j.year == year;
-            });
-            const deferred = i.deferred_balances.find(j => {
-              return j.month == month && j.year == year;
-            });
-            if (income != undefined || deferred != undefined) {
-              return true;
-            } else {
-              return false;
-            }
-          });
-          customerDetails.forEach((k, index) => {
-            var temp2 = {
-              ...k
-            };
-            temp2["month"] = month;
-            temp2["year"] = year;
-            const holder = temp2.incomes.find(j => {
-              return j.month == month && j.year == year;
-            });
-            temp2["income"] = holder != undefined ? holder.amount : 0;
-            const holder2 = temp2.deferred_balances.find(j => {
-              return j.month == month && j.year == year;
-            });
-            temp2["deferred"] = holder2 != undefined ? holder2.amount : 0;
-            customerDetails[index] = temp2;
-          });
-
-          //split detail into smaller tables
-          const customerDetails2 = this.productEnum.map(l => {
-            const detail = customerDetails.filter(f => {
-              return f.product == l.id;
-            });
-            if (detail.length == 0) {
-              return undefined;
-            }
-            return detail;
-          });
-          this.customerDetails = _.compact(customerDetails2);
-          this.customerLoading = false;
-          this.customerQueryDate = "";
-          this.customerSearchValue = "";
-          this.productFilter = "";
-        });
-    },
-
     GetReport() {
       var url = urlBase;
-      if (this.groupBy == 2) {
+      if (this.input.groupBy == 2) {
         url += "/api/v1/reports/getProductTable";
         this.columnEnum = [...this.productEnum];
       } else {
         url += "/api/v1/reports/getClassTable";
         this.columnEnum = [...this.classEnum];
       }
-      if (new Date(this.startM) > new Date(this.endM)) {
+      if (new Date(this.input.startM) > new Date(this.input.endM)) {
         this.$message({
           type: "error",
           message: "Invalid date range"
@@ -303,11 +205,11 @@ export default {
       }
 
       const data = {
-        startY: this.startM.getFullYear(),
-        endY: this.endM.getFullYear(),
-        startM: this.startM.getMonth() + 1,
-        endM: this.endM.getMonth() + 1,
-        isIncome: this.balanceType
+        startY: this.input.startM.getFullYear(),
+        endY: this.input.endM.getFullYear(),
+        startM: this.input.startM.getMonth() + 1,
+        endM: this.input.endM.getMonth() + 1,
+        isIncome: this.input.balanceType
       };
       axios.post(url, data).then(res => {
         this.tableData = res.data;
@@ -315,7 +217,6 @@ export default {
         this.CreateChartData(res.data);
       });
     },
-
     CreateChartData(tableData) {
       var chartData = {
         ...this.chartData
@@ -396,19 +297,7 @@ export default {
         });
       });
     },
-    getCustomerName() {
-      const url = urlBase + "/api/v1/reports/getCustomerName";
-      axios.get(url).then(res => {
-        this.customerNameList = res.data;
-      });
-    },
-    querySearchCustName(queryString, cb) {
-      var list = this.customerNameList;
-      var results = queryString
-        ? list.filter(this.createFilter(queryString))
-        : list;
-      cb(results);
-    },
+
     createFilter(queryString) {
       return link => {
         return (
@@ -419,7 +308,7 @@ export default {
   },
   created() {
     // this.GetCustomerReport()
-    this.getCustomerName();
+
     this.GetClassEnum();
     this.GetProductEnum();
   }

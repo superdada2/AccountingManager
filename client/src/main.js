@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import i18n from 'vue-i18n'
 import locale from 'element-ui/lib/locale/lang/en'
 import VueCookie from 'vue-cookie'
+import VueLocalStorage from 'vue-localstorage'
 
 Vue.config.productionTip = false
 Vue.use(i18n)
@@ -16,6 +17,7 @@ Vue.use(ElementUI, {
   locale
 })
 Vue.use(VueCookie)
+Vue.use(VueLocalStorage)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
