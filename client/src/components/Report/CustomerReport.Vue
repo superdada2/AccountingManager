@@ -9,6 +9,7 @@
         </el-option>
       </el-select>
       <el-button type="primary" id="tagAdder" @click="GetCustomerReport">Go</el-button>
+			<el-button type="success" id="tagAdder" @click="ResetInput">Reset</el-button>
       <el-button id="export" type="primary " @click="()=>{handleExport([].concat.apply([],this.customerDetails))}">Export</el-button>
       <SaveButton dataName="CustomerReport" :activeData="input" :Load="LoadInput"/>
       <br>
@@ -63,6 +64,13 @@ export default {
     };
   },
   methods: {
+    ResetInput() {
+      this.input = {
+        productFilter: "",
+        customerQueryDate: "",
+        customerSearchValue: ""
+      };
+    },
     LoadInput(input) {
       this.input = { ...input };
       this.input.customerQueryDate = new Date(input.customerQueryDate);
@@ -94,6 +102,13 @@ export default {
         : list;
       cb(results);
     },
+    createFilter(queryString) {
+      return link => {
+        return (
+          link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+        );
+      };
+    },
     GetCustomerReport() {
       const url = urlBase + "/api/v1/reports/getIncomeDeferred";
       this.customerTableVisibility = true;
@@ -103,9 +118,10 @@ export default {
         ? (where["customerName"] = this.input.customerSearchValue)
         : null;
       this.input.productFilter != ""
-        ? (where["product"] = this.productFilter)
+        ? (where["product"] = this.input.productFilter)
         : null;
       try {
+        console.log(where);
         axios
           .post(url, {
             where: where
@@ -157,9 +173,6 @@ export default {
               });
               this.customerDetails = _.compact(customerDetails2);
               this.customerLoading = false;
-              this.input.customerQueryDate = "";
-              this.input.customerSearchValue = "";
-              this.input.productFilter = "";
               this.$message({
                 type: "success",
                 message: "Success"
