@@ -369,7 +369,6 @@ export default {
           ...this.form1
         })
         .then(res => {
-          console.log(res.data);
           this.billByCountry = res.data;
         });
     },

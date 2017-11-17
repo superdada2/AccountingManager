@@ -80,8 +80,6 @@ export default {
   },
   methods: {
     LoadInput({ billingMonth }) {
-      console.log(billingMonth);
-      console.log(this.input);
       this.input.billingMonth = billingMonth;
     },
     ToDetail(row) {

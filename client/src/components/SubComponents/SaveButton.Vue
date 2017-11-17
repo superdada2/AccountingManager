@@ -60,7 +60,6 @@ export default {
         .catch(E => {});
     },
     Save() {
-      console.log("abs");
       if (this.newName == "") {
         this.$message({
           type: "error",
@@ -74,7 +73,6 @@ export default {
           data: { ...this.activeData }
         });
         this.dropDown = temp;
-        console.log(temp);
         this.$localStorage.remove(this.dataName);
         this.$localStorage.set(this.dataName, JSON.stringify(this.dropDown));
         this.newName = "";
@@ -82,11 +80,9 @@ export default {
       }
     },
     Command(id) {
-      // console.log(id);
       const entry = this.dropDown.find(i => {
         return i.id == id;
       });
-      // console.log(entry);
       this.Load(entry.data);
     }
   },

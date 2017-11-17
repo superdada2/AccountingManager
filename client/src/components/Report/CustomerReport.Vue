@@ -121,7 +121,6 @@ export default {
         ? (where["product"] = this.input.productFilter)
         : null;
       try {
-        console.log(where);
         axios
           .post(url, {
             where: where

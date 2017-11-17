@@ -212,8 +212,6 @@ export default {
       var deferredIndex = 0;
       var income = _.sortBy(income1, ["year", "month"]);
       var deferred = _.sortBy(deferred1, ["year", "month"]);
-      console.log(income, deferred);
-
       while (incomeIndex < income.length || deferredIndex < deferred.length) {
         switch (this.compareDate(
           income[incomeIndex],
