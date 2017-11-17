@@ -23,7 +23,7 @@
 </template>
 <script>
 import axios from "Axios";
-const urlBase = "http://" + window.location.hostname + ":3030";
+import { urlBase } from "../../settings.js";
 
 export default {
   name: "ModifyComment",

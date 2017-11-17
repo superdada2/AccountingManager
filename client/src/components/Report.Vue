@@ -76,7 +76,7 @@ import * as jsonexport from "jsonexport/dist";
 import SaveButton from "./SubComponents/SaveButton";
 import _ from "lodash";
 
-const urlBase = "http://" + window.location.hostname + ":3030";
+import { urlBase } from "../settings.js";
 const colors = {
   backgroundColor: [
     "rgba(255, 99, 132, 0.2)",

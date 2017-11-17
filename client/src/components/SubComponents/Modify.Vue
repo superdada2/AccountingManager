@@ -131,7 +131,7 @@
 
 <script>
 import axios from "Axios";
-const urlBase = "http://" + window.location.hostname + ":3030";
+import { urlBase } from "../../settings.js";
 export default {
   name: "modify",
   props: ["invoiceData", "close", "refresh"],
@@ -208,7 +208,6 @@ export default {
         invoiceNumber: [
           {
             required: true,
-            type: "number",
             message: "Please input an invoice number",
             trigger: "blur"
           }

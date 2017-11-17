@@ -40,7 +40,7 @@ import axios from "Axios";
 import * as jsonexport from "jsonexport/dist";
 import _ from "lodash";
 import SaveButton from "../SubComponents/SaveButton";
-const urlBase = "http://" + window.location.hostname + ":3030";
+import { urlBase } from "../../settings.js";
 export default {
   name: "customerReport",
   components: {
@@ -111,58 +111,62 @@ export default {
             where: where
           })
           .then(res => {
-            const month = this.input.customerQueryDate.getMonth() + 1;
-            const year = this.input.customerQueryDate.getFullYear();
-            var temp = [...res.data];
-            var customerDetails = temp.filter(i => {
-              const income = i.incomes.find(j => {
-                return j.month == month && j.year == year;
+            try {
+              const month = this.input.customerQueryDate.getMonth() + 1;
+              const year = this.input.customerQueryDate.getFullYear();
+              var temp = [...res.data];
+              var customerDetails = temp.filter(i => {
+                const income = i.incomes.find(j => {
+                  return j.month == month && j.year == year;
+                });
+                const deferred = i.deferred_balances.find(j => {
+                  return j.month == month && j.year == year;
+                });
+                if (income != undefined || deferred != undefined) {
+                  return true;
+                } else {
+                  return false;
+                }
               });
-              const deferred = i.deferred_balances.find(j => {
-                return j.month == month && j.year == year;
+              customerDetails.forEach((k, index) => {
+                var temp2 = {
+                  ...k
+                };
+                temp2["month"] = month;
+                temp2["year"] = year;
+                const holder = temp2.incomes.find(j => {
+                  return j.month == month && j.year == year;
+                });
+                temp2["income"] = holder != undefined ? holder.amount : 0;
+                const holder2 = temp2.deferred_balances.find(j => {
+                  return j.month == month && j.year == year;
+                });
+                temp2["deferred"] = holder2 != undefined ? holder2.amount : 0;
+                customerDetails[index] = temp2;
               });
-              if (income != undefined || deferred != undefined) {
-                return true;
-              } else {
-                return false;
-              }
-            });
-            customerDetails.forEach((k, index) => {
-              var temp2 = {
-                ...k
-              };
-              temp2["month"] = month;
-              temp2["year"] = year;
-              const holder = temp2.incomes.find(j => {
-                return j.month == month && j.year == year;
-              });
-              temp2["income"] = holder != undefined ? holder.amount : 0;
-              const holder2 = temp2.deferred_balances.find(j => {
-                return j.month == month && j.year == year;
-              });
-              temp2["deferred"] = holder2 != undefined ? holder2.amount : 0;
-              customerDetails[index] = temp2;
-            });
 
-            //split detail into smaller tables
-            const customerDetails2 = this.productEnum.map(l => {
-              const detail = customerDetails.filter(f => {
-                return f.product == l.id;
+              //split detail into smaller tables
+              const customerDetails2 = this.productEnum.map(l => {
+                const detail = customerDetails.filter(f => {
+                  return f.product == l.id;
+                });
+                if (detail.length == 0) {
+                  return undefined;
+                }
+                return detail;
               });
-              if (detail.length == 0) {
-                return undefined;
-              }
-              return detail;
-            });
-            this.customerDetails = _.compact(customerDetails2);
-            this.customerLoading = false;
-            this.input.customerQueryDate = "";
-            this.input.customerSearchValue = "";
-            this.input.productFilter = "";
-            this.$message({
-              type: "success",
-              message: "Success"
-            });
+              this.customerDetails = _.compact(customerDetails2);
+              this.customerLoading = false;
+              this.input.customerQueryDate = "";
+              this.input.customerSearchValue = "";
+              this.input.productFilter = "";
+              this.$message({
+                type: "success",
+                message: "Success"
+              });
+            } catch (err) {
+              this.customerLoading = false;
+            }
           });
       } catch (err) {
         console.log(err);

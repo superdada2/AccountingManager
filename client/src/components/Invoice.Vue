@@ -120,7 +120,7 @@ import axios from "Axios";
 import _ from "lodash";
 import Modify from "./SubComponents/Modify";
 import * as jsonexport from "jsonexport/dist";
-const urlBase = "http://" + window.location.hostname + ":3030";
+import { urlBase } from "../settings.js";
 export default {
   name: "invoice",
   components: {

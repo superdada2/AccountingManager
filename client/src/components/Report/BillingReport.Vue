@@ -56,7 +56,7 @@ import _ from "lodash";
 import Modify from "../SubComponents/Modify";
 import ModifyComments from "../SubComponents/ModifyComments";
 import SaveButton from "../SubComponents/SaveButton";
-const urlBase = "http://" + window.location.hostname + ":3030";
+import { urlBase } from "../../settings.js";
 export default {
   name: "billiingReport",
   data() {
