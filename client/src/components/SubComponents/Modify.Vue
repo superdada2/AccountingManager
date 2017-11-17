@@ -1,15 +1,11 @@
 <template>
   <div id='Add'>
-    <el-row>
-      <div class="header">
-        <h1>Add Invoice </h1>
-      </div>
-    </el-row>
-    <el-form :model="formValue" :rules="rules" ref="formValue" label-width="200px" align="left" >
+
+    <el-form :model="formValue" :rules="rules" ref="formValue" label-width="200px" align="left">
       <el-row>
         <el-col :span="12">
           <el-form-item prop="companyName" label='Company Name'>
-            <el-autocomplete placeholder="Company Name"  v-model="formValue.companyName" :fetch-suggestions="querySearchCustName"></el-autocomplete>            
+            <el-input placeholder="Company Name" v-model="formValue.companyName"></el-input>
             <br>
           </el-form-item>
           <el-form-item prop="product" label='Product'>
@@ -37,8 +33,9 @@
             <el-input @change="invoiceAmountOnChange" placeholder="Invoice Amount" type="number" v-model="formValue.invoiceAmount"></el-input>
           </el-form-item>
           <el-form-item prop="invoiceDate" label='Invoice Date'>
-            <el-date-picker v-model="formValue.invoiceDate" type="date" placeholder="Invoice Date">
-            </el-date-picker>
+            <!-- <el-date-picker v-model="formValue.invoiceDate" type="date" placeholder="Invoice Date">
+            </el-date-picker> -->
+          <el-input placeholder="Company Name" v-model="formValue.invoiceDate"></el-input>
           </el-form-item>
           <el-form-item prop="type" label='Type'>
             <el-select v-model="formValue.type" placeholder="Type">
@@ -53,8 +50,9 @@
             </el-select>
           </el-form-item>
           <el-form-item prop="billMonth" label='Billing Month'>
-            <el-date-picker v-model="formValue.billMonth" type="month" placeholder="Bill Month">
-            </el-date-picker>
+            <!-- <el-date-picker v-model="formValue.billMonth" type="month" placeholder="Bill Month">
+            </el-date-picker> -->
+            <el-input placeholder="Company Name" v-model="formValue.billMonth"></el-input>
           </el-form-item>
           <el-form-item prop="status" label='Status'>
             <el-select v-model="formValue.status" placeholder="Status">
@@ -69,31 +67,32 @@
         </el-col>
         <el-col :span="12">
           <el-form-item prop="recognitionStrMonth" label='Recognition Start Month'>
-            <el-date-picker v-model="formValue.recognitionStrMonth" type="month" placeholder="Recognition Start Month">
-            </el-date-picker>
+            <!-- <el-date-picker v-model="formValue.recognitionStrMonth" type="month" placeholder="Recognition Start Month">
+            </el-date-picker> -->
+            <el-input placeholder="Company Name" v-model="formValue.recognitionStrMonth"></el-input>
           </el-form-item>
-          <el-form-item prop="lengthRec" label='* Recognition Length'>
+          <el-form-item prop="lengthRec" label='Recognition Length'>
             <el-input placeholder="Length of Recognition(Months)" @change="lengthRecOnChange" type="number" v-model="formValue.lengthRec"
               ref="lengthRec"></el-input>
           </el-form-item>
-          <el-form-item prop="invoiceAmountUsd" label='* Invoice Amount USD'>
+          <el-form-item prop="invoiceAmountUsd" label='Invoice Amount USD'>
             <el-input placeholder="Invoice Amount(USD)" @change="invoiceAmountUsdOnChange" type="number" v-model="formValue.invoiceAmountUsd"></el-input>
           </el-form-item>
-          <el-form-item prop="fxRate" label='* FxRate'>
+          <el-form-item prop="fxRate" label='FxRate'>
             <el-input placeholder="Fx rate" type="number" @change="fxRateOnChange" v-model="formValue.fxRate"></el-input>
           </el-form-item>
-          <el-form-item prop="monthlyRec"  label='* Monthly Recognition USD'>
+          <el-form-item prop="monthlyRec" label='Monthly Recognition USD'>
             <el-input placeholder="Monthly Recognition(USD)" type="number" v-model="formValue.monthlyRec"></el-input>
           </el-form-item>
-          <el-form-item prop="annualIncreaseBool" label="Annual Increase Eligible">            
+          <el-form-item prop="annualIncreaseBool" label="Annual Increase Eligible">
             <el-switch v-model="formValue.annualIncreaseBool" on-text="" off-text="">
             </el-switch>
           </el-form-item>
-          <el-form-item prop="dateLastIncrease"  label='Date Since Last Increase'>
+          <el-form-item prop="dateLastIncrease" label='Date Since Last Increase'>
             <el-date-picker v-model="formValue.dateLastIncrease" type="date" placeholder="Date Last Increase">
             </el-date-picker>
           </el-form-item>
-          <el-form-item prop="increasePerc"  label='Increase Percentage'>
+          <el-form-item prop="increasePerc" label='Increase Percentage'>
             <el-input placeholder="Increase Percentage" type="number" v-model="formValue.increasePerc"></el-input>
           </el-form-item>
           <el-form-item prop="subscription" label='Subscription'>
@@ -116,9 +115,14 @@
       </el-row>
       <el-row>
         <div class="submit">
-          <el-button type="primary" @click="submit('formValue')">Add Invoice</el-button>
-          <el-button type="success" @click="SaveForm">Save</el-button>
-          <el-button @click="resetForm('formValue')">Reset</el-button>
+          <el-button type="primary" @click="submit('formValue')">Modify Invoice</el-button>
+          <el-button type="success" @click="ToDetail">Details</el-button>
+          <el-button type="danger" @click="deleteInvoice">Delete Invoice</el-button>
+          <!-- <router-link to="/details">
+            <el-button type="info"  :v-link='{name:Details}'>Details </el-button>
+          </router-link> -->
+          <el-button  @click="cancel">Cancel</el-button>
+          
         </div>
       </el-row>
     </el-form>
@@ -127,9 +131,10 @@
 
 <script>
 import axios from "Axios";
-import { urlBase } from "../settings.js";
+import { urlBase } from "../../settings.js";
 export default {
-  name: "add",
+  name: "modify",
+  props: ["invoiceData", "close", "refresh"],
   data() {
     return {
       classEnum: [],
@@ -141,7 +146,6 @@ export default {
       countryEnum: [],
       revenueEnum: [],
       subscriptionEnum: [],
-      customerNameList: [],
       formValue: {
         Class: "",
         product: "",
@@ -174,7 +178,7 @@ export default {
           {
             required: true,
             type: "number",
-            message: "Please select a Country",
+            message: "Please Input a Country",
             trigger: "change"
           }
         ],
@@ -218,7 +222,7 @@ export default {
         invoiceDate: [
           {
             required: true,
-            type: "date",
+
             message: "Please select an invoice date",
             trigger: "change"
           }
@@ -242,7 +246,7 @@ export default {
         billMonth: [
           {
             required: true,
-            type: "date",
+
             message: "Please select a billingMonth",
             trigger: "change"
           }
@@ -265,12 +269,13 @@ export default {
         recognitionStrMonth: [
           {
             required: true,
-            type: "date",
+
             message: "Please select a Recognition Start Month",
             trigger: "blur"
           }
         ],
         // lengthRec: [{
+        //   type: 'number',
         //   required: false,
         //   message: 'Please input a recognition length',
         //   trigger: 'blur'
@@ -302,10 +307,15 @@ export default {
     };
   },
   methods: {
-    //TODO: auto fill fx rate, and usd fields
+    ToDetail() {
+      this.$router.push({
+        name: "Details",
+        params: { invoiceId: this.formValue.id }
+      });
+    },
     loadData() {
       const url = urlBase + "/api/v1/enum/all";
-      this.getCustomerName();
+
       axios.get(url).then(res => {
         this.classEnum = res.data.Class;
         this.productEnum = res.data.product;
@@ -324,44 +334,52 @@ export default {
       return true;
     },
     resetForm(formName) {
-      const result = JSON.parse(this.$cookie.get("blankForm"));
-      this.formValue = result;
       this.$refs[formName].resetFields();
-      this.$cookie.delete("form");
     },
-    querySearchCustName(queryString, cb) {
-      var list = this.customerNameList;
-      var results = queryString
-        ? list.filter(this.createFilter(queryString))
-        : list;
-      cb(results);
+
+    deleteInvoice() {
+      const url = urlBase + "/api/v1/reports/deleteInvoice";
+      this.$confirm("Are you sure to Delete this Invoice?").then(_ => {
+        try {
+          axios
+            .post(url, {
+              id: this.invoiceData.id
+            })
+            .then(res => {
+              this.$message({
+                type: "success",
+                message: "Success!"
+              });
+              this.refresh();
+              this.close();
+            });
+        } catch (err) {
+          this.$message({
+            type: "error",
+            message: err
+          });
+        }
+      });
     },
-    createFilter(queryString) {
-      return link => {
-        return (
-          link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-        );
-      };
-    },
-    SaveForm() {
-      const save = JSON.stringify({ ...this.formValue });
-      this.$cookie.set("form", save);
+
+    cancel() {
+      this.close();
     },
     async submit(formName) {
-      const url = urlBase + "/api/v1/reports/createInvoice";
+      const url = urlBase + "/api/v1/reports/modifyInvoice";
       this.$refs[formName].validate(valid => {
         if (valid) {
           const formValues = this.formValue;
-          const message = {
-            ...formValues
-          };
+          const message = { id: this.invoiceData.id, ...formValues };
           try {
             const data = axios.post(url, message).then(i => {
               this.$message({
                 type: "success",
                 message: "Success!"
               });
-              // this.resetForm(formName);
+              this.$refs[formName].resetFields();
+              this.refresh();
+              this.close();
             });
           } catch (err) {
             this.$message({
@@ -427,28 +445,47 @@ export default {
         this.formValue.lengthRec = 12;
       }
       this.lengthRecOnChange(this.formValue.lengthRec);
-    },
-    getCustomerName() {
-      const url = urlBase + "/api/v1/reports/getCustomerName";
-      axios.get(url).then(res => {
-        this.customerNameList = res.data;
-      });
+    }
+  },
+  watch: {
+    invoiceData: function(newVal, old) {
+      newVal["companyName"] = newVal.customerName;
+      newVal["Class"] = newVal.class;
+      newVal["billMonth"] = newVal.billingMonth;
+      newVal["recognitionStrMonth"] = newVal.recognitionStartMonth;
+      newVal["lengthRec"] = newVal.lengthMonth;
+      newVal["invoiceAmountUsd"] = newVal.invoiceAmountUSD;
+      newVal["fxRate"] = newVal.FXRate;
+      newVal["monthlyRec"] = newVal.MonthlyRecoginitionAmountUSD;
+      newVal["increasePerc"] = newVal.increasePercentage;
+      newVal["annualIncreaseBool"] = newVal.annualIncreaseEli;
+      newVal["subscription"] = newVal.subscriptionType;
+
+      this.formValue = {
+        ...newVal
+      };
     }
   },
   created() {
     this.loadData();
-    if (this.$cookie.get("blankForm") == undefined) {
-      const save = JSON.stringify({ ...this.formValue });
-      this.$cookie.set("blankForm", save);
-    }
-    if (this.$cookie.get("form") != undefined) {
-      const result = JSON.parse(this.$cookie.get("form"));
-      result.invoiceDate = new Date(result.invoiceDate);
-      result.billMonth = new Date(result.billMonth);
-      result.recognitionStrMonth = new Date(result.recognitionStrMonth);
-      result.dateLastIncrease = new Date(result.dateLastIncrease);
-      this.formValue = result;
-    }
+    var newVal = {
+      ...this.invoiceData
+    };
+    newVal["companyName"] = newVal.customerName;
+    newVal["Class"] = newVal.class;
+    newVal["billMonth"] = newVal.billingMonth;
+    newVal["recognitionStrMonth"] = newVal.recognitionStartMonth;
+    newVal["lengthRec"] = newVal.lengthMonth;
+    newVal["invoiceAmountUsd"] = newVal.invoiceAmountUSD;
+    newVal["fxRate"] = newVal.FXRate;
+    newVal["monthlyRec"] = newVal.MonthlyRecoginitionAmountUSD;
+    newVal["increasePerc"] = newVal.increasePercentage;
+    newVal["annualIncreaseBool"] = newVal.annualIncreaseEli;
+    newVal["subscription"] = newVal.subscriptionType;
+
+    this.formValue = {
+      ...newVal
+    };
   }
 };
 </script>
@@ -457,7 +494,6 @@ export default {
 <style scoped>
 .el-select,
 .el-input,
-.el-autocomplete,
 .el-textarea {
   width: 80%;
 }

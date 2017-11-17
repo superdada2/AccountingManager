@@ -23,14 +23,43 @@ import {
   updateSubscription,
   updateType,
   update,
-  add
+  add,
+  deleteEnum,
+  loadCountry,
+  getCountry
 } from './controller';
 
 export const router = express.Router();
 
+router.get('/loadCountry', async(req, res) => {
+  try {
+    const result = await loadCountry(req.body)
+    res.status(200).json(result)
+  } catch (err) {
+    const message = err.message;
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
+
 router.post('/update', async(req, res) => {
   try {
     const result = await update(req.body)
+    res.status(200).json(result)
+  } catch (err) {
+    const message = err.message;
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
+
+router.post('/delete', async(req, res) => {
+  try {
+    const result = await deleteEnum(req.body)
     res.status(200).json(result)
   } catch (err) {
     const message = err.message;
@@ -64,6 +93,7 @@ router.get('/all', async(req, res) => {
     const type = await getType();
     const subscription = await getSubscription();
     const month = await getMonth();
+    const country = await getCountry();
     res.status(200).json({
       Class,
       currency,
@@ -72,7 +102,8 @@ router.get('/all', async(req, res) => {
       status,
       type,
       subscription,
-      month
+      month,
+      country
     })
   } catch (err) {
     const message = err.message

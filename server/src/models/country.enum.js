@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function (sequelize, DataTypes) {
-  return sequelize.define('currency_enum', {
+  return sequelize.define('country_enum', {
     id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -13,7 +13,12 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false,
       unique: true
     },
+    code: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      unique: true
+    }
   }, {
-    tableName: 'currency_enum'
+    tableName: 'country_enum'
   });
 };

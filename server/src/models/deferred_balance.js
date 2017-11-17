@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('deferred_balance', {
     id: {
       type: DataTypes.INTEGER(11),
@@ -8,29 +8,29 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    invoiceId:{
-      type:DataTypes.INTEGER(11),
-      allowNull:false,
-      references:{
-        model:'invoice',
-        key:'id'
+    invoiceId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      references: {
+        model: 'invoice',
+        key: 'id'
       }
     },
     amount: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
 
     },
-    year:{
-      type:DataTypes.INTEGER(11),
-      allowNull:false
+    year: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false
     },
-    month:{
-      type: DataTypes.INTEGER(11), 
-      allowNull:false,
-      refereces:{
-        model:'month_enum',
-        key:'id'
+    month: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      refereces: {
+        model: 'month_enum',
+        key: 'id'
       }
     }
   }, {

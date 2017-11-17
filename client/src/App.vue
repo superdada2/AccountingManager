@@ -9,7 +9,7 @@
           <img id="image" src="./assets/viz_logo.png">
           <h1 id="title">INVOICES</h1>
           <router-link to="/setting">
-            <el-button id="setting" type="info" round :v-link='{name:setting}'>
+            <el-button id="setting" type="info" round :v-link='{name:"Setting"}'>
               <i class="el-icon-setting"></i>
             </el-button>
           </router-link>
@@ -23,10 +23,12 @@
               <i class="el-icon-menu"></i>Home</el-menu-item>
             <el-menu-item index="Invoice">
               <i class="el-icon-document"></i>Invoices</el-menu-item>
+            <el-menu-item index="details">
+              <i class="el-icon-zoom-in"></i>Details</el-menu-item>
             <el-menu-item index="Report">
               <i class="el-icon-search"></i>Reports</el-menu-item>
             <el-menu-item index="Add">
-              <i class="el-icon-circle-check"></i>Add Invoice</el-menu-item>
+              <i class="el-icon-circle-check"></i>Add Invoice</el-menu-item>      
           </el-menu>
         </el-aside>
         <el-main id="content">
