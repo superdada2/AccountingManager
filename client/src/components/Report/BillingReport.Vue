@@ -14,8 +14,8 @@
       <el-button id="export" type="primary " @click="()=>handleExport(this.tableData)">Export</el-button>      
     </el-row>
     <el-row>
-      <el-table v-if="tableData.length > 0?true:false" :data="tableData" v-loading="tableLoading" style="width: 100%" @row-click="openComments"
-        @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
+      <el-table v-if="tableData.length > 0?true:false" :data="tableData" v-loading="tableLoading" style="width: 100%" @row-click="openComments "
+        @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}" show-summary :summary-method="GetSummaries">
         <el-table-column prop="customerName" label="CustomerName" sortable>
         </el-table-column>
         <el-table-column prop="invoiceNumber" label="Invoice Number" sortable>
@@ -89,6 +89,36 @@ export default {
           invoiceId: row.id
         }
       });
+    },
+    GetSummaries(param) {
+      console.log(param);
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "Total";
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]));
+        if (index === 7) {
+          sums[index] =
+            "$ " +
+            values
+              .reduce((prev, curr) => {
+                const value = Number(curr);
+                if (!isNaN(value)) {
+                  return prev + curr;
+                } else {
+                  return prev;
+                }
+              }, 0)
+              .toFixed(2);
+        } else {
+          sums[index] = "";
+        }
+      });
+
+      return sums;
     },
     handleExport(data) {
       jsonexport(data, (err, csv) => {

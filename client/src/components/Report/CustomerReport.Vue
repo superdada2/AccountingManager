@@ -16,7 +16,7 @@
     </a>
     <div class="dataTable">
       <el-table v-for="detail in customerDetails" :key="detail.id" @row-click="ToDetail" v-loading="customerLoading" :data="detail"
-        style="width: 100%" show-summary>
+        style="width: 100%" show-summary :summary-method="GetSummaries">
         <el-table-column prop="customerName" label="Customer Name" sortable />
         <el-table-column prop="invoiceNumber" label="Invoice Number" sortable />
         <el-table-column prop="product_enum.data" label="Product" sortable/>
@@ -197,6 +197,36 @@ export default {
           message: err.message
         });
       }
+    },
+    GetSummaries(param) {
+      console.log(param);
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "Total";
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]));
+        if (index === 3 || index === 4) {
+          sums[index] =
+            "$ " +
+            values
+              .reduce((prev, curr) => {
+                const value = Number(curr);
+                if (!isNaN(value)) {
+                  return prev + curr;
+                } else {
+                  return prev;
+                }
+              }, 0)
+              .toFixed(2);
+        } else {
+          sums[index] = "";
+        }
+      });
+
+      return sums;
     },
     handleExport(data) {
       jsonexport(data, (err, csv) => {

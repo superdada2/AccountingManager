@@ -8,7 +8,8 @@ import expressPartils from 'express-partials';
 import {
   sequelize
 } from './models'
-import mysql from 'mysql'
+import mysql from 'mysql';
+import passport from "passport";
 
 
 const app = express();
@@ -26,7 +27,7 @@ app.set("view engine", 'ejs')
 export default app;
 
 const server = http.createServer(app);
-const port = process.env.PORT || 3030;
+const port = process.env.PORT || 4040;
 
 sequelize.sync()
   .then(() => {

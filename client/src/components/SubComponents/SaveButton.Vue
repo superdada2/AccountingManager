@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     DeleteClick(id) {
-      this.$confirm("Are you sure to close this dialog?")
+      this.$confirm("Are you sure to delete this filter?")
         .then(E => {
           var temp = [...this.dropDown];
           _.remove(temp, function(n) {

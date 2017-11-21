@@ -182,7 +182,7 @@ export default {
           {
             required: true,
             message: "Please input Company Name",
-            trigger: "blur"
+            trigger: "change"
           }
         ],
         product: [

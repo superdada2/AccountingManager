@@ -105,7 +105,7 @@
         </el-table-column>
         <el-table-column prop="lengthMonth" label="length" sortable>
         </el-table-column>
-        <el-table-column align="right" prop="invoiceAmountUSD" label="amountUSD">
+        <el-table-column align="right" prop="invoiceAmountUSD" label="amountUSD" >
           <template slot-scope="scope">
             {{(scope.row.invoiceAmountUSD * 1).toLocaleString()}}
           </template>
@@ -163,6 +163,16 @@ export default {
   methods: {
     refreshData() {
       this.getInvoice(this.queryParam);
+    },
+    sortMethod(a, b) {
+      console.log(a.invoiceAmountUSD, b.invoiceAmountUSD);
+      if (a.invoiceAmountUSD < b.invoiceAmountUSD) {
+        return 1;
+      }
+      if (a.invoiceAmountUSD < b.invoiceAmountUSD) {
+        return -1;
+      }
+      return 0;
     },
     async handleExport(command) {
       var tempInvoice = [];

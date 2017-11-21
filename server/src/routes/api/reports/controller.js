@@ -54,7 +54,7 @@ export function loadData2() {
       companyName: companies[random(1, companies.length)],
       invoiceNumber: random(1, 90000),
       invoiceDate: randomDate(new Date(2014, 1), new Date(2017, 11)),
-      invoiceAmount: random(0, 100000),
+      invoiceAmount: random(0, 10000),
       billMonth: billingMonth,
       recognitionStrMonth: recStartMonth,
       lengthRec: random(10, 12),
@@ -66,7 +66,7 @@ export function loadData2() {
       invoiceAmountUsd: random(1, 50000),
       annualIncreaseBool: true,
       subscription: random(1, 2),
-      country: random(1, 40)
+      country: random(1, 243)
     })
     res(result)
   })
@@ -165,15 +165,114 @@ export function DeleteInvoice({
 export function ModifyInvoice(body) {
   return new Promise(async(res, rej) => {
     try {
-      await DeleteInvoice({
+      await DeleteDeferred({
         id: body.id
       })
-      await CreateInvoice(body)
+      await DeleteIncome({
+        id: body.id
+      })
+      await UpdateInvoice(body)
       res("success")
     } catch (err) {
       rej(err)
     }
   })
+}
+
+export function UpdateInvoice({
+  id = 0,
+  type = 1,
+  Class = 1,
+  product = 1,
+  currency = 1,
+  status = 1,
+  revenueType = 1,
+  companyName = 1,
+  invoiceNumber = 1,
+  invoiceAmount = 1,
+  invoiceDate = 1,
+  billMonth = 1,
+  description = 1,
+  recognitionStrMonth = 1,
+  lengthRec = 12,
+  fxRate = 1,
+  monthlyRec = 1,
+  dateLastIncrease = 1,
+  increasePerc = 1,
+  cancelationDate = 1,
+  comments = '1',
+  invoiceAmountUsd = 1,
+  annualIncreaseBool = 1,
+  subscription = 1,
+  country = 1,
+}) {
+  return new Promise(async(res, rej) => {
+    try {
+      var response = await invoice.update({
+        type: type,
+        customerName: companyName,
+        comments: comments,
+        description: description,
+        product: product,
+        class: Class,
+        invoiceNumber: invoiceNumber,
+        invoiceAmount: invoiceAmount,
+        invoiceDate: invoiceDate,
+        subscriptionType: subscription,
+        billingMonth: billMonth,
+        status: status,
+        recognitionStartMonth: recognitionStrMonth,
+        lengthMonth: lengthRec,
+        currency: currency,
+        FXRate: fxRate,
+        revenueType: revenueType,
+        cancellationDate: null,
+        annualIncreaseEli: annualIncreaseBool,
+        dateLastIncrease: dateLastIncrease,
+        increasePercentage: increasePerc,
+        invoiceAmountUSD: invoiceAmountUsd,
+        MonthlyRecoginitionAmountUSD: monthlyRec,
+        country: country
+      }, {
+        where: {
+          id: id
+        }
+      })
+
+      Date.prototype.addDays = function (days) {
+        this.setDate(this.getDate() + parseInt(days));
+        return this;
+      };
+      const billingStart = new Date(billMonth).addDays(2)
+      const supportStart = new Date(recognitionStrMonth).addDays(2)
+
+
+      const incomeList = createIncomeList({
+        id: id,
+        startMonth: supportStart.getMonth() + 1,
+        year: supportStart.getFullYear(),
+        length: lengthRec,
+        invoiceAmount: invoiceAmountUsd
+      })
+      incomeList.forEach(async(value) => {
+        await income.create(value)
+      })
+      const defferedList = createDeferred({
+        id: id,
+        startMonth: billingStart.getMonth() + 1,
+        year: billingStart.getFullYear(),
+        length: lengthRec,
+        invoiceAmount: invoiceAmountUsd
+      })
+      defferedList.forEach(async(value) => {
+        await deferred_balance.create(value)
+      })
+      res('Success')
+    } catch (err) {
+      rej(err.message)
+    }
+  })
+
 }
 
 export function CreateInvoice({
@@ -265,7 +364,6 @@ export function CreateInvoice({
       rej(err.message)
     }
   })
-
 }
 
 function createIncomeList({
