@@ -7,7 +7,7 @@
         </el-input>
       </el-form-item>
       <el-form-item prop="password" label="Password">
-        <el-input placeholder="Password" v-model="form.username" type="password">
+        <el-input placeholder="Password" v-model="form.password" type="password">
         </el-input>
       </el-form-item>
     </el-form>
@@ -16,6 +16,8 @@
   </div>
 </template>
 <script>
+import axios from "Axios";
+import { urlBase } from "../settings.js";
 export default {
   name: "register",
   data() {
@@ -41,6 +43,14 @@ export default {
         ]
       }
     };
+  },
+  methods: {
+    Register() {
+      const url = urlBase + "/auth/register";
+      axios.post(url, this.form).then(res => {
+        this.$message({ type: "success", message: "Register Success" });
+      });
+    }
   }
 };
 </script>

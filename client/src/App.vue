@@ -8,12 +8,13 @@
 
           <img id="image" src="./assets/viz_logo.png">
           <h1 id="title">INVOICES</h1>
-          <Login/>
+          
           <router-link to="/setting">
             <el-button id="setting" type="info" round :v-link='{name:"Setting"}'>
               <i class="el-icon-setting"></i>
             </el-button>
           </router-link>
+          <Login/>
 
         </div>
       </el-header>

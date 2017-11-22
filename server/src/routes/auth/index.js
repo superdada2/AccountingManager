@@ -22,7 +22,6 @@ router.post('/login', async(req, res) => {
 
 router.post('/register', async(req, res) => {
   try {
-
     const result = await register(req.body)
     console.log(result)
     res.status(200).json(result)

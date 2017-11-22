@@ -1,9 +1,9 @@
 <template>
-  <a className="login">
+  <a class="login">
     <a v-if="!loggedIn">
       <el-input placeholder="UserName" v-model="user.username">
       </el-input>
-      <el-input placeholder="Password" v-model="user.password">
+      <el-input placeholder="Password" type="password" v-model="user.password">
       </el-input>
       <el-button type="primary" @click="Login">Login</el-button>
     </a>
@@ -51,6 +51,10 @@ export default {
       this.loggedIn = false;
       this.$cookie.delete("auth");
       const url = urlBase + "/auth/logout";
+      this.$router.push({
+        name: "Register"
+      });
+      this.user = { username: "", password: "" };
       this.Get(url, null).then(res => {
         this.$message({ type: success, message: "Logout Complete" });
       });
@@ -66,6 +70,8 @@ export default {
 <style scoped>
 .login {
   float: right;
+  margin-right: 10px;
+  margin-top: 25px;
 }
 
 .el-input {
