@@ -9,7 +9,7 @@
     </a>
     <a v-if="loggedIn">
       <a>Welcome {{auth.user.username}}</a>
-      <el-button type="error" @click="Logout">Log Out</el-button>
+      <el-button type="info" @click="Logout">Log Out</el-button>
     </a>
   </a>
 </template>
@@ -76,5 +76,8 @@ export default {
 
 .el-input {
   width: 200px;
+}
+.el-button {
+  margin-left: 10px;
 }
 </style>

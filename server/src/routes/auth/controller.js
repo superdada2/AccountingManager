@@ -33,6 +33,9 @@ export function login({
           token
         })
       }
+      rej({
+        message: "failed"
+      })
     }).catch(err => {
       rej({
         message: "failed"
