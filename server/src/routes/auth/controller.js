@@ -60,3 +60,9 @@ export async function register({
     password: password
   })
 }
+
+export function GetUsers() {
+  return user.findAll({
+    attributes: ['username', 'accessLevel'],
+  })
+}

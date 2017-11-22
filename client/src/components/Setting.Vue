@@ -150,6 +150,9 @@
             </el-col>
           </el-row>
         </el-tab-pane>
+        <el-tab-pane label='Users' name='user'>
+          <Users/>
+        </el-tab-pane>
       </el-tabs>
 
     </div>
@@ -160,9 +163,13 @@
 import axios from "Axios";
 import { urlBase } from "../settings.js";
 import UserMixin from "../functions/Authentication";
+import Users from "./Setting/User";
 export default {
   name: "Settings",
   props: ["id"],
+  components: {
+    Users
+  },
   data() {
     return {
       temp: "",

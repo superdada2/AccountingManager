@@ -2,7 +2,8 @@ import express from 'express';
 import passport from 'passport';
 import {
   login,
-  register
+  register,
+  GetUsers
 } from './controller';
 
 export const router = express.Router()
@@ -51,6 +52,22 @@ router.post('/test', passport.authenticate('auth', {
 router.get('/logout', async(req, res) => {
   try {
     req.logout();
+    console.log(result)
+    res.status(200).json(result)
+  } catch (err) {
+    const message = err.message
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
+
+router.get('/user', passport.authenticate('auth', {
+  session: false
+}), async(req, res) => {
+  try {
+    const result = await GetUsers(req.body)
     console.log(result)
     res.status(200).json(result)
   } catch (err) {
