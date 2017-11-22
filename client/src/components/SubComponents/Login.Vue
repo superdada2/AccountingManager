@@ -6,10 +6,9 @@
       <el-input placeholder="Password" v-model="user.password">
       </el-input>
       <el-button type="primary" @click="Login">Login</el-button>
-      <el-button type="success" @click="Register">Register</el-button>
     </a>
     <a v-if="loggedIn">
-      <a>Welcome {{user.username}}</a>
+      <a>Welcome {{auth.user.username}}</a>
       <el-button type="error" @click="Logout">Log Out</el-button>
     </a>
   </a>
@@ -17,6 +16,7 @@
 <script>
 import axios from "Axios";
 import { urlBase } from "../../settings.js";
+import UserMixin from "../../functions/Authentication";
 export default {
   name: "Login",
   data() {
@@ -28,14 +28,15 @@ export default {
       loggedIn: false
     };
   },
+  mixins: [UserMixin],
   methods: {
     Login() {
       const url = urlBase + "/auth/login";
       axios
         .post(url, this.user)
         .then(res => {
-          (this.user = res.data), (this.loggedIn = true);
-          this.$cookie.set("user", JSON.stringify({ ...res.data }));
+          (this.auth = res.data), (this.loggedIn = true);
+          this.SetUser(res.data);
         })
         .catch(err => {
           this.$message({
@@ -45,7 +46,20 @@ export default {
           console.log(err);
         });
     },
-    Register() {}
+    Logout() {
+      this.auth = {};
+      this.loggedIn = false;
+      this.$cookie.delete("auth");
+      const url = urlBase + "/auth/logout";
+      axios.get(url, null).then(res => {
+        this.$message({ type: success, message: "Logout Complete" });
+      });
+    }
+  },
+  async created() {
+    if (await this.TestUser(this.auth.token)) {
+      this.loggedIn = true;
+    }
   }
 };
 </script>

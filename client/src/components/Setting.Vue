@@ -159,6 +159,7 @@
 <script>
 import axios from "Axios";
 import { urlBase } from "../settings.js";
+import UserMixin from "../functions/Authentication";
 export default {
   name: "Settings",
   props: ["id"],
@@ -189,6 +190,7 @@ export default {
       typeEnum: []
     };
   },
+  mixins: [UserMixin],
   methods: {
     addClick(value) {
       const url = urlBase + "/api/v1/enum/add";

@@ -77,6 +77,7 @@ import SaveButton from "./SubComponents/SaveButton";
 import _ from "lodash";
 
 import { urlBase } from "../settings.js";
+import UserMixin from "../functions/Authentication";
 import colors from "../assets/colors";
 export default {
   name: "report",
@@ -154,6 +155,7 @@ export default {
       }
     };
   },
+  mixins: [UserMixin],
   methods: {
     LoadInput(input) {
       this.input = input;

@@ -42,6 +42,7 @@ import * as jsonexport from "jsonexport/dist";
 import _ from "lodash";
 import SaveButton from "../SubComponents/SaveButton";
 import { urlBase } from "../../settings.js";
+import UserMixin from "../../functions/Authentication";
 export default {
   name: "customerReport",
   components: {
@@ -63,6 +64,7 @@ export default {
       customerNameList: []
     };
   },
+  mixins: [UserMixin],
   methods: {
     ResetInput() {
       this.input = {

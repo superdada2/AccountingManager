@@ -39,6 +39,7 @@
 <script>
 import axios from "Axios";
 import { urlBase } from "../../settings.js";
+import UserMixin from "../../functions/Authentication";
 export default {
   name: "ModifyDetail",
   props: ["detailData", "close", "refresh"],
@@ -47,6 +48,7 @@ export default {
       detail: {}
     };
   },
+  mixins: [UserMixin],
   methods: {
     AddTop() {
       var temp = [...this.detail.data];

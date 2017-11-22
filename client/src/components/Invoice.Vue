@@ -121,6 +121,7 @@ import _ from "lodash";
 import Modify from "./SubComponents/Modify";
 import * as jsonexport from "jsonexport/dist";
 import { urlBase } from "../settings.js";
+import UserMixin from "../functions/Authentication";
 export default {
   name: "invoice",
   components: {
@@ -160,6 +161,7 @@ export default {
       loading: true
     };
   },
+  mixins: [UserMixin],
   methods: {
     refreshData() {
       this.getInvoice(this.queryParam);

@@ -24,6 +24,7 @@
 <script>
 import axios from "Axios";
 import { urlBase } from "../../settings.js";
+import UserMixin from "../../functions/Authentication";
 
 export default {
   name: "ModifyComment",
@@ -36,6 +37,7 @@ export default {
       }
     };
   },
+  mixins: [UserMixin],
   methods: {
     updateComments() {
       if (

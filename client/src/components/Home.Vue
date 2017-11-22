@@ -84,6 +84,7 @@ import chartjs from "chart.piecelabel.js";
 import { urlBase } from "../settings.js";
 import SaveButton from "./SubComponents/SaveButton";
 import colors from "../assets/colors";
+import UserMixin from "../functions/Authentication";
 
 export default {
   name: "home",
@@ -95,6 +96,7 @@ export default {
     GeoChart,
     SaveButton
   },
+  mixins: [UserMixin],
   data() {
     return {
       form1: {

@@ -113,6 +113,7 @@ import ModifyDetail from "./SubComponents/ModifyDetail";
 
 import * as jsonexport from "jsonexport/dist";
 import { urlBase } from "../settings.js";
+import UserMixin from "../functions/Authentication";
 export default {
   name: "details",
   components: {
@@ -146,6 +147,7 @@ export default {
       detailVisibility: false
     };
   },
+  mixins: [UserMixin],
   methods: {
     handleHeaderClick(data) {
       this.currentDetail["data"] = data;

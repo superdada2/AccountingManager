@@ -132,6 +132,7 @@
 <script>
 import axios from "Axios";
 import { urlBase } from "../../settings.js";
+import UserMixin from "../../functions/Authentication";
 export default {
   name: "modify",
   props: ["invoiceData", "close", "refresh"],
@@ -306,6 +307,7 @@ export default {
       }
     };
   },
+  mixins: [UserMixin],
   methods: {
     ToDetail() {
       this.$router.push({

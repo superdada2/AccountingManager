@@ -57,6 +57,7 @@ import Modify from "../SubComponents/Modify";
 import ModifyComments from "../SubComponents/ModifyComments";
 import SaveButton from "../SubComponents/SaveButton";
 import { urlBase } from "../../settings.js";
+import UserMixin from "../../functions/Authentication";
 export default {
   name: "billiingReport",
   data() {
@@ -78,6 +79,7 @@ export default {
     ModifyComments,
     SaveButton
   },
+  mixins: [UserMixin],
   methods: {
     LoadInput({ billingMonth }) {
       this.input.billingMonth = billingMonth;

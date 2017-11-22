@@ -128,6 +128,7 @@
 <script>
 import axios from "Axios";
 import { urlBase } from "../settings.js";
+import UserMixin from "../functions/Authentication";
 export default {
   name: "add",
   data() {
@@ -301,12 +302,13 @@ export default {
       }
     };
   },
+  mixins: [UserMixin],
   methods: {
     //TODO: auto fill fx rate, and usd fields
     loadData() {
       const url = urlBase + "/api/v1/enum/all";
       this.getCustomerName();
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.classEnum = res.data.Class;
         this.productEnum = res.data.product;
         this.typeEnum = res.data.type;
@@ -430,7 +432,7 @@ export default {
     },
     getCustomerName() {
       const url = urlBase + "/api/v1/reports/getCustomerName";
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.customerNameList = res.data;
       });
     }

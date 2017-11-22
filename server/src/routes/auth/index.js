@@ -49,4 +49,18 @@ router.post('/test', passport.authenticate('auth', {
   }
 })
 
+router.get('/logout', async(req, res) => {
+  try {
+    req.logout();
+    console.log(result)
+    res.status(200).json(result)
+  } catch (err) {
+    const message = err.message
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
+
 export default router
