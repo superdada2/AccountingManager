@@ -132,6 +132,16 @@ import UserMixin from "../functions/Authentication";
 export default {
   name: "add",
   data() {
+    var checkInvoiceDate = (rule, value, callback) => {
+      console.log(value);
+      const month = value.getMonth();
+      const year = value.getFullYear();
+      if (month < new Date().getMonth() || year < new Date().getFullYear()) {
+        callback(new Error("Cant Input Past Invoice"));
+      } else {
+        callback();
+      }
+    };
     return {
       classEnum: [],
       productEnum: [],
@@ -218,10 +228,8 @@ export default {
         ],
         invoiceDate: [
           {
-            required: true,
-            type: "date",
-            message: "Please select an invoice date",
-            trigger: "change"
+            validator: checkInvoiceDate,
+            trigger: "blur"
           }
         ],
         type: [
@@ -329,6 +337,7 @@ export default {
       const result = JSON.parse(this.$cookie.get("blankForm"));
       this.formValue = result;
       this.$refs[formName].resetFields();
+      this.$refs[formName].validateField("subscription");
       this.$cookie.delete("form");
     },
     querySearchCustName(queryString, cb) {

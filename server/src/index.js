@@ -31,7 +31,7 @@ app.set("view engine", 'ejs')
 export default app;
 
 const server = http.createServer(app);
-const port = process.env.PORT || 4040;
+const port = process.env.PORT || 3030;
 
 sequelize.sync()
   .then(() => {

@@ -366,6 +366,14 @@ export default {
       this.close();
     },
     async submit(formName) {
+      const date = new Date(this.formValue.invoiceDate);
+      if (
+        date.getMonth() < new Date().getMonth() ||
+        date.getFullYear() < new Date().getFullYear()
+      ) {
+        this.$message({ type: "error", message: "Cannot modify past invoice" });
+        return false;
+      }
       const url = urlBase + "/api/v1/reports/modifyInvoice";
       this.$refs[formName].validate(valid => {
         if (valid) {

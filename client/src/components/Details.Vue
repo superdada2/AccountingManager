@@ -362,6 +362,8 @@ export default {
       this.refreshData();
     },
     modifyInvoice(row, e) {
+      const date = new Date(row.invoiceDate);
+
       this.modifyDialogVisibility = true;
       this.currentRow = row;
       e.stopPropagation();
