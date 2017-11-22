@@ -358,7 +358,7 @@ export default {
             ...formValues
           };
           try {
-            const data = axios.post(url, message).then(i => {
+            const data = this.Post(url, message).then(i => {
               this.$message({
                 type: "success",
                 message: "Success!"

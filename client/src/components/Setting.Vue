@@ -240,7 +240,7 @@ export default {
           break;
       }
       try {
-        axios.post(url, payLoad).then(res => {
+        this.Post(url, payLoad).then(res => {
           this.$message({
             showClose: true,
             message: "Success!",
@@ -311,7 +311,7 @@ export default {
           break;
       }
       try {
-        axios.post(url, payLoad).then(res => {
+        this.Post(url, payLoad).then(res => {
           this.$message({
             showClose: true,
             message: "Success!",
@@ -375,7 +375,7 @@ export default {
           break;
       }
       try {
-        axios.post(url, payLoad).then(res => {
+        this.Post(url, payLoad).then(res => {
           this.$message({
             showClose: true,
             message: "Success!",
@@ -394,7 +394,7 @@ export default {
     loadData() {
       const url = urlBase + "/api/v1/enum/all";
 
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.classEnum = res.data.Class;
         this.productEnum = res.data.product;
         this.typeEnum = res.data.type;

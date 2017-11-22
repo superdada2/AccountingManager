@@ -180,7 +180,7 @@ export default {
       var tempInvoice = [];
       if (command == "all") {
         const url = urlBase + "/api/v1/reports/getInvoice";
-        tempInvoice = (await axios.post(url, {
+        tempInvoice = (await this.Post(url, {
           all: true
         })).data;
       } else {
@@ -225,7 +225,7 @@ export default {
     getInvoice(param) {
       const url = urlBase + "/api/v1/reports/getInvoice";
       this.loading = true;
-      axios.post(url, param).then(res => {
+      this.Post(url, param).then(res => {
         this.invoices = res.data;
         this.loading = false;
       });
@@ -233,7 +233,7 @@ export default {
     getEnum() {
       const url = urlBase + "/api/v1/enum/all";
 
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.enumList = res.data;
         const keys = Object.keys(this.enumList);
         var enumListTemp = keys;
@@ -383,13 +383,13 @@ export default {
     },
     getCustomerName() {
       const url = urlBase + "/api/v1/reports/getCustomerName";
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.customerNameList = res.data;
       });
     },
     getInvoiceNumber() {
       const url = urlBase + "/api/v1/reports/getInvoiceNumber";
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.invoiceNumberList = res.data;
       });
     },
@@ -406,7 +406,7 @@ export default {
       ) {
         const url = urlBase + "/api/v1/reports/updateDescription";
 
-        axios.post(url, {
+        this.Post(url, {
           description: this.currentDescription,
           comments: this.currentComment,
           id: this.currentRow.id

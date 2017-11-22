@@ -46,7 +46,7 @@ export default {
       ) {
         const url = urlBase + "/api/v1/reports/updateDescription";
 
-        axios.post(url, {
+        this.Post(url, {
           description: this.row.description,
           comments: this.row.comments,
           id: this.row.id

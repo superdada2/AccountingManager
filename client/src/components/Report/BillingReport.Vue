@@ -144,20 +144,18 @@ export default {
       const url = urlBase + "/api/v1/reports/getInvoice";
       this.tableLoading = true;
       try {
-        axios
-          .post(url, {
-            where: {
-              billingMonth: this.input.billingMonth
-            }
-          })
-          .then(res => {
-            this.tableData = res.data;
-            this.$message({
-              type: "success",
-              message: "Success"
-            });
-            this.tableLoading = false;
+        this.Post(url, {
+          where: {
+            billingMonth: this.input.billingMonth
+          }
+        }).then(res => {
+          this.tableData = res.data;
+          this.$message({
+            type: "success",
+            message: "Success"
           });
+          this.tableLoading = false;
+        });
       } catch (err) {
         this.tableLoading = false;
         this.$message({

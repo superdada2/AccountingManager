@@ -79,19 +79,17 @@ export default {
     Save() {
       const url = urlBase + "/api/v1/reports/modifyIncomeDeferred";
       try {
-        axios
-          .post(url, {
-            invoiceId: this.detail.id,
-            data: this.detail.data
-          })
-          .then(res => {
-            this.$message({
-              type: "success",
-              message: "Saved!"
-            });
-            this.refresh();
-            this.close();
+        this.Post(url, {
+          invoiceId: this.detail.id,
+          data: this.detail.data
+        }).then(res => {
+          this.$message({
+            type: "success",
+            message: "Saved!"
           });
+          this.refresh();
+          this.close();
+        });
       } catch (err) {
         this.$message({
           type: "error",

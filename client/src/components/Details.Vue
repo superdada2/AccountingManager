@@ -191,10 +191,10 @@ export default {
         spinner: "el-icon-loading"
       });
       try {
-        axios.post(url, param).then(res => {
+        this.Post(url, param).then(res => {
           this.invoices = res.data;
         });
-        axios.post(url2, param).then(res => {
+        this.Post(url2, param).then(res => {
           var details = [];
           res.data.forEach(entry => {
             var temp = this.merge(entry.incomes, entry.deferred_balances);
@@ -329,13 +329,13 @@ export default {
     },
     getCustomerName() {
       const url = urlBase + "/api/v1/reports/getCustomerName";
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.customerNameList = res.data;
       });
     },
     getInvoiceNumber() {
       const url = urlBase + "/api/v1/reports/getInvoiceNumber";
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.invoiceNumberList = res.data;
       });
     },
@@ -352,7 +352,7 @@ export default {
       ) {
         const url = urlBase + "/api/v1/reports/updateDescription";
 
-        axios.post(url, {
+        this.Post(url, {
           description: this.currentDescription,
           comments: this.currentComment,
           id: this.currentRow.id

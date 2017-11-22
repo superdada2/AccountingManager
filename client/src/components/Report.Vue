@@ -186,7 +186,7 @@ export default {
         endM: this.input.endM.getMonth() + 1,
         isIncome: this.input.balanceType
       };
-      axios.post(url, data).then(res => {
+      this.Post(url, data).then(res => {
         this.tableData = res.data;
         this.tableVisibility = true;
         this.CreateChartData(res.data);
@@ -244,14 +244,14 @@ export default {
 
     GetProductEnum() {
       const url = urlBase + "/api/v1/enum/product";
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.productEnum = res.data;
       });
     },
 
     GetClassEnum() {
       const url = urlBase + "/api/v1/enum/class";
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.classEnum = res.data;
       });
     },

@@ -51,7 +51,7 @@ export default {
       this.loggedIn = false;
       this.$cookie.delete("auth");
       const url = urlBase + "/auth/logout";
-      axios.get(url, null).then(res => {
+      this.Get(url, null).then(res => {
         this.$message({ type: success, message: "Logout Complete" });
       });
     }

@@ -318,7 +318,7 @@ export default {
     loadData() {
       const url = urlBase + "/api/v1/enum/all";
 
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.classEnum = res.data.Class;
         this.productEnum = res.data.product;
         this.typeEnum = res.data.type;
@@ -343,18 +343,16 @@ export default {
       const url = urlBase + "/api/v1/reports/deleteInvoice";
       this.$confirm("Are you sure to Delete this Invoice?").then(_ => {
         try {
-          axios
-            .post(url, {
-              id: this.invoiceData.id
-            })
-            .then(res => {
-              this.$message({
-                type: "success",
-                message: "Success!"
-              });
-              this.refresh();
-              this.close();
+          this.Post(url, {
+            id: this.invoiceData.id
+          }).then(res => {
+            this.$message({
+              type: "success",
+              message: "Success!"
             });
+            this.refresh();
+            this.close();
+          });
         } catch (err) {
           this.$message({
             type: "error",
@@ -374,7 +372,7 @@ export default {
           const formValues = this.formValue;
           const message = { id: this.invoiceData.id, ...formValues };
           try {
-            const data = axios.post(url, message).then(i => {
+            const data = this.Post(url, message).then(i => {
               this.$message({
                 type: "success",
                 message: "Success!"
@@ -415,7 +413,7 @@ export default {
         "http://apilayer.net/api/live?access_key=a85aa84971650d26dc61c8932a548e31&currencies=AUD";
       const currency = this.currencyEnum.find(i => i.id == value).data;
       url = url.replace("AUD", currency);
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.formValue.fxRate = 1 / res.data.quotes["USD" + currency];
 
         if (this.formValue.invoiceAmount != "") {
