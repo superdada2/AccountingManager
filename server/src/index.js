@@ -9,10 +9,13 @@ import {
   sequelize
 } from './models'
 import mysql from 'mysql';
-import passport from "passport";
+import passport from 'passport';
+import strategy from './Auth'
+
 
 
 const app = express();
+passport.use("auth", strategy)
 app.set("view engine", 'ejs')
   .set('views', __dirname + '/views')
   .use(expressPartils())
@@ -22,6 +25,7 @@ app.set("view engine", 'ejs')
   .use(bodyParser.urlencoded({
     extended: true
   }))
+  .use(passport.initialize())
   .use('/', router)
 
 export default app;

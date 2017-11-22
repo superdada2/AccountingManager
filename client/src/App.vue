@@ -8,6 +8,7 @@
 
           <img id="image" src="./assets/viz_logo.png">
           <h1 id="title">INVOICES</h1>
+          <Login/>
           <router-link to="/setting">
             <el-button id="setting" type="info" round :v-link='{name:"Setting"}'>
               <i class="el-icon-setting"></i>
@@ -41,54 +42,56 @@
 </template>
 
 <script>
-  export default {
-    name: 'app'
+import Login from "./components/SubComponents/Login";
+export default {
+  name: "app",
+  components: {
+    Login
   }
-
+};
 </script>
 
 <style>
-  body {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-  }
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
 
-  #title {
-    padding-top: 20px;
-    display: inline-block;
-    padding-left: 30px;
-  }
+#title {
+  padding-top: 20px;
+  display: inline-block;
+  padding-left: 30px;
+}
 
-  #app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
-  }
+#app {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+}
 
-  #header {
-    background: #545454;
-    color: snow;
-  }
+#header {
+  background: #545454;
+  color: snow;
+}
 
-  .el-header {
-    padding: 0px
-  }
+.el-header {
+  padding: 0px;
+}
 
-  #sideBar {
-    height: 100%;
-    position: relative;
-  }
+#sideBar {
+  height: 100%;
+  position: relative;
+}
 
-  #setting {
-    margin-top: 25px;
-    margin-right: 10px;
-    float: right;
-  }
+#setting {
+  margin-top: 25px;
+  margin-right: 10px;
+  float: right;
+}
 
-  #image {
-    margin-left: 20px;
-  }
-
+#image {
+  margin-left: 20px;
+}
 </style>

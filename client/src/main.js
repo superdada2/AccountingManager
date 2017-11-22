@@ -9,6 +9,7 @@ import i18n from 'vue-i18n'
 import locale from 'element-ui/lib/locale/lang/en'
 import VueCookie from 'vue-cookie'
 import VueLocalStorage from 'vue-localstorage'
+import UserMixin from './functions/Authentication'
 
 Vue.config.productionTip = false
 Vue.use(i18n)
@@ -18,6 +19,7 @@ Vue.use(ElementUI, {
 })
 Vue.use(VueCookie)
 Vue.use(VueLocalStorage)
+Vue.mixin(UserMixin)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

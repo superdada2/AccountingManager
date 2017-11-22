@@ -6,6 +6,7 @@ import Invoice from '@/components/Invoice'
 import Report from '@/components/Report'
 import Setting from '@/components/Setting'
 import Details from '@/components/Details'
+import Register from '@/components/Register'
 
 Vue.use(Router)
 
@@ -44,7 +45,11 @@ export default new Router({
     path: '/details',
     name: 'Details',
     component: Details
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
   }
-
   ]
 })
