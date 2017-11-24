@@ -29,6 +29,7 @@ export default {
     };
   },
   mixins: [UserMixin],
+  props: ["refreshMenu", "clearMenu"],
   methods: {
     Login() {
       const url = urlBase + "/auth/login";
@@ -37,6 +38,7 @@ export default {
         .then(res => {
           (this.auth = res.data), (this.loggedIn = true);
           this.SetUser(res.data);
+          this.refreshMenu();
         })
         .catch(err => {
           this.$message({
@@ -55,6 +57,7 @@ export default {
         name: "Register"
       });
       this.user = { username: "", password: "" };
+      this.clearMenu();
       this.Get(url, null).then(res => {
         this.$message({ type: success, message: "Logout Complete" });
       });

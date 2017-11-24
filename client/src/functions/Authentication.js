@@ -2,6 +2,7 @@ import axios from 'Axios'
 import {
   urlBase
 } from '../settings'
+
 var userMixin = {
   data () {
     return {
@@ -71,6 +72,7 @@ var userMixin = {
       }
     },
     Authorize (requredPermissions) {
+      console.log(requredPermissions)
       const permissions = [...this.auth.user.user_permissions]
       if (requredPermissions.constructor === Array) {
         var authorize
