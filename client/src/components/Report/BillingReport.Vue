@@ -1,5 +1,6 @@
 <template>
   <div className="billingReport">
+    <Help :message="helpMessage"/>
     <el-dialog title="Modify" :visible.sync="modifyDialogVisibility" width="80%">
       <Modify :invoice-data="currentRow" :close="()=>{this.modifyDialogVisibility = false}" :refresh="GetInvoice" />
     </el-dialog>
@@ -32,7 +33,7 @@
         </el-table-column>
         <el-table-column align="right" prop="invoiceAmountUSD" label="amountUSD">
           <template slot-scope="scope">
-            {{(scope.row.invoiceAmountUSD * 1).toLocaleString()}}
+            {{(scope.row.invoiceAmountUSD * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
           </template>
         </el-table-column>
         <el-table-column prop="increasePercentage" label="Percentage" sortable>
@@ -58,10 +59,13 @@ import ModifyComments from "../SubComponents/ModifyComments";
 import SaveButton from "../SubComponents/SaveButton";
 import { urlBase } from "../../settings.js";
 import UserMixin from "../../functions/Authentication";
+import Help from "../SubComponents/Help";
 export default {
   name: "billiingReport",
   data() {
     return {
+      helpMessage:
+        "Left Click on a invoice view/modify comments and description. Right click to view invoice in detail",
       input: {
         billingMonth: ""
       },
@@ -77,7 +81,8 @@ export default {
   components: {
     Modify,
     ModifyComments,
-    SaveButton
+    SaveButton,
+    Help
   },
   mixins: [UserMixin],
   methods: {
@@ -103,18 +108,16 @@ export default {
         }
         const values = data.map(item => Number(item[column.property]));
         if (index === 7) {
-          sums[index] =
-            "$ " +
-            values
-              .reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
-                  return prev + curr;
-                } else {
-                  return prev;
-                }
-              }, 0)
-              .toFixed(2);
+          sums[index] = values
+            .reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0)
+            .toLocaleString(undefined, { style: "currency", currency: "USD" });
         } else {
           sums[index] = "";
         }

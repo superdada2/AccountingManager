@@ -1,5 +1,6 @@
 <template>
   <div class="customerReport">
+    <Help :message="helpMessage"/>
     <a class="inputRow">
       <el-autocomplete placeholder="Customer" v-model="input.customerSearchValue" :fetch-suggestions="querySearchCustName"></el-autocomplete>
       <el-date-picker v-model="input.customerQueryDate" type="month" placeholder="Month">
@@ -22,12 +23,12 @@
         <el-table-column prop="product_enum.data" label="Product" sortable/>
         <el-table-column prop="income" label="Income" align="right" sortable>
           <template slot-scope="scope">
-            {{(scope.row.income * 1).toLocaleString()}}
+            {{(scope.row.income * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
           </template>
         </el-table-column>
         <el-table-column prop="deferred" label="Deferred" align="right" sortable>
           <template slot-scope="scope">
-            {{(scope.row.deferred * 1).toLocaleString()}}
+            {{(scope.row.deferred * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
           </template>
         </el-table-column>
         <el-table-column prop="month" label="Month" />
@@ -43,13 +44,16 @@ import _ from "lodash";
 import SaveButton from "../SubComponents/SaveButton";
 import { urlBase } from "../../settings.js";
 import UserMixin from "../../functions/Authentication";
+import Help from "../SubComponents/Help";
 export default {
   name: "customerReport",
   components: {
-    SaveButton
+    SaveButton,
+    Help
   },
   data() {
     return {
+      helpMessage: "Left Click on invoice to show detail",
       input: {
         productFilter: "",
         customerQueryDate: "",
@@ -220,7 +224,10 @@ export default {
                   return prev;
                 }
               }, 0)
-              .toFixed(2);
+              .toLocaleString(undefined, {
+                style: "currency",
+                currency: "USD"
+              });
         } else {
           sums[index] = "";
         }

@@ -1,5 +1,6 @@
 <template>
   <div class='Default'>
+    <Help :message="helpMessage"/>
     <el-row>
       <div class='header'>
         <h1>Home</h1>
@@ -85,6 +86,7 @@ import { urlBase } from "../settings.js";
 import SaveButton from "./SubComponents/SaveButton";
 import colors from "../assets/colors";
 import UserMixin from "../functions/Authentication";
+import Help from "./SubComponents/Help";
 
 export default {
   name: "home",
@@ -94,7 +96,8 @@ export default {
     DoughnutChart,
     BarChart,
     GeoChart,
-    SaveButton
+    SaveButton,
+    Help
   },
   mixins: [UserMixin],
   data() {
@@ -104,6 +107,7 @@ export default {
         startMonth: new Date(2015, 1),
         endMonth: new Date()
       },
+      helpMessage: "Left click on chart label to filter",
       startDate: "",
       endDate: "",
       billByCountry: [],

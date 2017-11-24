@@ -3,6 +3,7 @@
     <div class='header'>
       <h1>Details </h1>
     </div>
+    <Help :message="helpMessage"/>
     <el-dialog title='Comments and Description' :visible.sync='commentDialogVisibility' width='50%'>
       <ModifyComments :close="()=>{this.commentDialogVisibility = false}" :currentRow="currentRow" :refresh="refreshData"/>
     </el-dialog>
@@ -56,7 +57,7 @@
           </el-table-column>
           <el-table-column align="right" prop='invoiceAmountUSD' label='amountUSD'>
             <template slot-scope="scope">
-              {{(scope.row.invoiceAmountUSD * 1).toLocaleString()}}
+              {{(scope.row.invoiceAmountUSD * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
             </template>
           </el-table-column>
         </el-table>
@@ -64,7 +65,7 @@
     </el-row>
     <el-row>
 
-      <el-col :span='6' v-for='detail in details' :key='detail.id'>
+      <el-col :span='8' v-for='detail in details' :key='detail.id'>
         <el-table :data='detail' @header-click="()=>handleHeaderClick(detail)" max-height="780" style='width: 95%; height:780px;'
           class='detailTable' border>
           <el-table-column :label="detail.customerName + ': '+ detail.product + ': '+detail.invoiceNumber">
@@ -74,12 +75,12 @@
             </el-table-column>
             <el-table-column align="right" prop='income' label='Income'>
               <template slot-scope="scope">
-                {{(scope.row.income * 1).toLocaleString()}}
+                {{(scope.row.income * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
               </template>
             </el-table-column>
             <el-table-column align="right" prop='deferred' label='Deferred'>
               <template slot-scope="scope">
-                {{(scope.row.deferred * 1).toLocaleString()}}
+                {{(scope.row.deferred * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
               </template>
             </el-table-column>
           </el-table-column>
@@ -98,16 +99,20 @@ import ModifyComments from "./SubComponents/ModifyComments";
 import * as jsonexport from "jsonexport/dist";
 import { urlBase } from "../settings.js";
 import UserMixin from "../functions/Authentication";
+import Help from "./SubComponents/Help";
 export default {
   name: "details",
   components: {
     Modify,
     ModifyDetail,
-    ModifyComments
+    ModifyComments,
+    Help
   },
   props: ["test"],
   data() {
     return {
+      helpMessage:
+        "Left Click on a invoice view/modify comments and description. Right click to view invoice in detail. Left click on a deferred/income table to  modify",
       currentRow: {},
       commentDialogVisibility: false,
       modifyDialogVisibility: false,

@@ -1,5 +1,6 @@
 <template>
   <div id="sd">
+    <Help :message="helpMessage"/>
     <div class="header">
       <h1>Invoice </h1>
     </div>
@@ -87,11 +88,11 @@
         </el-table-column>
         <el-table-column prop="recognitionStartMonth" label="RecStart" sortable>
         </el-table-column>
-        <el-table-column prop="lengthMonth" label="length" sortable>
+        <el-table-column prop="lengthMonth" label="Recognition Lenth" sortable>
         </el-table-column>
-        <el-table-column align="right" prop="invoiceAmountUSD" label="amountUSD" >
+        <el-table-column align="right" prop="invoiceAmountUSD" label="AmountUSD" >
           <template slot-scope="scope">
-            {{(scope.row.invoiceAmountUSD * 1).toLocaleString()}}
+            {{(scope.row.invoiceAmountUSD * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
           </template>
         </el-table-column>
       </el-table>
@@ -103,6 +104,7 @@
 import axios from "Axios";
 import _ from "lodash";
 import Modify from "./SubComponents/Modify";
+import Help from "./SubComponents/Help";
 import ModifyComments from "./SubComponents/ModifyComments";
 import * as jsonexport from "jsonexport/dist";
 import { urlBase } from "../settings.js";
@@ -111,11 +113,14 @@ export default {
   name: "invoice",
   components: {
     Modify,
-    ModifyComments
+    ModifyComments,
+    Help
   },
   data() {
     return {
       currentRow: {},
+      helpMessage:
+        "Left Click on a invoice view/modify comments and description. Right click to view invoice in detail",
       commentDialogVisibility: false,
       modifyDialogVisibility: false,
       tags: [],

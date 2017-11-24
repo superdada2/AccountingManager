@@ -44,12 +44,12 @@
               <el-table-column prop="count" label="Count" />
               <el-table-column v-for="item in columnEnum" :key="item.id" :prop="item.data" :label="item.data" align="right">
                 <template slot-scope="scope">
-                  {{(scope.row[item.data] * 1).toLocaleString()}}
+                  {{(scope.row[item.data] * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
                 </template>
               </el-table-column>
               <el-table-column prop="total" label="Total" align="right">
                 <template slot-scope="scope">
-                  {{(scope.row.total * 1).toLocaleString()}}
+                  {{(scope.row.total * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
                 </template>
               </el-table-column>
             </el-table>
