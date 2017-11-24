@@ -12,7 +12,7 @@
         <el-input type='textarea' :rows='5' v-model='row.description'>
         </el-input>
       </el-col>
-      
+
     </el-row>
 
     <span slot='footer' class='dialog-footer'>
@@ -40,6 +40,13 @@ export default {
   mixins: [UserMixin],
   methods: {
     updateComments() {
+      if (!this.Authorize({ type: 1, role: 2 })) {
+        this.$message({
+          type: "error",
+          message: "No Permission!"
+        });
+        return;
+      }
       if (
         this.row.comments != this.currentRow.comments ||
         this.row.description != this.currentRow.description
@@ -58,11 +65,15 @@ export default {
   },
   watch: {
     currentRow: function(newVal, old) {
-      this.row = { ...newVal };
+      this.row = {
+        ...newVal
+      };
     }
   },
   created() {
-    this.row = { ...this.currentRow };
+    this.row = {
+      ...this.currentRow
+    };
   }
 };
 </script>
@@ -72,6 +83,7 @@ export default {
   float: right;
   margin: 10px;
 }
+
 .content {
   height: 200px;
 }

@@ -340,6 +340,13 @@ export default {
     },
 
     deleteInvoice() {
+      if (!this.Authorize({ type: 1, role: 3 })) {
+        this.$message({
+          type: "error",
+          message: "No Permission!"
+        });
+        return;
+      }
       const url = urlBase + "/api/v1/reports/deleteInvoice";
       this.$confirm("Are you sure to Delete this Invoice?").then(_ => {
         try {
@@ -366,6 +373,13 @@ export default {
       this.close();
     },
     async submit(formName) {
+      if (!this.Authorize({ type: 1, role: 2 })) {
+        this.$message({
+          type: "error",
+          message: "No Permission!"
+        });
+        return;
+      }
       const date = new Date(this.formValue.invoiceDate);
       if (
         date.getMonth() < new Date().getMonth() ||

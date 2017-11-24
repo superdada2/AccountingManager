@@ -77,6 +77,13 @@ export default {
       this.detail.data = temp;
     },
     Save() {
+      if (!this.Authorize({ type: 1, role: 2 })) {
+        this.$message({
+          type: "error",
+          message: "No Permission!"
+        });
+        return;
+      }
       const url = urlBase + "/api/v1/reports/modifyIncomeDeferred";
       try {
         this.Post(url, {

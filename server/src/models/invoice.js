@@ -57,7 +57,7 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false
     },
     invoiceAmount: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.DECIMAL(12, 5),
       allowNull: false
     },
     invoiceDate: {
@@ -102,7 +102,7 @@ module.exports = function (sequelize, DataTypes) {
       }
     },
     FXRate: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.DECIMAL(12, 5),
       allowNull: false,
       defaultValue: '1'
     },
@@ -128,16 +128,16 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true,
     },
     increasePercentage: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.DECIMAL(12, 5),
       alowNull: true,
       defaultValue: 0
     },
     invoiceAmountUSD: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.DECIMAL(12, 5),
       allowNull: true
     },
     MonthlyRecoginitionAmountUSD: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.DECIMAL(12, 5),
       allowNull: false
     }
   }, {

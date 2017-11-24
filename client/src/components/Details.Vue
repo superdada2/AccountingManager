@@ -4,23 +4,7 @@
       <h1>Details </h1>
     </div>
     <el-dialog title='Comments and Description' :visible.sync='commentDialogVisibility' width='50%'>
-      <el-row>
-        <el-col :span='11' class='input'>
-          <span> Comments </span>
-          <el-input type='textarea' :rows='5' v-model='currentComment'>
-          </el-input>
-
-        </el-col>
-        <el-col :span='11' class='input'>
-          <span> Description </span>
-          <el-input type='textarea' :rows='5' v-model='currentDescription'>
-          </el-input>
-        </el-col>
-      </el-row>
-      <span slot='footer' class='dialog-footer'>
-        <el-button @click='commentDialogVisibility = false'>Cancel</el-button>
-        <el-button type='primary' @click='updateComments'>Save</el-button>
-      </span>
+      <ModifyComments :close="()=>{this.commentDialogVisibility = false}" :currentRow="currentRow" :refresh="refreshData"/>
     </el-dialog>
     <el-dialog title='Modify' :visible.sync='modifyDialogVisibility' width='80%'>
       <Modify :invoice-data='currentRow' :close='closeModify' :refresh='refreshData' />
@@ -110,7 +94,7 @@ import axios from "Axios";
 import _ from "lodash";
 import Modify from "./SubComponents/Modify";
 import ModifyDetail from "./SubComponents/ModifyDetail";
-
+import ModifyComments from "./SubComponents/ModifyComments";
 import * as jsonexport from "jsonexport/dist";
 import { urlBase } from "../settings.js";
 import UserMixin from "../functions/Authentication";
@@ -118,14 +102,13 @@ export default {
   name: "details",
   components: {
     Modify,
-    ModifyDetail
+    ModifyDetail,
+    ModifyComments
   },
   props: ["test"],
   data() {
     return {
       currentRow: {},
-      currentDescription: "",
-      currentComment: "",
       commentDialogVisibility: false,
       modifyDialogVisibility: false,
       invoices: [],
@@ -340,26 +323,8 @@ export default {
       });
     },
     openComments(row) {
-      this.commentDialogVisibility = true;
-      this.currentDescription = row.description;
-      this.currentComment = row.comments;
       this.currentRow = row;
-    },
-    updateComments() {
-      if (
-        this.currentComment != this.currentRow.comments ||
-        this.currentDescription != this.currentRow.description
-      ) {
-        const url = urlBase + "/api/v1/reports/updateDescription";
-
-        this.Post(url, {
-          description: this.currentDescription,
-          comments: this.currentComment,
-          id: this.currentRow.id
-        });
-      }
-      this.commentDialogVisibility = false;
-      this.refreshData();
+      this.commentDialogVisibility = true;
     },
     modifyInvoice(row, e) {
       const date = new Date(row.invoiceDate);

@@ -7,7 +7,7 @@
     </el-row>
     <div class='content'>
       <el-tabs  value='add'>
-        <el-tab-pane label='Add' name='add'>
+        <el-tab-pane label='Add' name='add' v-if="addTabVisibility">
           <el-row>
             <el-col :span='12'>
               <el-input placeholder='Add Class' v-model='Class'></el-input>
@@ -36,7 +36,7 @@
             </el-col>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label='Update' name='update'>
+        <el-tab-pane label='Update' name='update' v-if="updatedTabVisibility">
           <el-row>
             <el-col :span='12'>
               <el-select v-model='idClass' placeholder='Class'>
@@ -93,7 +93,7 @@
             </el-col>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label='Delete' name='delete'>
+        <el-tab-pane label='Delete' name='delete' v-if="deleteTabVisibility">
           <el-row>
             <el-col :span='12'>
               <el-select v-model='idClass' placeholder='Class'>
@@ -150,7 +150,7 @@
             </el-col>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label='Users' name='user'>
+        <el-tab-pane label='Users' name='user' v-if="usersTabVisibility">
           <Users/>
         </el-tab-pane>
       </el-tabs>
@@ -172,6 +172,10 @@ export default {
   },
   data() {
     return {
+      addTabVisibility: false,
+      updatedTabVisibility: false,
+      deleteTabVisibility: false,
+      usersTabVisibility: false,
       temp: "",
       tab: "Add",
       Class: "",
@@ -398,6 +402,20 @@ export default {
         });
       }
     },
+    renderTab() {
+      if (this.Authorize({ type: 2, role: 1 })) {
+        this.addTabVisibility = true;
+      }
+      if (this.Authorize({ type: 2, role: 2 })) {
+        this.updatedTabVisibility = true;
+      }
+      if (this.Authorize({ type: 2, role: 3 })) {
+        this.deleteTabVisibility = true;
+      }
+      if (this.Authorize({ type: 4, role: 1 })) {
+        this.usersTabVisibility = true;
+      }
+    },
     loadData() {
       const url = urlBase + "/api/v1/enum/all";
 
@@ -414,6 +432,7 @@ export default {
   },
   created() {
     this.loadData();
+    this.renderTab();
   }
 };
 </script>
