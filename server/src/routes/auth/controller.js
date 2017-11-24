@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import {
-  user
+  user,
+  user_permission
 } from '../../models'
 import {
   jwtOptions
@@ -16,7 +17,10 @@ export function login({
     user.findOne({
       where: {
         username: username
-      }
+      },
+      include: [{
+        model: user_permission
+      }],
     }).then(thisUser => {
       console.log(thisUser.dataValues.password)
 
@@ -62,7 +66,33 @@ export async function register({
 }
 
 export function GetUsers() {
+
   return user.findAll({
-    attributes: ['username', 'accessLevel'],
+    attributes: ['username'],
+    include: [{
+      model: user_permission
+    }],
+
+  })
+}
+
+export function UpdatePermissions({
+  username = "",
+  permissions = []
+}) {
+  return new Promise(async(res, rej) => {
+    await user_permission.destroy({
+      where: {
+        username: username
+      }
+    })
+    user_permission.bulkCreate(permissions).then(
+      out => {
+        res("success")
+      }
+    ).catch(err => {
+
+      rej("failed")
+    })
   })
 }

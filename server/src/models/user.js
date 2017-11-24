@@ -13,10 +13,6 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING(255),
             allowNull: false,
         },
-        accessLevel: {
-            type: DataTypes.INTEGER(11),
-            defaultValue: 10,
-        }
     }, {
         tableName: 'user'
     });

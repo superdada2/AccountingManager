@@ -1,5 +1,6 @@
 import {
-  user
+  user,
+  user_permission
 } from '../models';
 import passport from 'passport';
 import {
@@ -16,12 +17,15 @@ var strategy = new strategyJWT(jwtOptions, (payload, next) => {
   user.findOne({
     where: {
       username: payload.username
-    }
+    },
+    include: [{
+      model: user_permission
+    }],
   }).then(res => {
 
     next(null, {
       username: res.dataValues.username,
-      accessLevel: res.dataValues.accessLevel
+      permissions: res.dataValues.user_permissions.map(i => i.dataValues)
     })
   })
 

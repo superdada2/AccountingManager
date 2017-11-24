@@ -21,7 +21,7 @@
       <el-container>
         <el-aside width="160px">
           <el-menu id="sideBar" default-active="Home" :router="true">
-            <el-menu-item index="Home">
+            <el-menu-item index="Home" v-if="homeVisibility">
               <i class="el-icon-menu"></i>Home</el-menu-item>
             <el-menu-item index="Invoice">
               <i class="el-icon-document"></i>Invoices</el-menu-item>
@@ -44,10 +44,26 @@
 
 <script>
 import Login from "./components/SubComponents/Login";
+import UserMixin from "./functions/Authentication";
 export default {
   name: "app",
+  mixins: [UserMixin],
   components: {
     Login
+  },
+  data() {
+    return {
+      homeVisibility: false,
+      invoiceVisibility: false,
+      detailsVisibility: false,
+      reportsVisibility: false,
+      addVisibility: false
+    };
+  },
+  create() {
+    if (this.Authorize({ type: 3, role: 1 })) {
+      this.homeVisibility = true;
+    }
   }
 };
 </script>

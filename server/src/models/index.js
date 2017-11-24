@@ -58,6 +58,10 @@ db.invoice.hasMany(db.deferred_balance, {
   foreignKey: 'invoiceId',
   onDelete: 'cascade'
 })
+db.user.hasMany(db.user_permission, {
+  foreignKey: 'username',
+  onDelete: 'cascade'
+})
 
 db.income.belongsTo(db.invoice, {
   foreignKey: 'invoiceId',

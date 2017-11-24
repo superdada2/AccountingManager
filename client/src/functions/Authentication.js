@@ -69,7 +69,42 @@ var userMixin = {
         case 'view':
           return this.auth.user <= 6
       }
+    },
+    Authorize (requredPermissions) {
+      const permissions = [...this.auth.user.user_permissions]
+      if (requredPermissions.constructor === Array) {
+        var authorize
+        for (var i = 0; i < requredPermissions.length; i++) {
+          authorize = permissions.find(j => {
+            return j.module === requredPermissions[i].type && j.role === requredPermissions[i].role
+          })
+          if (authorize) {
+            break
+          }
+        }
+        if (authorize) {
+          console.log('authorized')
+          return true
+        } else {
+          console.log('Unauthorized')
+          return false
+        }
+      } else {
+        console.log(requredPermissions, permissions)
+        const authorize = permissions.find(i => {
+          return i.module === requredPermissions.type && i.role === requredPermissions.role
+        })
+        console.log(authorize)
+        if (authorize) {
+          console.log('authorized')
+          return true
+        } else {
+          console.log('Unauthorized')
+          return false
+        }
+      }
     }
+
   },
   created () {
     this.GetUser()
