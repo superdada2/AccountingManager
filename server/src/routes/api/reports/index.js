@@ -29,7 +29,7 @@ router.post('/updateDescription', (req, res, next) => {
 }, async(req, res) => {
   try {
     console.log(req.body)
-    const result = await UpdateInvoiceDescription(req.body)
+    const result = await UpdateInvoiceDescription(req.body, req.user.username)
     res.status(200).json(result)
   } catch (err) {
 
@@ -48,8 +48,8 @@ router.post('/deleteInvoice', (req, res, next) => {
   }])
 }, async(req, res) => {
   try {
-    console.log(req.body)
-    const result = await DeleteInvoice(req.body)
+    console.log(req.user)
+    const result = await DeleteInvoice(req.body, req.user.username)
     res.status(200).json(result)
   } catch (err) {
 
@@ -91,7 +91,7 @@ router.post('/modifyIncomeDeferred', (req, res, next) => {
 }, async(req, res) => {
   try {
     console.log(req.body)
-    const result = await ModifyIncomeDeferred(req.body)
+    const result = await ModifyIncomeDeferred(req.body, req.user.username)
     res.status(200).json(result)
   } catch (err) {
 
@@ -112,7 +112,7 @@ router.post('/modifyInvoice', (req, res, next) => {
 }, async(req, res) => {
   try {
     console.log(req.body)
-    const result = await ModifyInvoice(req.body)
+    const result = await ModifyInvoice(req.body, req.user.username)
     res.status(200).json(result)
   } catch (err) {
 
@@ -133,7 +133,7 @@ router.post('/createInvoice', (req, res, next) => {
 }, async(req, res) => {
   try {
     console.log(req.body)
-    const result = await CreateInvoice(req.body)
+    const result = await CreateInvoice(req.body, req.user.username)
     res.status(200).json(result)
   } catch (err) {
 

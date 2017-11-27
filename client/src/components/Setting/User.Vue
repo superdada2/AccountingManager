@@ -5,7 +5,7 @@
       </el-option>
     </el-select>
     <div class="permission">
-      <el-form align="left">
+      <el-form label-position="left">
         <el-form-item label='Invoice Permsions: '>
           <el-checkbox-group v-model="permission.invoicePermissions">
             <el-checkbox v-for="option in options.invoiceOptions" :label="option.key" :key="option.key">{{option.name}}</el-checkbox>

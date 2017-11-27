@@ -7,6 +7,35 @@ import {
 import {
   jwtOptions
 } from '../../settings'
+import nodemailer from 'nodemailer'
+
+export function resetPassword({
+  email = ""
+}) {
+  return new Promise(async(res, rej) => {
+
+    user.findOne({
+      email: email,
+      status: 'active'
+    }).then(res => {
+      var token = jwt.sign({
+        username: res.dataValues.username
+      }, jwtOptions.resetPassword)
+
+
+
+
+      res({
+        status: 'success'
+      })
+    }).catch(err => {
+      rej({
+        status: 'failed',
+        message: 'Error'
+      })
+    })
+  })
+}
 
 export function login({
   username = "blobl",
@@ -16,7 +45,8 @@ export function login({
     console.log(username)
     user.findOne({
       where: {
-        username: username
+        username: username,
+        status: "active"
       },
       include: [{
         model: user_permission
@@ -50,14 +80,16 @@ export function login({
 
 export async function register({
   username = "",
-  password = ""
+  password = "",
+  email = ""
 }) {
 
   const hashed = bcrypt.hashSync(password, 10)
 
   const res = await user.create({
     username: username,
-    password: hashed
+    password: hashed,
+    email: email
   })
   return login({
     username: username,
@@ -68,11 +100,23 @@ export async function register({
 export function GetUsers() {
 
   return user.findAll({
-    attributes: ['username'],
+    attributes: ['username', 'status', 'email'],
     include: [{
       model: user_permission
     }],
 
+  })
+}
+
+export function DeleteUser({
+  username = ""
+}) {
+  return user.update({
+    status: "deleted"
+  }, {
+    where: {
+      username: username
+    }
   })
 }
 

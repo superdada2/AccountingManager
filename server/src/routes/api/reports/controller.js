@@ -11,6 +11,7 @@ import {
   type_enum,
   month_enum,
   sequelize,
+  change_history
 } from '../../../models';
 import Promise from 'bluebird';
 
@@ -36,6 +37,68 @@ export async function loadData() {
   for (var i = 0; i < 100; i++) {
     await loadData2()
   }
+}
+
+export function trackChanges({
+  username = "",
+  operationType = "",
+  invoiceId = "",
+  operation = "",
+  original = {}
+}) {
+  return new Promise(async(res, rej) => {
+    var payload = {}
+    switch (operationType) {
+      case 'Create':
+        payload = {
+          user: username,
+          invoiceId: invoiceId,
+          operationType: operationType,
+          operation: operation
+        }
+      case 'Modify':
+        payload = {
+          user: username,
+          invoiceId: invoiceId,
+          operationType: operationType,
+          operation: JSON.stringify({
+            original: original,
+            updated: operation
+          })
+        }
+      case 'Delete':
+        payload = {
+          user: username,
+          invoiceId: invoiceId,
+          operationType: operationType,
+          operation: JSON.stringify(original)
+        }
+      case 'ModifyIncomeDeferred':
+        const originalIncome = await income.find({
+          invoiceId: invoiceId
+        })
+        const originalDeferred = await deferred_balance.find({
+          invoiceId: invoiceId
+        })
+        payload = {
+          user: username,
+          invoiceId: invoiceId,
+          operationType: operationType,
+          operation: JSON.stringify({
+            original: original,
+            updated: operation
+          })
+        }
+    }
+    change_history.create(payload)
+      .then(result => {
+        res(result)
+      })
+      .catch(err => {
+        rej(err)
+        console.log(err)
+      })
+  })
 }
 
 export function loadData2() {
@@ -75,9 +138,16 @@ export function loadData2() {
 export function ModifyIncomeDeferred({
   data = [],
   invoiceId = 0
-}) {
+}, username = "") {
   return new Promise(async(res, rej) => {
     try {
+      var originalIncome = await income.find({
+        invoiceId: invoiceId
+      })
+      var originalDeferred = await deferred_balance.find({
+        invoiceId: invoiceId
+      })
+
       await DeleteIncome({
         id: invoiceId
       })
@@ -102,6 +172,16 @@ export function ModifyIncomeDeferred({
             year: value.year,
             month: value.month
           })
+        }
+      })
+      await trackChanges({
+        username: username,
+        operationType: 'ModifyIncomeDeferred',
+        invoiceId: invoiceId,
+        operation: data,
+        original: {
+          income: originalIncome,
+          deferred: originalDeferred
         }
       })
       res("success")
@@ -131,11 +211,15 @@ export function DeleteDeferred({
   })
 }
 
-export function DeleteInvoice({
+export async function DeleteInvoice({
   id = 0
-}) {
-  return new Promise((res, rej) => {
+}, username = "") {
+  return new Promise(async(res, rej) => {
     try {
+      var original = await invoice.find({
+        id: id
+      })
+
       income.destroy({
         where: {
           invoiceId: id
@@ -150,8 +234,16 @@ export function DeleteInvoice({
             where: {
               id: id
             }
-          }).then(() => {
+          }).then(async() => {
+            await trackChanges({
+              username: username,
+              invoiceId: id,
+              operationType: 'Delete',
+              operation: null,
+              original: original
+            })
             res("success")
+
           })
         })
       })
@@ -162,9 +254,12 @@ export function DeleteInvoice({
 
 }
 
-export function ModifyInvoice(body) {
+export function ModifyInvoice(body, username) {
   return new Promise(async(res, rej) => {
     try {
+      var original = await invoice.find({
+        id: body.id
+      })
       await DeleteDeferred({
         id: body.id
       })
@@ -172,6 +267,14 @@ export function ModifyInvoice(body) {
         id: body.id
       })
       await UpdateInvoice(body)
+      console.log('track')
+      await trackChanges({
+        username: username,
+        invoiceId: body.id,
+        operationType: 'Modify',
+        operation: body,
+        original: original
+      })
       res("success")
     } catch (err) {
       rej(err)
@@ -300,7 +403,7 @@ export function CreateInvoice({
   annualIncreaseBool = 1,
   subscription = 1,
   country = 1,
-}) {
+}, username = "") {
   return new Promise(async(res, rej) => {
     try {
       var response = await invoice.create({
@@ -358,6 +461,13 @@ export function CreateInvoice({
       })
       defferedList.forEach(async(value) => {
         await deferred_balance.create(value)
+      })
+      trackChanges({
+        username: username,
+        invoiceId: id,
+        operationType: 'Create',
+        operation: response.dataValues,
+        original: null
       })
       res('Success')
     } catch (err) {
@@ -436,14 +546,33 @@ export function UpdateInvoiceDescription({
   id = 0,
   description = "",
   comments = ""
-}) {
-  return invoice.update({
-    description: description,
-    comments: comments
-  }, {
-    where: {
+}, username = "") {
+  return new Promise((res, req) => {
+    const original = invoice.find({
       id: id
-    }
+    })
+    invoice.update({
+      description: description,
+      comments: comments
+    }, {
+      where: {
+        id: id
+      }
+    }).then(result => {
+      trackChanges({
+        username: username,
+        invoiceId: id,
+        operationType: 'Modify',
+        operation: {
+          description: description,
+          comments: comments
+        },
+        original: original
+      })
+      res('success')
+    }).catch(err => {
+      rej(err)
+    })
   })
 }
 

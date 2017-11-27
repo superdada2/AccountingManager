@@ -86,7 +86,8 @@ export default {
           this.Authorize([
             { type: 2, role: 1 },
             { type: 2, role: 2 },
-            { type: 2, role: 3 }
+            { type: 2, role: 3 },
+            { type: 4, role: 1 }
           ])
         ) {
           this.settingVisibility = true;

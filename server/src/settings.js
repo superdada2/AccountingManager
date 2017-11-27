@@ -7,3 +7,4 @@ var strategyJWT = passportJWT.Strategy
 export var jwtOptions = {}
 jwtOptions.jwtFromRequest = passportJWT.ExtractJwt.fromAuthHeaderWithScheme('jwt')
 jwtOptions.secretOrKey = 'invoice';
+jwtOptions.resetSecret = "resetPassword"
