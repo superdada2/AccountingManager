@@ -12,7 +12,8 @@ import {
   ModifyInvoice,
   GetIncomeDeferred,
   ModifyIncomeDeferred,
-  loadData2
+  loadData2,
+  GetHistory
 } from './controller'
 
 import {
@@ -20,6 +21,7 @@ import {
 } from '../../../Auth/Authorization'
 
 export const router = express.Router()
+
 
 router.post('/updateDescription', (req, res, next) => {
   Authorize(req, res, next, [{

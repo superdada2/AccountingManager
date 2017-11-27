@@ -135,6 +135,12 @@ export function loadData2() {
   })
 }
 
+export function GetHistory({
+  where: {}
+}) {
+  return change_history.find(where)
+}
+
 export function ModifyIncomeDeferred({
   data = [],
   invoiceId = 0
@@ -641,6 +647,13 @@ export function getDistinctInvoiceNumber() {
 
 export function getDistinctCustomerName() {
   const query = "SELECT DISTINCT customerName AS value FROM invoice"
+  return sequelize.query(query, {
+    type: sequelize.QueryTypes.SELECT
+  })
+}
+
+export function getDistinctUserName() {
+  const query = "SELECT DISTINCT username AS username FROM user"
   return sequelize.query(query, {
     type: sequelize.QueryTypes.SELECT
   })
