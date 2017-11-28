@@ -8,6 +8,7 @@ import Setting from '@/components/Setting'
 import Details from '@/components/Details'
 import Register from '@/components/Register'
 import Historys from '@/components/History'
+import Welcome from '@/components/Welcome'
 
 Vue.use(Router)
 
@@ -56,6 +57,11 @@ export default new Router({
     path: '/history',
     name: 'History',
     component: Historys
+  },
+  {
+    path: '/welcome',
+    name: 'Welcome',
+    component: Welcome
   }
   ]
 })

@@ -31,8 +31,6 @@
         <el-button @click="resetForm('ruleForm2')">Reset</el-button>
       </el-form-item>
     </el-form>
-
-
     </el-row>
   </div>
 

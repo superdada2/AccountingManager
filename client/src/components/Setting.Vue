@@ -1,5 +1,8 @@
 <template>
   <div id='Setting'>
+    <div id="version">
+      {{"Version: " + version}}
+    </div>
     <el-row>
       <div class='header'>
         <h1>Settings </h1>
@@ -164,10 +167,11 @@
 
 <script>
 import axios from "Axios";
-import { urlBase } from "../settings.js";
+import { urlBase, version } from "../settings.js";
 import UserMixin from "../functions/Authentication";
 import UserPermission from "./Setting/UserPermission";
 import UserManagement from "./Setting/UserManagement";
+
 export default {
   name: "Settings",
   props: ["id"],
@@ -177,6 +181,7 @@ export default {
   },
   data() {
     return {
+      version: version,
       addTabVisibility: false,
       updatedTabVisibility: false,
       deleteTabVisibility: false,
@@ -455,5 +460,12 @@ export default {
   width: 300px;
   margin: 20px;
   margin-top: 10px;
+}
+#version {
+  position: fixed;
+  bottom: 30px;
+  right: 5px;
+  width: 140px;
+  font-size: 12px;
 }
 </style>
