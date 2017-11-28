@@ -133,13 +133,17 @@ export default {
   name: "add",
   data() {
     var checkInvoiceDate = (rule, value, callback) => {
-      console.log(value);
-      const month = value.getMonth();
-      const year = value.getFullYear();
-      if (month < new Date().getMonth() || year < new Date().getFullYear()) {
-        callback(new Error("Cant Input Past Invoice"));
-      } else {
-        callback();
+      try {
+        console.log(value);
+        const month = value.getMonth();
+        const year = value.getFullYear();
+        if (month < new Date().getMonth() || year < new Date().getFullYear()) {
+          callback(new Error("Cant Input Past Invoice"));
+        } else {
+          callback();
+        }
+      } catch (err) {
+        callback(new Error("Cant Be Empty"));
       }
     };
     return {
@@ -229,7 +233,8 @@ export default {
         invoiceDate: [
           {
             validator: checkInvoiceDate,
-            trigger: "blur"
+            trigger: "blur",
+            required: true
           }
         ],
         type: [
@@ -367,13 +372,22 @@ export default {
             ...formValues
           };
           try {
-            const data = this.Post(url, message).then(i => {
-              this.$message({
-                type: "success",
-                message: "Success!"
+            const data = this.Post(url, message)
+              .then(i => {
+                console.log("succes", i);
+                this.$message({
+                  type: "success",
+                  message: "Success!"
+                });
+                // this.resetForm(formName);
+              })
+              .catch(err => {
+                console.log("error", err.message);
+                this.$message({
+                  message: err.message,
+                  type: "error"
+                });
               });
-              // this.resetForm(formName);
-            });
           } catch (err) {
             this.$message({
               message: err.message,

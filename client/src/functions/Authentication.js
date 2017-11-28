@@ -2,6 +2,7 @@ import axios from 'Axios'
 import {
   urlBase
 } from '../settings'
+import Promise from 'bluebird'
 
 var userMixin = {
   data () {
@@ -37,17 +38,40 @@ var userMixin = {
       }
       return true
     },
+    // Post (url, payload) {
+    //   return axios.post(url, payload, {
+    //     headers: {
+    //       Authorization: 'JWT ' + this.auth.token
+    //     }
+    //   }).catch(err => {
+    //     if (err.response.status === 401) {
+    //       this.$router.push({
+    //         name: 'Register'
+    //       })
+    //     } else {
+    //       console.log(err)
+    //     }
+    //   })
+    // },
     Post (url, payload) {
-      return axios.post(url, payload, {
-        headers: {
-          Authorization: 'JWT ' + this.auth.token
-        }
-      }).catch(err => {
-        if (err.response.status === 401) {
-          this.$router.push({
-            name: 'Register'
+      return new Promise((res, rej) => {
+        axios.post(url, payload, {
+          headers: {
+              Authorization: 'JWT ' + this.auth.token
+            }
+        })
+          .then(response => {
+            res(response)
           })
-        }
+          .catch(err => {
+            if (err.response.status === 401) {
+              this.$router.push({
+                name: 'Register'
+              })
+            } else {
+              rej(err)
+            }
+          })
       })
     },
     Get (url) {

@@ -414,6 +414,18 @@ export function CreateInvoice({
 }, username = "") {
   return new Promise(async(res, rej) => {
     try {
+
+      //check for duplicates
+      const exist = await invoice.findOne({
+        where: {
+          invoiceNumber: invoiceNumber,
+          product: product
+        }
+      })
+      if (exist) {
+        rej(new Error("Duplicate Entry"))
+        return
+      }
       var response = await invoice.create({
         type: type,
         customerName: companyName,
@@ -440,6 +452,7 @@ export function CreateInvoice({
         MonthlyRecoginitionAmountUSD: monthlyRec,
         country: country
       })
+
 
       Date.prototype.addDays = function (days) {
         this.setDate(this.getDate() + parseInt(days));
