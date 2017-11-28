@@ -139,7 +139,11 @@ export function GetHistory({
   where
 }) {
   return change_history.findAll({
-    where
+    where,
+    limit: 100,
+    order: [
+      ['timestamp', 'DESC']
+    ]
   })
 }
 

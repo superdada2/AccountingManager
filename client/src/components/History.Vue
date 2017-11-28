@@ -8,6 +8,7 @@
       <HistoryDetail :close="()=>{this.detailDialogVisibility = false}" :currentRow="currentRow" />
     </el-dialog>
     <el-row>
+      
       <el-select v-model="operationSelect" placeholder="Operation" >
         <el-option key="Create" label="Create" value="Create">
         </el-option>
@@ -21,6 +22,7 @@
       <el-button type="primary" @click="()=>addTagg('operationType')">Add</el-button>
       <el-autocomplete placeholder="User" v-model="userSearch" :fetch-suggestions="querySearchUser"></el-autocomplete>
       <el-button type="primary" @click="()=>addTagg('user')">Add</el-button>
+      <el-button id="export" type="primary " @click="()=>{handleExport(this.historyData)}">Export</el-button>
     </el-row>
     <el-row>
       <div id="tags">
@@ -36,6 +38,9 @@
         <el-table-column prop="user" label="User">
         </el-table-column>
         <el-table-column prop="timestamp" label="Time Stamp">
+          <template slot-scope="scope">
+            {{scope.row.timestamp | formatDate}}
+          </template>
         </el-table-column>
         <el-table-column prop="operationType" label="Operation Type">
         </el-table-column>
@@ -49,6 +54,8 @@ import { urlBase } from "../settings.js";
 import UserMixin from "../functions/Authentication";
 import Help from "./SubComponents/Help";
 import HistoryDetail from "./SubComponents/HistoryDetail";
+import * as jsonexport from "jsonexport/dist";
+import moment from "moment";
 export default {
   name: "history",
   mixins: [UserMixin],
@@ -131,6 +138,23 @@ export default {
         });
       }
     },
+    handleExport(data) {
+      jsonexport(data, (err, csv) => {
+        if (err) return console.log(err);
+        var uriContent =
+          "data:application/octet-stream," + encodeURIComponent(csv);
+        var link = document.createElement("a");
+        link.setAttribute("href", uriContent);
+        link.setAttribute("download", "Report.csv");
+        document.body.appendChild(link); // Required for FF
+
+        link.click();
+        this.$message({
+          type: "success",
+          message: "Success"
+        });
+      });
+    },
     removeTagg(tag) {
       this.tags.splice(this.tags.indexOf(tag), 1);
       delete this.queryParam.where[tag.id];
@@ -154,10 +178,17 @@ export default {
   created() {
     this.getHistory();
     this.getUserName();
+  },
+  filters: {
+    formatDate: function(dateString) {
+      return moment(dateString).format("YYYY-MM-DD hh:mm:ss");
+    }
   }
 };
 </script>
 
 <style scoped>
-
+#export {
+  float: right;
+}
 </style>

@@ -8,7 +8,9 @@ import {
   register,
   GetUsers,
   UpdatePermissions,
-  DeleteUser
+  DeleteUser,
+  changePassword,
+  ChangeStatus
 } from './controller';
 
 export const router = express.Router()
@@ -104,6 +106,52 @@ router.get('/user', passport.authenticate('auth', {
     })
   }
 })
+router.post('/changeStatus', passport.authenticate('auth', {
+  session: false
+}), (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 4,
+    role: 1
+  }])
+}, passport.authenticate('auth', {
+  session: false
+}), async(req, res) => {
+  try {
+
+    const result = await ChangeStatus(req.body)
+    res.status(200).json(result)
+  } catch (err) {
+    const message = err.message
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
+router.post('/resetPassword', passport.authenticate('auth', {
+  session: false
+}), (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 4,
+    role: 1
+  }])
+}, passport.authenticate('auth', {
+  session: false
+}), async(req, res) => {
+  try {
+
+    const result = await changePassword(req.body)
+    res.status(200).json(result)
+  } catch (err) {
+    const message = err.message
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
+
+
 
 router.post('/updatePermissions', passport.authenticate('auth', {
   session: false

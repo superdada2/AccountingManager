@@ -19,7 +19,7 @@ module.exports = function (sequelize, DataTypes) {
         status: {
             type: DataTypes.STRING(255),
             allowNull: false,
-            defaultValue: 'active'
+            defaultValue: 'Active'
         }
     }, {
         tableName: 'user'

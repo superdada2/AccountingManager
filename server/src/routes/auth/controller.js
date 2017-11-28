@@ -21,10 +21,6 @@ export function resetPassword({
       var token = jwt.sign({
         username: res.dataValues.username
       }, jwtOptions.resetPassword)
-
-
-
-
       res({
         status: 'success'
       })
@@ -37,6 +33,33 @@ export function resetPassword({
   })
 }
 
+export function changePassword({
+  password = "",
+  username = ""
+}) {
+  const hashed = bcrypt.hashSync(password, 10)
+  return user.update({
+    password: hashed
+  }, {
+    where: {
+      username: username
+    }
+  })
+}
+
+
+export function ChangeStatus({
+  username = "",
+  status = "Active"
+}) {
+  return user.update({
+    status: status
+  }, {
+    where: {
+      username: username
+    }
+  })
+}
 export function login({
   username = "blobl",
   password = "bob"

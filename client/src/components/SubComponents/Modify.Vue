@@ -380,7 +380,7 @@ export default {
         });
         return;
       }
-      const date = new Date(this.formValue.invoiceDate);
+      const date = new Date(this.invoiceData.invoiceDate);
       if (
         date.getMonth() < new Date().getMonth() ||
         date.getFullYear() < new Date().getFullYear()
@@ -388,6 +388,16 @@ export default {
         this.$message({ type: "error", message: "Cannot modify past invoice" });
         return false;
       }
+
+      const date2 = new Date(this.formValue.invoiceDate);
+      if (
+        date2.getMonth() < new Date().getMonth() ||
+        date2.getFullYear() < new Date().getFullYear()
+      ) {
+        this.$message({ type: "error", message: "Cannot modify past invoice" });
+        return false;
+      }
+
       const url = urlBase + "/api/v1/reports/modifyInvoice";
       this.$refs[formName].validate(valid => {
         if (valid) {

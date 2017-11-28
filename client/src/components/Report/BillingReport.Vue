@@ -37,6 +37,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="increasePercentage" label="Percentage" sortable>
+          <template slot-scope="scope">
+            {{(scope.row.increasePercentage * 1).toLocaleString("en", {style: "percent"})}}
+          </template>
         </el-table-column>
         <el-table-column prop='annualIncreaseEli' label="Eligible">
           <template slot-scope="scope">

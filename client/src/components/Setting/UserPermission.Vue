@@ -4,8 +4,10 @@
       <el-option v-for="user in users" :key="user.username" :label="user.username" :value="user.username">
       </el-option>
     </el-select>
+    <br>
+    <br>
     <div class="permission">
-      <el-form label-position="left">
+      <el-form label-position="left" label-width="200px">
         <el-form-item label='Invoice Permsions: '>
           <el-checkbox-group v-model="permission.invoicePermissions">
             <el-checkbox v-for="option in options.invoiceOptions" :label="option.key" :key="option.key">{{option.name}}</el-checkbox>
@@ -162,6 +164,13 @@ export default {
         });
     },
     Submit() {
+      if (this.currentUser === "") {
+        this.$message({
+          type: "error",
+          message: "User can not be empty!"
+        });
+        return;
+      }
       var permissionArray = [];
       //Add Invoice permission
       this.permission.invoicePermissions.forEach(i => {
@@ -200,7 +209,6 @@ export default {
         });
       });
       const url = urlBase + "/auth/updatePermissions";
-      console.log(permissionArray);
       this.Post(url, {
         username: this.currentUser,
         permissions: permissionArray
