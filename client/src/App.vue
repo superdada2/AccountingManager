@@ -8,13 +8,13 @@
 
           <img id="image" src="./assets/viz_logo.png">
           <h1 id="title">INVOICES</h1>
-          
+
           <router-link to="/setting" v-if="settingVisibility">
             <el-button id="setting" type="info" round :v-link='{name:"Setting"}'>
               <i class="el-icon-setting"></i>
             </el-button>
           </router-link>
-          <Login :refreshMenu="renderMenu" :clearMenu="clearMenu"/>
+          <Login :refreshMenu="renderMenu" :clearMenu="clearMenu" />
 
         </div>
       </el-header>
@@ -30,7 +30,9 @@
             <el-menu-item index="Report" v-if="reportsVisibility">
               <i class="el-icon-search"></i>Reports</el-menu-item>
             <el-menu-item index="Add" v-if="addVisibility">
-              <i class="el-icon-circle-check"></i>Add Invoice</el-menu-item>      
+              <i class="el-icon-circle-check"></i>Add Invoice</el-menu-item>
+            <el-menu-item index="History" v-if="historyVisibility">
+              <i class="el-icon-time"></i>History</el-menu-item>
           </el-menu>
         </el-aside>
         <el-main id="content">
@@ -58,7 +60,8 @@ export default {
       invoiceVisibility: false,
       settingVisibility: false,
       reportsVisibility: false,
-      addVisibility: false
+      addVisibility: false,
+      historyVisibility: false
     };
   },
   methods: {
@@ -69,25 +72,65 @@ export default {
         return;
       } else {
         console.log(this.auth.user);
-        if (this.Authorize({ type: 3, role: 1 })) {
+        if (
+          this.Authorize({
+            type: 3,
+            role: 1
+          })
+        ) {
           this.homeVisibility = true;
         }
 
-        if (this.Authorize({ type: 1, role: 4 })) {
+        if (
+          this.Authorize({
+            type: 1,
+            role: 4
+          })
+        ) {
           this.invoiceVisibility = true;
         }
-        if (this.Authorize({ type: 5, role: 1 })) {
+        if (
+          this.Authorize({
+            type: 5,
+            role: 1
+          })
+        ) {
           this.reportsVisibility = true;
         }
-        if (this.Authorize({ type: 1, role: 1 })) {
+        if (
+          this.Authorize({
+            type: 1,
+            role: 1
+          })
+        ) {
           this.addVisibility = true;
         }
         if (
+          this.Authorize({
+            type: 4,
+            role: 2
+          })
+        ) {
+          this.historyVisibility = true;
+        }
+        if (
           this.Authorize([
-            { type: 2, role: 1 },
-            { type: 2, role: 2 },
-            { type: 2, role: 3 },
-            { type: 4, role: 1 }
+            {
+              type: 2,
+              role: 1
+            },
+            {
+              type: 2,
+              role: 2
+            },
+            {
+              type: 2,
+              role: 3
+            },
+            {
+              type: 4,
+              role: 1
+            }
           ])
         ) {
           this.settingVisibility = true;
@@ -100,6 +143,7 @@ export default {
         (this.settingVisibility = false),
         (this.reportsVisibility = false),
         (this.addVisibility = false);
+      this.historyVisibility = false;
     }
   },
   created() {

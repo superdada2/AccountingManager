@@ -7,6 +7,7 @@ import Report from '@/components/Report'
 import Setting from '@/components/Setting'
 import Details from '@/components/Details'
 import Register from '@/components/Register'
+import Historys from '@/components/History'
 
 Vue.use(Router)
 
@@ -50,6 +51,11 @@ export default new Router({
     path: '/register',
     name: 'Register',
     component: Register
+  },
+  {
+    path: '/history',
+    name: 'History',
+    component: Historys
   }
   ]
 })

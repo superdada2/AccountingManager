@@ -84,6 +84,10 @@ const userOptions = [
   {
     name: "Admin",
     key: 1
+  },
+  {
+    name: "View History",
+    key: 2
   }
 ];
 const reportOptions = [
@@ -95,7 +99,7 @@ const reportOptions = [
 import UserMixin from "../../functions/Authentication";
 import { urlBase } from "../../settings.js";
 export default {
-  name: "user",
+  name: "userPermission",
   mixins: [UserMixin],
   data() {
     return {

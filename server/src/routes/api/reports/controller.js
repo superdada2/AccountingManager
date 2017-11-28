@@ -136,9 +136,11 @@ export function loadData2() {
 }
 
 export function GetHistory({
-  where: {}
+  where
 }) {
-  return change_history.find(where)
+  return change_history.findAll({
+    where
+  })
 }
 
 export function ModifyIncomeDeferred({
@@ -553,8 +555,8 @@ export function UpdateInvoiceDescription({
   description = "",
   comments = ""
 }, username = "") {
-  return new Promise((res, req) => {
-    const original = invoice.find({
+  return new Promise(async(res, req) => {
+    const original = await invoice.find({
       id: id
     })
     invoice.update({
@@ -653,7 +655,7 @@ export function getDistinctCustomerName() {
 }
 
 export function getDistinctUserName() {
-  const query = "SELECT DISTINCT username AS username FROM user"
+  const query = "SELECT DISTINCT username AS value FROM user"
   return sequelize.query(query, {
     type: sequelize.QueryTypes.SELECT
   })

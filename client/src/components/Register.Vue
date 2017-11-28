@@ -17,7 +17,6 @@
     </el-form>
     <br>
     <el-button type="success" @click="Register">Register</el-button>
-    <el-button type="primary" @click="ResetPassword">Forgot Password</el-button>
   </div>
 </template>
 <script>

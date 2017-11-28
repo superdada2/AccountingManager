@@ -150,8 +150,8 @@
             </el-col>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label='Users' name='user' v-if="usersTabVisibility">
-          <Users/>
+        <el-tab-pane label='UsersPermission' name='userPermission' v-if="usersTabVisibility">
+          <UserPermission/>
         </el-tab-pane>
       </el-tabs>
 
@@ -163,12 +163,12 @@
 import axios from "Axios";
 import { urlBase } from "../settings.js";
 import UserMixin from "../functions/Authentication";
-import Users from "./Setting/User";
+import UserPermission from "./Setting/UserPermission";
 export default {
   name: "Settings",
   props: ["id"],
   components: {
-    Users
+    UserPermission
   },
   data() {
     return {

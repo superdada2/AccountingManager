@@ -57,20 +57,6 @@ var userMixin = {
         }
       })
     },
-    CheckPermission (type = 'view') {
-      switch (type) {
-        case 'admin':
-          return this.auth.user <= 2
-        case 'delete':
-          return this.auth.user <= 3
-        case 'modify':
-          return this.auth.user <= 4
-        case 'add':
-          return this.auth.user <= 5
-        case 'view':
-          return this.auth.user <= 6
-      }
-    },
     Authorize (requredPermissions) {
       console.log(requredPermissions)
       const permissions = [...this.auth.user.user_permissions]
@@ -106,7 +92,6 @@ var userMixin = {
         }
       }
     }
-
   },
   created () {
     this.GetUser()

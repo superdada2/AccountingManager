@@ -25,7 +25,7 @@ export const router = express.Router()
 
 router.post('/getHistory', (req, res, next) => {
   Authorize(req, res, next, [{
-    type: 1,
+    type: 4,
     role: 2
   }])
 }, async(req, res) => {
@@ -44,9 +44,9 @@ router.post('/getHistory', (req, res, next) => {
   }
 })
 
-router.post('/getUsername', (req, res, next) => {
+router.get('/getUsername', (req, res, next) => {
   Authorize(req, res, next, [{
-    type: 1,
+    type: 4,
     role: 2
   }])
 }, async(req, res) => {
