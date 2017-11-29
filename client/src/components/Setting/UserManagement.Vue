@@ -45,7 +45,7 @@ const userStatusOptions = [
     key: 1
   },
   {
-    name: "Deleted",
+    name: "Inactive",
     key: 2
   }
 ];

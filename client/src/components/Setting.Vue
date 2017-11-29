@@ -14,27 +14,27 @@
           <el-row>
             <el-col :span='12'>
               <el-input placeholder='Add Class' v-model='Class'></el-input>
-              <el-button type='primary' @click="()=>addClick('class')">Add</el-button>
+              <el-button type='primary' @click="()=>AddClick('class')">Add</el-button>
               <br>
               <el-input placeholder='Add Currency' v-model='currency'></el-input>
-              <el-button type='primary' @click="()=>addClick('currency')">Add</el-button>
+              <el-button type='primary' @click="()=>AddClick('currency')">Add</el-button>
               <br>
               <el-input placeholder='Add Product' v-model='product'></el-input>
-              <el-button type='primary' @click="()=>addClick('product')">Add</el-button>
+              <el-button type='primary' @click="()=>AddClick('product')">Add</el-button>
               <br>
               <el-input placeholder='Add Type' v-model='type'></el-input>
-              <el-button type='primary' @click="()=>addClick('type')">Add</el-button>
+              <el-button type='primary' @click="()=>AddClick('type')">Add</el-button>
               <br>
             </el-col>
             <el-col :span='12'>
               <el-input placeholder='Add Revenue Type' v-model='revenueType'></el-input>
-              <el-button type='primary' @click="()=>addClick('revenueType')">Add</el-button>
+              <el-button type='primary' @click="()=>AddClick('revenueType')">Add</el-button>
               <br>
               <el-input placeholder='Add Status Type' v-model='status'></el-input>
-              <el-button type='primary' @click="()=>addClick('status')">Add</el-button>
+              <el-button type='primary' @click="()=>AddClick('status')">Add</el-button>
               <br>
               <el-input placeholder='Add Subscription Type' v-model='subscription'></el-input>
-              <el-button type='primary' @click="()=>addClick('subscription')">Add</el-button>
+              <el-button type='primary' @click="()=>AddClick('subscription')">Add</el-button>
               <br>
             </el-col>
           </el-row>
@@ -47,28 +47,28 @@
                 </el-option>
               </el-select>
               <el-input placeholder='Modify Class' v-model='Class'></el-input>
-              <el-button type='primary' @click="()=>updateClick('class')">Modify</el-button>
+              <el-button type='primary' @click="()=>UpdateClick('class')">Modify</el-button>
               <br>
               <el-select v-model='idCurrency' placeholder='Currency'>
                 <el-option v-for='item in currencyEnum' :key='item.id' :label='item.data' :value='item.id'>
                 </el-option>
               </el-select>
               <el-input placeholder='Modify Currency' v-model='currency'></el-input>
-              <el-button type='primary' @click="()=>updateClick('currency')">Modify</el-button>
+              <el-button type='primary' @click="()=>UpdateClick('currency')">Modify</el-button>
               <br>
               <el-select v-model='idProduct' placeholder='Product'>
                 <el-option v-for='item in productEnum' :key='item.id' :label='item.data' :value='item.id'>
                 </el-option>
               </el-select>
               <el-input placeholder='Modify Product' v-model='product'></el-input>
-              <el-button type='primary' @click="()=>updateClick('product')">Modify</el-button>
+              <el-button type='primary' @click="()=>UpdateClick('product')">Modify</el-button>
               <br>
               <el-select v-model='idType' placeholder='Type'>
                 <el-option v-for='item in typeEnum' :key='item.id' :label='item.data' :value='item.id'>
                 </el-option>
               </el-select>
               <el-input placeholder='Modify Type' v-model='type'></el-input>
-              <el-button type='primary' @click="()=>updateClick('type')">Modify</el-button>
+              <el-button type='primary' @click="()=>UpdateClick('type')">Modify</el-button>
               <br>
             </el-col>
             <el-col :span='12'>
@@ -77,21 +77,21 @@
                 </el-option>
               </el-select>
               <el-input placeholder='Modify Revenue Type' v-model='revenueType'></el-input>
-              <el-button type='primary' @click="()=>updateClick('revenueType')">Modify</el-button>
+              <el-button type='primary' @click="()=>UpdateClick('revenueType')">Modify</el-button>
               <br>
               <el-select v-model='idStatus' placeholder='Status'>
                 <el-option v-for='item in statusEnum' :key='item.id' :label='item.data' :value='item.id'>
                 </el-option>
               </el-select>
               <el-input placeholder='Modify Status Type' v-model='status'></el-input>
-              <el-button type='primary' @click="()=>updateClick('status')">Modify</el-button>
+              <el-button type='primary' @click="()=>UpdateClick('status')">Modify</el-button>
               <br>
               <el-select v-model='idSubscription' placeholder='Subscription'>
                 <el-option v-for='item in subscriptionEnum' :key='item.id' :label='item.data' :value='item.id'>
                 </el-option>
               </el-select>
               <el-input placeholder='Modify Subscription Type' v-model='subscription'></el-input>
-              <el-button type='primary' @click="()=>updateClick('subscription')">Modify</el-button>
+              <el-button type='primary' @click="()=>UpdateClick('subscription')">Modify</el-button>
               <br>
             </el-col>
           </el-row>
@@ -104,28 +104,28 @@
                 </el-option>
               </el-select>
               
-              <el-button type='primary' @click="()=>deleteClick('class')">Delete</el-button>
+              <el-button type='primary' @click="()=>DeleteClick('class')">Delete</el-button>
               <br>
               <el-select v-model='idCurrency' placeholder='Currency'>
                 <el-option v-for='item in currencyEnum' :key='item.id' :label='item.data' :value='item.id'>
                 </el-option>
               </el-select>
               
-              <el-button type='primary' @click="()=>deleteClick('currency')">Delete</el-button>
+              <el-button type='primary' @click="()=>DeleteClick('currency')">Delete</el-button>
               <br>
               <el-select v-model='idProduct' placeholder='Product'>
                 <el-option v-for='item in productEnum' :key='item.id' :label='item.data' :value='item.id'>
                 </el-option>
               </el-select>
               
-              <el-button type='primary' @click="()=>deleteClick('product')">Delete</el-button>
+              <el-button type='primary' @click="()=>DeleteClick('product')">Delete</el-button>
               <br>
               <el-select v-model='idType' placeholder='Type'>
                 <el-option v-for='item in typeEnum' :key='item.id' :label='item.data' :value='item.id'>
                 </el-option>
               </el-select>
               
-              <el-button type='primary' @click="()=>deleteClick('type')">Delete</el-button>
+              <el-button type='primary' @click="()=>DeleteClick('type')">Delete</el-button>
               <br>
             </el-col>
             <el-col :span='12'>
@@ -134,21 +134,21 @@
                 </el-option>
               </el-select>
               
-              <el-button type='primary' @click="()=>deleteClick('revenueType')">Delete</el-button>
+              <el-button type='primary' @click="()=>DeleteClick('revenueType')">Delete</el-button>
               <br>
               <el-select v-model='idStatus' placeholder='Status'>
                 <el-option v-for='item in statusEnum' :key='item.id' :label='item.data' :value='item.id'>
                 </el-option>
               </el-select>
               
-              <el-button type='primary' @click="()=>deleteClick('status')">Delete</el-button>
+              <el-button type='primary' @click="()=>DeleteClick('status')">Delete</el-button>
               <br>
               <el-select v-model='idSubscription' placeholder='Subscription'>
                 <el-option v-for='item in subscriptionEnum' :key='item.id' :label='item.data' :value='item.id'>
                 </el-option>
               </el-select>
               
-              <el-button type='primary' @click="()=>deleteClick('subscription')">Delete</el-button>
+              <el-button type='primary' @click="()=>DeleteClick('subscription')">Delete</el-button>
               <br>
             </el-col>
           </el-row>
@@ -214,7 +214,7 @@ export default {
   },
   mixins: [UserMixin],
   methods: {
-    addClick(value) {
+    AddClick(value) {
       const url = urlBase + "/api/v1/enum/add";
       var payLoad = {};
       switch (value) {
@@ -278,7 +278,7 @@ export default {
         });
       }
     },
-    updateClick(value) {
+    UpdateClick(value) {
       const url = urlBase + "/api/v1/enum/update";
       var payLoad = {};
       switch (value) {
@@ -349,7 +349,7 @@ export default {
         });
       }
     },
-    deleteClick(value) {
+    DeleteClick(value) {
       const url = urlBase + "/api/v1/enum/delete";
       var payLoad = {};
       switch (value) {
@@ -413,7 +413,7 @@ export default {
         });
       }
     },
-    renderTab() {
+    RenderTab() {
       if (this.Authorize({ type: 2, role: 1 })) {
         this.addTabVisibility = true;
       }
@@ -427,7 +427,7 @@ export default {
         this.usersTabVisibility = true;
       }
     },
-    loadData() {
+    LoadData() {
       EnumApi.GetAllEnum(this.auth.token).then(res => {
         this.classEnum = res.data.Class;
         this.productEnum = res.data.product;
@@ -440,8 +440,8 @@ export default {
     }
   },
   created() {
-    this.loadData();
-    this.renderTab();
+    this.LoadData();
+    this.RenderTab();
   }
 };
 </script>

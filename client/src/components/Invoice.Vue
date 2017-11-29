@@ -5,14 +5,14 @@
       <h1>Invoice </h1>
     </div>
     <el-dialog title="Comments and Description" :visible.sync="commentDialogVisibility" width="50%">
-      <ModifyComments :close="()=>{this.commentDialogVisibility = false}" :currentRow="currentRow" :refresh="refreshData"/>
+      <ModifyComments :close="()=>{this.commentDialogVisibility = false}" :currentRow="currentRow" :refresh="RefreshData"/>
     </el-dialog>
     <el-dialog title="Modify" :visible.sync="modifyDialogVisibility" width="80%">
-      <Modify :invoice-data="currentRow" :close="closeModify" :refresh="refreshData" />
+      <Modify :invoice-data="currentRow" :close="CloseModify" :refresh="RefreshData" />
     </el-dialog>
     <div id="filter">
 
-      <el-dropdown @command="handleExport">
+      <el-dropdown @command="HandleExport">
         <el-button type="primary" class="export">
           Export
           <i class="el-icon-arrow-down el-icon--right"></i>
@@ -25,7 +25,7 @@
 
       <br>
 
-      <el-select v-model="selector2" placeholder="Selector" @change="selector2Change">
+      <el-select v-model="selector2" placeholder="Selector" @change="Selector2Change">
         <el-option key="invoiceAmount" label="invoiceAmount" value="invoiceAmount">
         </el-option>
         <el-option key="invoiceAmountUSD" label="invoiceAmountUSD" value="invoiceAmountUSD">
@@ -44,28 +44,28 @@
       </el-date-picker>
       <el-date-picker v-if="!isNumber" v-model="max" type="date" placeholder="End Date">
       </el-date-picker>
-      <el-button type="primary" id="tagAdder" @click="addTagg2">Add</el-button>
+      <el-button type="primary" id="tagAdder" @click="AddTagg2">Add</el-button>
       <br>
-      <el-select v-model="selector" placeholder="Selector" @change="selectorChange">
-        <el-option v-for="item in fieldOptions" :key="item" :label="item" :value="item">
+      <el-select v-model="selector" placeholder="Selector" @change="SelectorChange">
+        <el-option v-for="item in fieldOptions" :key="item.toString()" :label="item.toString()" :value="item">
         </el-option>
       </el-select>
       <a> = </a>
-      <el-autocomplete v-if="isCustomer" placeholder="Value" v-model="searchValue" :fetch-suggestions="querySearchCustName"></el-autocomplete>
-      <el-autocomplete v-if="isInvoice" placeholder="Value" v-model="searchValue" :fetch-suggestions="querySearchInvoice"></el-autocomplete>
+      <el-autocomplete v-if="isCustomer" placeholder="Value" v-model="searchValue" :fetch-suggestions="QuerySearchCustName"></el-autocomplete>
+      <el-autocomplete v-if="isInvoice" placeholder="Value" v-model="searchValue" :fetch-suggestions="QuerySearchInvoice"></el-autocomplete>
       <el-select v-if="isSelect" v-model="searchValue" placeholder="Value">
         <el-option v-for="item in searchValueOptions" :key="item.id" :label="item.data" :value="item.id">
         </el-option>
       </el-select>
-      <el-button type="primary" id="tagAdder" @click="addTagg">Add</el-button>
+      <el-button type="primary" id="tagAdder" @click="AddTagg">Add</el-button>
     </div>
     <div id="tags">
-      <el-tag v-for="tag in tags" :key="tag.id" @close="removeTagg(tag)" closable :type="success">
+      <el-tag v-for="tag in tags" :key="tag.id" @close="RemoveTagg(tag)" closable type="success">
         {{tag.value}}
       </el-tag>
     </div>
     <div id="dataTable">
-      <el-table :data="invoices" v-loading="loading" style="width: 100%" @row-click="openComments" @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
+      <el-table :data="invoices" v-loading="loading" style="width: 100%" @row-click="OpenComments" @row-contextmenu="(row, e)=>{e.preventDefault(), ModifyInvoice(row,e)}">
         <el-table-column prop="type_enum.data" label="Type">
         </el-table-column>
         <el-table-column prop="invoiceDate" label="Date" sortable>
@@ -84,7 +84,7 @@
         </el-table-column>
         <el-table-column prop="revenue_type_enum.data" label="Revenue Type" sortable>
         </el-table-column>
-        <el-table-column prop="product_enum.data" label="Product" sortable>
+        <el-table-column prop='product_enum.data' label="Product" sortable>
         </el-table-column>
         <el-table-column prop="recognitionStartMonth" label="RecStart" sortable>
         </el-table-column>
@@ -153,19 +153,10 @@ export default {
   },
   mixins: [UserMixin],
   methods: {
-    refreshData() {
-      this.getInvoice(this.queryParam);
+    RefreshData() {
+      this.GetInvoice(this.queryParam);
     },
-    sortMethod(a, b) {
-      if (a.invoiceAmountUSD < b.invoiceAmountUSD) {
-        return 1;
-      }
-      if (a.invoiceAmountUSD < b.invoiceAmountUSD) {
-        return -1;
-      }
-      return 0;
-    },
-    async handleExport(command) {
+    async HandleExport(command) {
       var tempInvoice = [];
       if (command == "all") {
         const url = urlBase + "/api/v1/reports/getInvoice";
@@ -211,7 +202,7 @@ export default {
         });
       });
     },
-    getInvoice(param) {
+    GetInvoice(param) {
       const url = urlBase + "/api/v1/reports/getInvoice";
       this.loading = true;
       this.Post(url, param).then(res => {
@@ -219,7 +210,7 @@ export default {
         this.loading = false;
       });
     },
-    getEnum() {
+    GetEnum() {
       EnumApi.GetAllEnum(this.auth.token).then(res => {
         this.enumList = res.data;
         const keys = Object.keys(this.enumList);
@@ -230,14 +221,14 @@ export default {
       });
     },
 
-    selector2Change(value) {
+    Selector2Change(value) {
       if (value == "invoiceAmountUSD" || value == "invoiceAmount") {
         this.isNumber = true;
       } else {
         this.isNumber = false;
       }
     },
-    selectorChange(value) {
+    SelectorChange(value) {
       if (this.enumList[value] != undefined) {
         this.searchValueOptions = this.enumList[value];
         this.isSelect = true;
@@ -256,7 +247,7 @@ export default {
       }
     },
 
-    addTagg2() {
+    AddTagg2() {
       // if(this.selector2 == "" || (this.))
       var currentParam = {
         ...this.queryParam.where
@@ -275,7 +266,7 @@ export default {
       }
 
       this.queryParam.where = currentParam;
-      this.getInvoice(this.queryParam);
+      this.GetInvoice(this.queryParam);
       if (
         _.findIndex(this.tags, i => {
           return i.id == this.selector2;
@@ -311,14 +302,14 @@ export default {
         });
       }
     },
-    addTagg() {
+    AddTagg() {
       const currentParam = {
         ...this.queryParam.where
       };
       currentParam[this.selector] = this.searchValue;
 
       this.queryParam.where = currentParam;
-      this.getInvoice(this.queryParam);
+      this.GetInvoice(this.queryParam);
       if (
         _.findIndex(this.tags, i => {
           return i.id == this.selector;
@@ -337,66 +328,66 @@ export default {
         });
       }
     },
-    removeTagg(tag) {
+    RemoveTagg(tag) {
       this.tags.splice(this.tags.indexOf(tag), 1);
       delete this.queryParam.where[tag.id];
-      this.getInvoice(this.queryParam);
+      this.GetInvoice(this.queryParam);
     },
-    querySearchCustName(queryString, cb) {
+    QuerySearchCustName(queryString, cb) {
       var list = this.customerNameList;
       var results = queryString
-        ? list.filter(this.createFilter(queryString))
+        ? list.filter(this.CreateFilter(queryString))
         : list;
       cb(results);
     },
-    querySearchInvoice(queryString, cb) {
+    QuerySearchInvoice(queryString, cb) {
       var list = this.invoiceNumberList;
       var results = queryString
-        ? list.filter(this.createFilterNumber(queryString))
+        ? list.filter(this.CreateFilterNumber(queryString))
         : list;
       cb(results);
     },
-    createFilter(queryString) {
+    CreateFilter(queryString) {
       return link => {
         return (
           link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
         );
       };
     },
-    createFilterNumber(queryString) {
+    CreateFilterNumber(queryString) {
       return link => {
         return link.value.toString().indexOf(queryString.toLowerCase()) === 0;
       };
     },
-    getCustomerName() {
+    GetCustomerName() {
       const url = urlBase + "/api/v1/reports/getCustomerName";
       this.Get(url).then(res => {
         this.customerNameList = res.data;
       });
     },
-    getInvoiceNumber() {
+    GetInvoiceNumber() {
       const url = urlBase + "/api/v1/reports/getInvoiceNumber";
       this.Get(url).then(res => {
         this.invoiceNumberList = res.data;
       });
     },
-    openComments(row) {
+    OpenComments(row) {
       this.currentRow = row;
       this.commentDialogVisibility = true;
     },
-    modifyInvoice(row, e) {
+    ModifyInvoice(row, e) {
       this.modifyDialogVisibility = true;
       this.currentRow = row;
     },
-    closeModify() {
+    CloseModify() {
       this.modifyDialogVisibility = false;
     }
   },
   created() {
-    this.getInvoice();
-    this.getEnum();
-    this.getCustomerName();
-    this.getInvoiceNumber();
+    this.GetInvoice();
+    this.GetEnum();
+    this.GetCustomerName();
+    this.GetInvoiceNumber();
   }
 };
 </script>

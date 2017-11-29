@@ -25,8 +25,8 @@
             </el-date-picker>
 
             <el-button id="submit" type="primary " @click="GetReport">Submit</el-button>
-            <el-button id="export" type="primary " @click="()=>handleExport(this.tableData)">Export</el-button>
-            <SaveButton dataName="DefaultReport" :activeData="input" :Load="LoadInput"/>
+            <el-button id="export" type="primary " @click="()=>HandleExport(this.tableData)">Export</el-button>
+            <SaveButton dataName="DefaultReport" :activeData="input" :Load="LoadInput" />
           </a>
         </el-row>
 
@@ -255,7 +255,7 @@ export default {
         this.classEnum = res.data;
       });
     },
-    handleExport(data) {
+    HandleExport(data) {
       jsonexport(data, (err, csv) => {
         if (err) return console.log(err);
         var uriContent =
@@ -271,14 +271,6 @@ export default {
           message: "Success"
         });
       });
-    },
-
-    createFilter(queryString) {
-      return link => {
-        return (
-          link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-        );
-      };
     }
   },
   created() {

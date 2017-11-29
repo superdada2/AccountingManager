@@ -52,7 +52,6 @@ export default {
         });
     },
     Logout() {
-      this.auth = {};
       this.loggedIn = false;
       this.$cookie.delete("auth");
       const url = urlBase + "/auth/logout";
@@ -61,8 +60,10 @@ export default {
       });
       this.user = { username: "", password: "" };
       this.clearMenu();
-      this.Get(url, null).then(res => {
-        this.$message({ type: success, message: "Logout Complete" });
+
+      this.Post(url, null).then(res => {
+        this.$message({ type: "success", message: "Logout Complete" });
+        this.auth = {};
       });
     }
   },

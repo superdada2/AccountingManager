@@ -20,7 +20,9 @@ export function resetPassword({
     }).then(res => {
       var token = jwt.sign({
         username: res.dataValues.username
-      }, jwtOptions.resetPassword)
+      }, jwtOptions.resetPassword, {
+        expiresIn: '10h'
+      })
       res({
         status: 'success'
       })

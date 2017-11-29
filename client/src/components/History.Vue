@@ -19,14 +19,14 @@
         <el-option key="Delete" label="Delete" value="Delete">
         </el-option>
       </el-select>
-      <el-button type="primary" @click="()=>addTagg('operationType')">Add</el-button>
-      <el-autocomplete placeholder="User" v-model="userSearch" :fetch-suggestions="querySearchUser"></el-autocomplete>
-      <el-button type="primary" @click="()=>addTagg('user')">Add</el-button>
-      <el-button id="export" type="primary " @click="()=>{handleExport(this.historyData)}">Export</el-button>
+      <el-button type="primary" @click="()=>AddTagg('operationType')">Add</el-button>
+      <el-autocomplete placeholder="User" v-model="userSearch" :fetch-suggestions="QuerySearchUser"></el-autocomplete>
+      <el-button type="primary" @click="()=>AddTagg('user')">Add</el-button>
+      <el-button id="export" type="primary " @click="()=>{HandleExport(this.historyData)}">Export</el-button>
     </el-row>
     <el-row>
       <div id="tags">
-        <el-tag v-for="tag in tags" :key="tag.id" @close="removeTagg(tag)" closable :type="success">
+        <el-tag v-for="tag in tags" :key="tag.id" @close="RemoveTagg(tag)" closable type="success">
           {{tag.value}}
         </el-tag>
       </div>
@@ -89,21 +89,21 @@ export default {
         this.usernameList = res.data;
       });
     },
-    createFilter(queryString) {
+    CreateFilter(queryString) {
       return link => {
         return (
           link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
         );
       };
     },
-    querySearchUser(queryString, cb) {
+    QuerySearchUser(queryString, cb) {
       var list = this.usernameList;
       var results = queryString
-        ? list.filter(this.createFilter(queryString))
+        ? list.filter(this.CreateFilter(queryString))
         : list;
       cb(results);
     },
-    addTagg(selector) {
+    AddTagg(selector) {
       const currentParam = {
         ...this.queryParam.where
       };
@@ -119,7 +119,7 @@ export default {
           break;
       }
       this.queryParam.where = currentParam;
-      this.getHistory(this.queryParam);
+      this.GetHistory(this.queryParam);
       if (
         _.findIndex(this.tags, i => {
           return i.id == selector;
@@ -138,7 +138,7 @@ export default {
         });
       }
     },
-    handleExport(data) {
+    HandleExport(data) {
       jsonexport(data, (err, csv) => {
         if (err) return console.log(err);
         var uriContent =
@@ -155,12 +155,12 @@ export default {
         });
       });
     },
-    removeTagg(tag) {
+    RemoveTagg(tag) {
       this.tags.splice(this.tags.indexOf(tag), 1);
       delete this.queryParam.where[tag.id];
-      this.getHistory(this.queryParam);
+      this.GetHistory(this.queryParam);
     },
-    getHistory(param) {
+    GetHistory(param) {
       const url = urlBase + "/api/v1/reports/getHistory";
       this.loading = true;
       this.Post(url, param).then(res => {
@@ -168,7 +168,7 @@ export default {
         this.loading = false;
       });
     },
-    getUserName() {
+    GetUserName() {
       const url = urlBase + "/api/v1/reports/getUsername";
       this.Get(url).then(res => {
         this.usernameList = res.data;
@@ -176,8 +176,8 @@ export default {
     }
   },
   created() {
-    this.getHistory();
-    this.getUserName();
+    this.GetHistory();
+    this.GetUserName();
   },
   filters: {
     formatDate: function(dateString) {

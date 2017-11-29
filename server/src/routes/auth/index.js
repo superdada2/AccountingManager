@@ -69,10 +69,12 @@ router.post('/test', passport.authenticate('auth', {
   }
 })
 
-router.get('/logout', async(req, res) => {
+router.post('/logout', passport.authenticate('auth', {
+  session: false
+}), (req, res) => {
   try {
     req.logout();
-    res.status(200).json(result)
+    res.status(200).json("success")
   } catch (err) {
     const message = err.message
     res.status(500).json({
