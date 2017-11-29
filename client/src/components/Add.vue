@@ -320,7 +320,6 @@ export default {
   methods: {
     //TODO: auto fill fx rate, and usd fields
     loadData() {
-      const url = urlBase + "/api/v1/enum/all";
       this.getCustomerName();
       this.GetAllEnum().then(res => {
         this.classEnum = res.data.Class;
