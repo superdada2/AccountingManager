@@ -71,7 +71,6 @@ export default {
         this.clearMenu();
         return;
       } else {
-        console.log(this.auth.user);
         if (
           this.Authorize({
             type: 3,

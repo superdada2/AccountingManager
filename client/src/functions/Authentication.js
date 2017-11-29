@@ -32,27 +32,11 @@ var userMixin = {
       const url = urlBase + '/auth/test'
 
       var result = await this.Post(url, null)
-      console.log(result)
       if (result === undefined) {
         return false
       }
       return true
     },
-    // Post (url, payload) {
-    //   return axios.post(url, payload, {
-    //     headers: {
-    //       Authorization: 'JWT ' + this.auth.token
-    //     }
-    //   }).catch(err => {
-    //     if (err.response.status === 401) {
-    //       this.$router.push({
-    //         name: 'Register'
-    //       })
-    //     } else {
-    //       console.log(err)
-    //     }
-    //   })
-    // },
     Post (url, payload) {
       return new Promise((res, rej) => {
         axios.post(url, payload, {
@@ -82,7 +66,6 @@ var userMixin = {
       })
     },
     Authorize (requredPermissions) {
-      console.log(requredPermissions)
       const permissions = [...this.auth.user.user_permissions]
       if (requredPermissions.constructor === Array) {
         var authorize
@@ -102,11 +85,9 @@ var userMixin = {
           return false
         }
       } else {
-        console.log(requredPermissions, permissions)
         const authorize = permissions.find(i => {
           return i.module === requredPermissions.type && i.role === requredPermissions.role
         })
-        console.log(authorize)
         if (authorize) {
           console.log('authorized')
           return true

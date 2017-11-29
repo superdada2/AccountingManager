@@ -65,7 +65,6 @@ export function login({
   password = "bob"
 }) {
   return new Promise((res, rej) => {
-    console.log(username)
     user.findOne({
       where: {
         username: username,
@@ -75,7 +74,6 @@ export function login({
         model: user_permission
       }],
     }).then(thisUser => {
-      console.log(thisUser.dataValues.password)
 
       if (bcrypt.compareSync(password, thisUser.dataValues.password)) {
         var token = jwt.sign({

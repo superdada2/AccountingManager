@@ -129,13 +129,12 @@
 import axios from "Axios";
 import { urlBase } from "../settings.js";
 import UserMixin from "../functions/Authentication";
-import enumMixin from "../functions/EnumApi";
+import EnumApi from "../functions/EnumApi";
 export default {
   name: "add",
   data() {
     var checkInvoiceDate = (rule, value, callback) => {
       try {
-        console.log(value);
         const month = value.getMonth();
         const year = value.getFullYear();
         if (month < new Date().getMonth() || year < new Date().getFullYear()) {
@@ -316,12 +315,13 @@ export default {
       }
     };
   },
-  mixins: [UserMixin, enumMixin],
+  mixins: [UserMixin],
+
   methods: {
     //TODO: auto fill fx rate, and usd fields
     loadData() {
       this.getCustomerName();
-      this.GetAllEnum().then(res => {
+      EnumApi.GetAllEnum(this.auth.token).then(res => {
         this.classEnum = res.data.Class;
         this.productEnum = res.data.product;
         this.typeEnum = res.data.type;

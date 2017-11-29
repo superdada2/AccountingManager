@@ -279,7 +279,6 @@ export function ModifyInvoice(body, username) {
         id: body.id
       })
       await UpdateInvoice(body)
-      console.log('track')
       await trackChanges({
         username: username,
         invoiceId: body.id,

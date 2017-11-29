@@ -203,7 +203,6 @@ export default {
       }
     },
     GetSummaries(param) {
-      console.log(param);
       const { columns, data } = param;
       const sums = [];
       columns.forEach((column, index) => {

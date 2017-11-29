@@ -133,7 +133,7 @@
 import axios from "Axios";
 import { urlBase } from "../../settings.js";
 import UserMixin from "../../functions/Authentication";
-import EnumMixin from "../../functions/EnumApi";
+import EnumApi from "../../functions/EnumApi";
 export default {
   name: "modify",
   props: ["invoiceData", "close", "refresh"],
@@ -308,7 +308,7 @@ export default {
       }
     };
   },
-  mixins: [UserMixin, EnumMixin],
+  mixins: [UserMixin],
   methods: {
     ToDetail() {
       this.$router.push({
@@ -317,7 +317,7 @@ export default {
       });
     },
     loadData() {
-      this.GetAllEnum().then(res => {
+      EnumApi.GetAllEnum(this.auth.token).then(res => {
         this.classEnum = res.data.Class;
         this.productEnum = res.data.product;
         this.typeEnum = res.data.type;

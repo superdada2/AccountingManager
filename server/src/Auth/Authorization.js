@@ -21,11 +21,9 @@ export function Authorize(req, res, next, requredPermissions) {
       })
     }
   } else {
-    console.log(requredPermissions, permissions)
     const authorize = permissions.find(i => {
       return i.module === requredPermissions.type && i.role === requredPermissions.role
     })
-    console.log(authorize)
     if (authorize) {
       console.log("authorized")
       next()

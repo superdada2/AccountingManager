@@ -109,7 +109,7 @@ import ModifyComments from "./SubComponents/ModifyComments";
 import * as jsonexport from "jsonexport/dist";
 import { urlBase } from "../settings.js";
 import UserMixin from "../functions/Authentication";
-import EnumMixin from "../functions/EnumApi";
+import EnumApi from "../functions/EnumApi";
 export default {
   name: "invoice",
   components: {
@@ -151,13 +151,12 @@ export default {
       loading: true
     };
   },
-  mixins: [UserMixin, EnumMixin],
+  mixins: [UserMixin],
   methods: {
     refreshData() {
       this.getInvoice(this.queryParam);
     },
     sortMethod(a, b) {
-      console.log(a.invoiceAmountUSD, b.invoiceAmountUSD);
       if (a.invoiceAmountUSD < b.invoiceAmountUSD) {
         return 1;
       }
@@ -221,7 +220,7 @@ export default {
       });
     },
     getEnum() {
-      this.GetAllEnum().then(res => {
+      EnumApi.GetAllEnum(this.auth.token).then(res => {
         this.enumList = res.data;
         const keys = Object.keys(this.enumList);
         var enumListTemp = keys;

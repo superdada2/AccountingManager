@@ -45,7 +45,6 @@ router.post('/delete', async(req, res) => {
 router.post('/register', async(req, res) => {
   try {
     const result = await register(req.body)
-    console.log(result)
     res.status(200).json(result)
   } catch (err) {
     const message = err.message
@@ -73,7 +72,6 @@ router.post('/test', passport.authenticate('auth', {
 router.get('/logout', async(req, res) => {
   try {
     req.logout();
-    console.log(result)
     res.status(200).json(result)
   } catch (err) {
     const message = err.message
