@@ -129,6 +129,7 @@
 import axios from "Axios";
 import { urlBase } from "../settings.js";
 import UserMixin from "../functions/Authentication";
+import enumMixin from "../functions/EnumApi";
 export default {
   name: "add",
   data() {
@@ -315,13 +316,13 @@ export default {
       }
     };
   },
-  mixins: [UserMixin],
+  mixins: [UserMixin, enumMixin],
   methods: {
     //TODO: auto fill fx rate, and usd fields
     loadData() {
       const url = urlBase + "/api/v1/enum/all";
       this.getCustomerName();
-      this.Get(url).then(res => {
+      this.GetAllEnum().then(res => {
         this.classEnum = res.data.Class;
         this.productEnum = res.data.product;
         this.typeEnum = res.data.type;

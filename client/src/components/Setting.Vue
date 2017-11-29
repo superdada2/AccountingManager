@@ -169,6 +169,7 @@
 import axios from "Axios";
 import { urlBase, version } from "../settings.js";
 import UserMixin from "../functions/Authentication";
+import EnumMixin from "../functions/EnumApi";
 import UserPermission from "./Setting/UserPermission";
 import UserManagement from "./Setting/UserManagement";
 
@@ -211,7 +212,7 @@ export default {
       typeEnum: []
     };
   },
-  mixins: [UserMixin],
+  mixins: [UserMixin, EnumMixin],
   methods: {
     addClick(value) {
       const url = urlBase + "/api/v1/enum/add";
@@ -427,9 +428,7 @@ export default {
       }
     },
     loadData() {
-      const url = urlBase + "/api/v1/enum/all";
-
-      this.Get(url).then(res => {
+      this.GetAllEnum().then(res => {
         this.classEnum = res.data.Class;
         this.productEnum = res.data.product;
         this.typeEnum = res.data.type;
