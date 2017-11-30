@@ -38,10 +38,16 @@ export default {
         .then(res => {
           (this.auth = res.data), (this.loggedIn = true);
           this.SetUser(res.data);
-          this.refreshMenu();
-          this.$router.push({
-            name: "Welcome"
-          });
+          if (this.auth.user.forceReset === true) {
+            this.$router.push({
+              name: "ResetPassword"
+            });
+          } else {
+            this.refreshMenu();
+            this.$router.push({
+              name: "Welcome"
+            });
+          }
         })
         .catch(err => {
           this.$message({

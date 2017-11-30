@@ -127,7 +127,9 @@ router.post('/changeStatus', passport.authenticate('auth', {
 router.post('/resetOwnPassword', passport.authenticate('auth', {
   session: false
 }), (req, res, next) => {
-  if (req.user.username === req.body.username) {
+  console.log(req.body)
+  if (req.user.username == req.body.username) {
+
     next()
   } else {
     res.status(401).json({

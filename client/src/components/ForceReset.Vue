@@ -25,7 +25,7 @@
 import UserMixin from "../functions/Authentication";
 import { urlBase } from "../settings.js";
 export default {
-  name: "userManagement",
+  name: "ResetPassword",
   mixins: [UserMixin],
   data() {
     var validatePass = (rule, value, callback) => {
@@ -85,10 +85,10 @@ export default {
       this.$refs["ruleForm2"].validate(valid => {
         if (valid) {
           this.$confirm("Are you sure to reset this password?").then(_ => {
+            console.log(this.currentUser);
             this.Post(url, {
               password: this.ruleForm2.pass,
-              username: this.currentUser,
-              forceReset: this.forceReset
+              username: this.auth.user.username
             })
               .then(res => {
                 this.$message({

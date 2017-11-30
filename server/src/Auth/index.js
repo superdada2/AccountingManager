@@ -22,7 +22,6 @@ var strategy = new strategyJWT(jwtOptions, (payload, next) => {
       model: user_permission
     }],
   }).then(res => {
-
     next(null, {
       username: res.dataValues.username,
       permissions: res.dataValues.user_permissions.map(i => i.dataValues)
