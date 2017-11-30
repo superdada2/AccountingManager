@@ -91,9 +91,7 @@ router.get('/user', passport.authenticate('auth', {
     type: 4,
     role: 1
   }])
-}, passport.authenticate('auth', {
-  session: false
-}), async(req, res) => {
+}, async(req, res) => {
   try {
 
     const result = await GetUsers(req.body)
@@ -113,9 +111,7 @@ router.post('/changeStatus', passport.authenticate('auth', {
     type: 4,
     role: 1
   }])
-}, passport.authenticate('auth', {
-  session: false
-}), async(req, res) => {
+}, async(req, res) => {
   try {
 
     const result = await ChangeStatus(req.body)
@@ -128,6 +124,31 @@ router.post('/changeStatus', passport.authenticate('auth', {
     })
   }
 })
+router.post('/resetOwnPassword', passport.authenticate('auth', {
+  session: false
+}), (req, res, next) => {
+  if (req.user.username === req.body.username) {
+    next()
+  } else {
+    res.status(401).json({
+      status: false,
+      message: "Access denied"
+    })
+  }
+}, async(req, res) => {
+  try {
+
+    const result = await changePassword(req.body)
+    res.status(200).json(result)
+  } catch (err) {
+    const message = err.message
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
+
 router.post('/resetPassword', passport.authenticate('auth', {
   session: false
 }), (req, res, next) => {
@@ -135,9 +156,7 @@ router.post('/resetPassword', passport.authenticate('auth', {
     type: 4,
     role: 1
   }])
-}, passport.authenticate('auth', {
-  session: false
-}), async(req, res) => {
+}, async(req, res) => {
   try {
 
     const result = await changePassword(req.body)

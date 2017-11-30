@@ -181,7 +181,7 @@ export default {
   },
   filters: {
     formatDate: function(dateString) {
-      return moment(dateString).format("YYYY-MM-DD hh:mm:ss");
+      return moment(dateString).format("YYYY-MM-DD HH:mm:ss");
     }
   }
 };

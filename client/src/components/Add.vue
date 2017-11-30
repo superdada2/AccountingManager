@@ -138,7 +138,16 @@ export default {
         const month = value.getMonth();
         const year = value.getFullYear();
         if (month < new Date().getMonth() || year < new Date().getFullYear()) {
-          callback(new Error("Cant Input Past Invoice"));
+          if (
+            !this.Authorize({
+              type: 1,
+              role: 5
+            })
+          ) {
+            callback(new Error("Cant Input Past Invoice"));
+          } else {
+            callback();
+          }
         } else {
           callback();
         }

@@ -27,6 +27,9 @@
         <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off"></el-input>
       </el-form-item>
       <el-form-item>
+        <el-checkbox v-model="forceReset">Force Reset</el-checkbox>
+      </el-form-item>
+      <el-form-item>
         <el-button type="primary" @click="ResetPassword">Reset Password</el-button>
         <el-button @click="resetForm('ruleForm2')">Reset</el-button>
       </el-form-item>
@@ -77,6 +80,7 @@ export default {
     return {
       users: [],
       currentUser: "",
+      forceReset: true,
       userStatusOptions: userStatusOptions,
       status: "",
       ruleForm2: {
@@ -101,6 +105,7 @@ export default {
       const user = [...this.users];
       var temp = user.find(i => i.username == newUser);
       this.status = temp.status;
+      this.forceReset = temp.forceReset;
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
@@ -145,7 +150,8 @@ export default {
           this.$confirm("Are you sure to reset this password?").then(_ => {
             this.Post(url, {
               password: this.ruleForm2.pass,
-              username: this.currentUser
+              username: this.currentUser,
+              forceReset: this.forceReset
             })
               .then(res => {
                 this.$message({

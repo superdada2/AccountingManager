@@ -37,11 +37,13 @@ export function resetPassword({
 
 export function changePassword({
   password = "",
-  username = ""
+  username = "",
+  forceReset = false
 }) {
   const hashed = bcrypt.hashSync(password, 10)
   return user.update({
-    password: hashed
+    password: hashed,
+    forceReset: forceReset
   }, {
     where: {
       username: username

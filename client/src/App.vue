@@ -7,7 +7,7 @@
         <div id="header">
 
           <img id="image" src="./assets/viz_logo.png">
-          <h1 id="title">INVOICES</h1>
+          <h1 id="title">Deferred Revenue Tracker</h1>
 
           <router-link to="/setting" v-if="settingVisibility">
             <el-button id="setting" type="info" round :v-link='{name:"Setting"}'>

@@ -58,6 +58,10 @@ const invoiceOptions = [
   {
     name: "View",
     key: 4
+  },
+  {
+    name: "Override",
+    key: 5
   }
 ];
 

@@ -29,6 +29,10 @@ import {
   getCountry
 } from './controller';
 
+import {
+  Authorize
+} from '../../../Auth/Authorization'
+
 export const router = express.Router();
 
 router.get('/loadCountry', (req, res, next) => {

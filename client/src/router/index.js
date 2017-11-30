@@ -9,10 +9,11 @@ import Details from '@/components/Details'
 import Register from '@/components/Register'
 import Historys from '@/components/History'
 import Welcome from '@/components/Welcome'
+import ForceReset from '@/components/ForceReset'
 
 Vue.use(Router)
 
-export default new Router({
+var router = new Router({
   routes: [{
     path: '/home',
     name: 'Home',
@@ -62,6 +63,13 @@ export default new Router({
     path: '/welcome',
     name: 'Welcome',
     component: Welcome
+  },
+  {
+    path: '/resetPassword',
+    name: 'ResetPassword',
+    component: ForceReset
   }
   ]
 })
+
+export default router
