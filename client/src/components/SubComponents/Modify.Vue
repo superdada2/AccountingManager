@@ -107,6 +107,10 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item prop="startDate" label='Start Date'>
+            <el-date-picker v-model="formValue.startDate" type="date" placeholder="Start Date">
+            </el-date-picker>
+          </el-form-item>
           <el-form-item prop="comments" label='Comments'>
             <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" placeholder="Comments" v-model="formValue.comments">
             </el-input>
@@ -173,7 +177,8 @@ export default {
         invoiceAmountUsd: "",
         annualIncreaseBool: true,
         subscription: "",
-        country: ""
+        country: "",
+        startDate: ""
       },
       rules: {
         country: [
@@ -189,6 +194,14 @@ export default {
             required: true,
             message: "Please input Company Name",
             trigger: "blur"
+          }
+        ],
+        startDate: [
+          {
+            required: true,
+            type: "date",
+            message: "Please select a start date",
+            trigger: "change"
           }
         ],
         product: [

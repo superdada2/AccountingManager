@@ -64,6 +64,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.DATEONLY,
       allowNull: false
     },
+    startDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
+    },
     subscriptionType: {
       type: DataTypes.INTEGER(11),
       allowNull: false,

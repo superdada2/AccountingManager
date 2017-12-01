@@ -102,6 +102,10 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item prop="startDate" label='Start Date'>
+            <el-date-picker v-model="formValue.startDate" type="date" placeholder="Start Date">
+            </el-date-picker>
+          </el-form-item>
           <el-form-item prop="revenueType" label='Revenue Type'>
             <el-select v-model="formValue.revenueType" placeholder="Revenue Type">
               <el-option v-for="item in revenueEnum" :key="item.id" :label="item.data" :value="item.id">
@@ -191,7 +195,8 @@ export default {
         invoiceAmountUsd: "",
         annualIncreaseBool: true,
         subscription: "",
-        country: ""
+        country: "",
+        startDate: ""
       },
       rules: {
         country: [
@@ -267,6 +272,14 @@ export default {
             required: true,
             type: "date",
             message: "Please select a billingMonth",
+            trigger: "change"
+          }
+        ],
+        startDate: [
+          {
+            required: true,
+            type: "date",
+            message: "Please select a start date",
             trigger: "change"
           }
         ],
