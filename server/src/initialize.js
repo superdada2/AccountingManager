@@ -130,13 +130,27 @@ export async function loadInvoice(req, res) {
       }).id : country.find(i => {
         return i.data == 'N/A'
       }).id
+      tempObj.subscription = subscription.find(i => {
+        return i.data.toLowerCase() == jsonObj.subscription.toLowerCase()
+      }) ? subscription.find(i => {
+        return i.data.toLowerCase() == jsonObj.subscription.toLowerCase()
+      }).id : subscription.find(i => {
+        return i.data == 'N/A'
+      }).id
       tempObj.recognitionStrMonth = new Date(new Date(tempObj.startDate).getFullYear(), tempObj.recognitionStrMonth - 1)
       tempObj.billMonth = new Date(new Date(tempObj.startDate).getFullYear(), tempObj.billMonth - 1)
       tempObj.invoiceDate = new Date(tempObj.invoiceDate)
+      tempObj.invoiceAmount = parseFloat(tempObj.invoiceAmount.replace(/,/g, ''))
+      tempObj.invoiceAmountUsd = parseFloat(tempObj.invoiceAmountUsd.replace(/,/g, ''))
+      for (var k in tempObj) {
+        if (tempObj[k] == '') {
+          delete tempObj[k]
+        }
+      }
 
       console.log(tempObj)
 
-      await CreateInvoice(tempObj, 'admin')
+      await CreateInvoice(tempObj, 'admin', false)
     })
     .on('done', (error) => {
       console.log(error);

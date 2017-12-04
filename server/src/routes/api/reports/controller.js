@@ -11,8 +11,10 @@ import {
   type_enum,
   month_enum,
   sequelize,
-  change_history
+  change_history,
 } from '../../../models';
+
+import logger from '../../../logger'
 import Promise from 'bluebird';
 
 const companies = [
@@ -415,10 +417,9 @@ export function CreateInvoice({
   subscription = 1,
   country = 1,
   startDate = new Date(1990, 1, 1)
-}, username = "") {
+}, username = "", checkDuplicate = true) {
   return new Promise(async(res, rej) => {
     try {
-
       //check for duplicates
       const exist = await invoice.findOne({
         where: {
@@ -426,7 +427,7 @@ export function CreateInvoice({
           product: product
         }
       })
-      if (exist) {
+      if (exist && checkDuplicate) {
         rej(new Error("Duplicate Entry"))
         return
       }
@@ -458,7 +459,6 @@ export function CreateInvoice({
         country: country,
         startDate: startDate
       }).then(async response => {
-        console.log(response.id)
         Date.prototype.addDays = function (days) {
           this.setDate(this.getDate() + parseInt(days));
           return this;
@@ -493,7 +493,10 @@ export function CreateInvoice({
           original: null
         })
       }).catch(async err => {
-        console.log(err)
+        logger.error({
+          err: err,
+          invoiceNumber: invoiceNumber
+        })
         await income.destroy({
           where: {
             invoiceId: currentId
