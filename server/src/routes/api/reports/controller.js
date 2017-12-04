@@ -399,22 +399,22 @@ export function CreateInvoice({
   companyName = 1,
   invoiceNumber = 1,
   invoiceAmount = 1,
-  invoiceDate = 1,
+  invoiceDate = new Date(1990, 1, 1),
   billMonth = 1,
-  description = 1,
-  recognitionStrMonth = 1,
+  description = 'N/A',
+  recognitionStrMonth = new Date(1990, 1, 1),
   lengthRec = 12,
   fxRate = 1,
   monthlyRec = 1,
-  dateLastIncrease = 1,
+  dateLastIncrease = new Date(1990, 1, 1),
   increasePerc = 1,
-  cancelationDate = 1,
-  comments = '1',
+  cancelationDate = new Date(1990, 1, 1),
+  comments = 'N/A',
   invoiceAmountUsd = 1,
-  annualIncreaseBool = 1,
+  annualIncreaseBool = true,
   subscription = 1,
   country = 1,
-  startDate = 1
+  startDate = new Date(1990, 1, 1)
 }, username = "") {
   return new Promise(async(res, rej) => {
     try {
@@ -430,7 +430,8 @@ export function CreateInvoice({
         rej(new Error("Duplicate Entry"))
         return
       }
-      var response = await invoice.create({
+      var currentId = 0
+      invoice.create({
         type: type,
         customerName: companyName,
         comments: comments,
@@ -456,47 +457,64 @@ export function CreateInvoice({
         MonthlyRecoginitionAmountUSD: monthlyRec,
         country: country,
         startDate: startDate
-      })
+      }).then(async response => {
+        console.log(response.id)
+        Date.prototype.addDays = function (days) {
+          this.setDate(this.getDate() + parseInt(days));
+          return this;
+        };
+        const id = response.id
+        currentId = id
+        const billingStart = new Date(billMonth).addDays(2)
+        const supportStart = new Date(recognitionStrMonth).addDays(2)
 
 
-      Date.prototype.addDays = function (days) {
-        this.setDate(this.getDate() + parseInt(days));
-        return this;
-      };
-      const id = response.dataValues.id
-      const billingStart = new Date(billMonth).addDays(2)
-      const supportStart = new Date(recognitionStrMonth).addDays(2)
+        const incomeList = createIncomeList({
+          id: id,
+          startMonth: supportStart.getMonth() + 1,
+          year: supportStart.getFullYear(),
+          length: lengthRec,
+          invoiceAmount: invoiceAmountUsd
+        })
+        await income.bulkCreate(incomeList)
+        const defferedList = createDeferred({
+          id: id,
+          startMonth: billingStart.getMonth() + 1,
+          year: billingStart.getFullYear(),
+          length: lengthRec,
+          invoiceAmount: invoiceAmountUsd
+        })
+        await deferred_balance.bulkCreate(defferedList)
+        trackChanges({
+          username: username,
+          invoiceId: id,
+          operationType: 'Create',
+          operation: response,
+          original: null
+        })
+      }).catch(async err => {
+        console.log(err)
+        await income.destroy({
+          where: {
+            invoiceId: currentId
+          }
+        })
+        await deferred_balance.destroy({
+          where: {
+            invoiceId: currentId
+          }
+        })
+        await invoice.destroy({
+          where: {
+            id: currentId
+          }
+        })
+      })
 
-
-      const incomeList = createIncomeList({
-        id: id,
-        startMonth: supportStart.getMonth() + 1,
-        year: supportStart.getFullYear(),
-        length: lengthRec,
-        invoiceAmount: invoiceAmountUsd
-      })
-      incomeList.forEach(async(value) => {
-        await income.create(value)
-      })
-      const defferedList = createDeferred({
-        id: id,
-        startMonth: billingStart.getMonth() + 1,
-        year: billingStart.getFullYear(),
-        length: lengthRec,
-        invoiceAmount: invoiceAmountUsd
-      })
-      defferedList.forEach(async(value) => {
-        await deferred_balance.create(value)
-      })
-      trackChanges({
-        username: username,
-        invoiceId: id,
-        operationType: 'Create',
-        operation: response.dataValues,
-        original: null
-      })
+      console.log('success')
       res('Success')
     } catch (err) {
+      console.log(err.message)
       rej(err.message)
     }
   })

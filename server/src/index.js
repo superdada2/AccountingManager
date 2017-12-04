@@ -11,6 +11,7 @@ import {
 import mysql from 'mysql';
 import passport from 'passport';
 import strategy from './Auth'
+import initialize from './initialize'
 
 
 
@@ -35,7 +36,9 @@ const port = process.env.PORT || 3030;
 
 sequelize.sync()
   .then(() => {
+    //initialize()
     server.listen(port, function () {
+
       console.log('Server listening at port %d', port);
     })
   })
