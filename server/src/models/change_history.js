@@ -11,7 +11,7 @@ module.exports = function (sequelize, DataTypes) {
     timestamp: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('now')
+      defaultValue: sequelize.fn('CURRENT_TIMESTAMP')
     },
     user: {
       type: DataTypes.STRING,
