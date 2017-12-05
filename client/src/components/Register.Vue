@@ -74,7 +74,7 @@ export default {
           this.$message({ type: "success", message: "Register Success" });
         })
         .catch(err => {
-          console.log("caught");
+          // console.log("caught");
           this.$message({
             type: "error",
             message: "Registration Failed"

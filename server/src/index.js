@@ -36,7 +36,7 @@ const port = process.env.PORT || 3030;
 
 sequelize.sync()
   .then(() => {
-    initialize()
+    //initialize()
     server.listen(port, function () {
 
       console.log('Server listening at port %d', port);

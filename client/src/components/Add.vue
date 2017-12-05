@@ -396,7 +396,7 @@ export default {
           try {
             const data = this.Post(url, message)
               .then(i => {
-                console.log("succes", i);
+                // console.log("succes", i);
                 this.$message({
                   type: "success",
                   message: "Success!"
