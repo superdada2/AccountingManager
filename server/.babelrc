@@ -7,11 +7,10 @@
     "transform-promise-to-bluebird",
     "syntax-async-functions",
     "transform-regenerator",
-    "syntax-async-functions",
-    [
+    "syntax-async-functions", [
       "transform-runtime",
       {
-        "polyfill": false,
+        "polyfill": true,
         "regenerator": true
       }
     ]

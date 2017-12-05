@@ -18,6 +18,7 @@ Vue.use(ElementUI, {
 })
 Vue.use(VueCookie)
 Vue.use(VueLocalStorage)
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

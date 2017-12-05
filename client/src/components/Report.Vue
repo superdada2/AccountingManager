@@ -25,8 +25,8 @@
             </el-date-picker>
 
             <el-button id="submit" type="primary " @click="GetReport">Submit</el-button>
-            <el-button id="export" type="primary " @click="()=>handleExport(this.tableData)">Export</el-button>
-            <SaveButton dataName="DefaultReport" :activeData="input" :Load="LoadInput"/>
+            <el-button id="export" type="primary " @click="()=>HandleExport(this.tableData)">Export</el-button>
+            <SaveButton dataName="DefaultReport" :activeData="input" :Load="LoadInput" />
           </a>
         </el-row>
 
@@ -44,12 +44,12 @@
               <el-table-column prop="count" label="Count" />
               <el-table-column v-for="item in columnEnum" :key="item.id" :prop="item.data" :label="item.data" align="right">
                 <template slot-scope="scope">
-                  {{(scope.row[item.data] * 1).toLocaleString()}}
+                  {{(scope.row[item.data] * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
                 </template>
               </el-table-column>
               <el-table-column prop="total" label="Total" align="right">
                 <template slot-scope="scope">
-                  {{(scope.row.total * 1).toLocaleString()}}
+                  {{(scope.row.total * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
                 </template>
               </el-table-column>
             </el-table>
@@ -77,6 +77,7 @@ import SaveButton from "./SubComponents/SaveButton";
 import _ from "lodash";
 
 import { urlBase } from "../settings.js";
+import UserMixin from "../functions/Authentication";
 import colors from "../assets/colors";
 export default {
   name: "report",
@@ -154,6 +155,7 @@ export default {
       }
     };
   },
+  mixins: [UserMixin],
   methods: {
     LoadInput(input) {
       this.input = input;
@@ -184,7 +186,7 @@ export default {
         endM: this.input.endM.getMonth() + 1,
         isIncome: this.input.balanceType
       };
-      axios.post(url, data).then(res => {
+      this.Post(url, data).then(res => {
         this.tableData = res.data;
         this.tableVisibility = true;
         this.CreateChartData(res.data);
@@ -242,18 +244,18 @@ export default {
 
     GetProductEnum() {
       const url = urlBase + "/api/v1/enum/product";
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.productEnum = res.data;
       });
     },
 
     GetClassEnum() {
       const url = urlBase + "/api/v1/enum/class";
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.classEnum = res.data;
       });
     },
-    handleExport(data) {
+    HandleExport(data) {
       jsonexport(data, (err, csv) => {
         if (err) return console.log(err);
         var uriContent =
@@ -269,14 +271,6 @@ export default {
           message: "Success"
         });
       });
-    },
-
-    createFilter(queryString) {
-      return link => {
-        return (
-          link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-        );
-      };
     }
   },
   created() {

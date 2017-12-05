@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';
-import config from '../../config';
+import config from '../config';
 
 export const sequelize = new Sequelize(
   config.db.database,
@@ -56,6 +56,10 @@ db.invoice.hasMany(db.income, {
 })
 db.invoice.hasMany(db.deferred_balance, {
   foreignKey: 'invoiceId',
+  onDelete: 'cascade'
+})
+db.user.hasMany(db.user_permission, {
+  foreignKey: 'username',
   onDelete: 'cascade'
 })
 

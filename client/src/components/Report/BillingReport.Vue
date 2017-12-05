@@ -1,5 +1,6 @@
 <template>
   <div className="billingReport">
+    <Help :message="helpMessage"/>
     <el-dialog title="Modify" :visible.sync="modifyDialogVisibility" width="80%">
       <Modify :invoice-data="currentRow" :close="()=>{this.modifyDialogVisibility = false}" :refresh="GetInvoice" />
     </el-dialog>
@@ -14,8 +15,8 @@
       <el-button id="export" type="primary " @click="()=>handleExport(this.tableData)">Export</el-button>      
     </el-row>
     <el-row>
-      <el-table v-if="tableData.length > 0?true:false" :data="tableData" v-loading="tableLoading" style="width: 100%" @row-click="openComments"
-        @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}">
+      <el-table v-if="tableData.length > 0?true:false" :data="tableData" v-loading="tableLoading" style="width: 100%" @row-click="openComments "
+        @row-contextmenu="(row, e)=>{e.preventDefault(), modifyInvoice(row,e)}" show-summary :summary-method="GetSummaries">
         <el-table-column prop="customerName" label="CustomerName" sortable>
         </el-table-column>
         <el-table-column prop="invoiceNumber" label="Invoice Number" sortable>
@@ -32,10 +33,13 @@
         </el-table-column>
         <el-table-column align="right" prop="invoiceAmountUSD" label="amountUSD">
           <template slot-scope="scope">
-            {{(scope.row.invoiceAmountUSD * 1).toLocaleString()}}
+            {{(scope.row.invoiceAmountUSD * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
           </template>
         </el-table-column>
         <el-table-column prop="increasePercentage" label="Percentage" sortable>
+          <template slot-scope="scope">
+            {{(scope.row.increasePercentage * 1).toLocaleString("en", {style: "percent"})}}
+          </template>
         </el-table-column>
         <el-table-column prop='annualIncreaseEli' label="Eligible">
           <template slot-scope="scope">
@@ -57,10 +61,14 @@ import Modify from "../SubComponents/Modify";
 import ModifyComments from "../SubComponents/ModifyComments";
 import SaveButton from "../SubComponents/SaveButton";
 import { urlBase } from "../../settings.js";
+import UserMixin from "../../functions/Authentication";
+import Help from "../SubComponents/Help";
 export default {
   name: "billiingReport",
   data() {
     return {
+      helpMessage:
+        "Left Click on a invoice view/modify comments and description. Right click to view invoice in detail",
       input: {
         billingMonth: ""
       },
@@ -76,8 +84,10 @@ export default {
   components: {
     Modify,
     ModifyComments,
-    SaveButton
+    SaveButton,
+    Help
   },
+  mixins: [UserMixin],
   methods: {
     LoadInput({ billingMonth }) {
       this.input.billingMonth = billingMonth;
@@ -89,6 +99,34 @@ export default {
           invoiceId: row.id
         }
       });
+    },
+    GetSummaries(param) {
+      console.log(param);
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "Total";
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]));
+        if (index === 7) {
+          sums[index] = values
+            .reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0)
+            .toLocaleString(undefined, { style: "currency", currency: "USD" });
+        } else {
+          sums[index] = "";
+        }
+      });
+
+      return sums;
     },
     handleExport(data) {
       jsonexport(data, (err, csv) => {
@@ -112,20 +150,18 @@ export default {
       const url = urlBase + "/api/v1/reports/getInvoice";
       this.tableLoading = true;
       try {
-        axios
-          .post(url, {
-            where: {
-              billingMonth: this.input.billingMonth
-            }
-          })
-          .then(res => {
-            this.tableData = res.data;
-            this.$message({
-              type: "success",
-              message: "Success"
-            });
-            this.tableLoading = false;
+        this.Post(url, {
+          where: {
+            billingMonth: this.input.billingMonth
+          }
+        }).then(res => {
+          this.tableData = res.data;
+          this.$message({
+            type: "success",
+            message: "Success"
           });
+          this.tableLoading = false;
+        });
       } catch (err) {
         this.tableLoading = false;
         this.$message({

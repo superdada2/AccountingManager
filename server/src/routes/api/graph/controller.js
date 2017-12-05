@@ -23,7 +23,7 @@ export function BillByCustomer({
   switch (filter) {
     case "active":
       return invoice.findAll({
-        attributes: ["customerName", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["customerName", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['customerName'],
@@ -40,7 +40,7 @@ export function BillByCustomer({
       break;
     case "total":
       return invoice.findAll({
-        attributes: ["customerName", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["customerName", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['customerName'],
@@ -49,7 +49,7 @@ export function BillByCustomer({
       break;
     case "billingMonth":
       return invoice.findAll({
-        attributes: ["customerName", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["customerName", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['customerName'],
@@ -62,7 +62,7 @@ export function BillByCustomer({
       break;
     case "recognitionStartMonth":
       return invoice.findAll({
-        attributes: ["customerName", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["customerName", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['customerName'],
@@ -85,7 +85,7 @@ export function BillByCurrency({
   switch (filter) {
     case "active":
       return invoice.findAll({
-        attributes: ["currency", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["currency", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['currency'],
@@ -104,7 +104,7 @@ export function BillByCurrency({
       break;
     case "total":
       return invoice.findAll({
-        attributes: ["currency", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["currency", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['currency'],
@@ -115,7 +115,7 @@ export function BillByCurrency({
       break;
     case "billingMonth":
       return invoice.findAll({
-        attributes: ["currency", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["currency", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['currency'],
@@ -131,7 +131,7 @@ export function BillByCurrency({
       break;
     case "recognitionStartMonth":
       return invoice.findAll({
-        attributes: ["currency", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["currency", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['currency'],
@@ -156,7 +156,7 @@ export function BillByClass({
   switch (filter) {
     case "active":
       return invoice.findAll({
-        attributes: ["class", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["class", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['class'],
@@ -175,7 +175,7 @@ export function BillByClass({
       break;
     case "total":
       return invoice.findAll({
-        attributes: ["class", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["class", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['class'],
@@ -186,7 +186,7 @@ export function BillByClass({
       break;
     case "billingMonth":
       return invoice.findAll({
-        attributes: ["class", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["class", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['class'],
@@ -202,7 +202,7 @@ export function BillByClass({
       break;
     case "recognitionStartMonth":
       return invoice.findAll({
-        attributes: ["class", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["class", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['class'],
@@ -227,7 +227,7 @@ export function BillByProduct({
   switch (filter) {
     case "active":
       return invoice.findAll({
-        attributes: ["product", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["product", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['product'],
@@ -246,7 +246,7 @@ export function BillByProduct({
       break;
     case "total":
       return invoice.findAll({
-        attributes: ["product", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["product", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['product'],
@@ -257,7 +257,7 @@ export function BillByProduct({
       break;
     case "billingMonth":
       return invoice.findAll({
-        attributes: ["product", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["product", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['product'],
@@ -273,7 +273,7 @@ export function BillByProduct({
       break;
     case "recognitionStartMonth":
       return invoice.findAll({
-        attributes: ["product", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["product", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['product'],
@@ -298,7 +298,7 @@ export function BillByRevenueType({
   switch (filter) {
     case "active":
       return invoice.findAll({
-        attributes: ["revenueType", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["revenueType", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['revenueType'],
@@ -317,7 +317,7 @@ export function BillByRevenueType({
       break;
     case "total":
       return invoice.findAll({
-        attributes: ["revenueType", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["revenueType", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['revenueType'],
@@ -328,7 +328,7 @@ export function BillByRevenueType({
       break;
     case "billingMonth":
       return invoice.findAll({
-        attributes: ["revenueType", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["revenueType", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['revenueType'],
@@ -344,7 +344,7 @@ export function BillByRevenueType({
       break;
     case "recognitionStartMonth":
       return invoice.findAll({
-        attributes: ["revenueType", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["revenueType", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['revenueType'],
@@ -369,7 +369,7 @@ export function BillByStatus({
   switch (filter) {
     case "active":
       return invoice.findAll({
-        attributes: ["status", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["status", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['status'],
@@ -388,7 +388,7 @@ export function BillByStatus({
       break;
     case "total":
       return invoice.findAll({
-        attributes: ["status", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["status", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['status'],
@@ -399,7 +399,7 @@ export function BillByStatus({
       break;
     case "billingMonth":
       return invoice.findAll({
-        attributes: ["status", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["status", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['status'],
@@ -415,7 +415,7 @@ export function BillByStatus({
       break;
     case "recognitionStartMonth":
       return invoice.findAll({
-        attributes: ["status", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["status", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['status'],
@@ -440,7 +440,7 @@ export function BillByType({
   switch (filter) {
     case "active":
       return invoice.findAll({
-        attributes: ["type", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["type", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['type'],
@@ -459,7 +459,7 @@ export function BillByType({
       break;
     case "total":
       return invoice.findAll({
-        attributes: ["type", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["type", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['type'],
@@ -470,7 +470,7 @@ export function BillByType({
       break;
     case "billingMonth":
       return invoice.findAll({
-        attributes: ["type", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["type", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['type'],
@@ -486,7 +486,7 @@ export function BillByType({
       break;
     case "recognitionStartMonth":
       return invoice.findAll({
-        attributes: ["type", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["type", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['type'],
@@ -511,7 +511,7 @@ export function BillByCountry({
   switch (filter) {
     case "active":
       return invoice.findAll({
-        attributes: ["country", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["country", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['country'],
@@ -530,7 +530,7 @@ export function BillByCountry({
       break;
     case "total":
       return invoice.findAll({
-        attributes: ["country", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["country", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['country'],
@@ -541,7 +541,7 @@ export function BillByCountry({
       break;
     case "billingMonth":
       return invoice.findAll({
-        attributes: ["country", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["country", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['country'],
@@ -557,7 +557,7 @@ export function BillByCountry({
       break;
     case "recognitionStartMonth":
       return invoice.findAll({
-        attributes: ["country", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+        attributes: ["country", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
           [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
         ],
         group: ['country'],
@@ -578,7 +578,7 @@ export function BillByCountry({
 
 export function BillByMonthInvoiced() {
   return invoice.findAll({
-    attributes: ["customerName", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice']],
+    attributes: ["customerName", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice']],
     group: ['customerName'],
 
   })
@@ -589,7 +589,7 @@ export function BillByBillingMonth({
 }) {
   const Op = Sequelize.Op
   return invoice.findAll({
-    attributes: ["billingMonth", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice'],
+    attributes: ["billingMonth", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice'],
       [sequelize.fn('count', sequelize.col('invoiceAmountUSD')), 'numberInvoice']
     ],
     group: ['billingMonth'],
@@ -603,7 +603,7 @@ export function BillByBillingMonth({
 
 export function RecognitionStartMonth() {
   return invoice.findAll({
-    attributes: ["recognitionStartMonth", [sequelize.fn('sum', sequelize.col('invoiceAmountUSD')), 'totalInvoice']],
+    attributes: ["recognitionStartMonth", [sequelize.fn('abs', sequelize.fn('sum', sequelize.col('invoiceAmountUSD'))), 'totalInvoice']],
     group: ['recognitionStartMonth'],
 
   })

@@ -12,15 +12,26 @@ import {
   ModifyInvoice,
   GetIncomeDeferred,
   ModifyIncomeDeferred,
-  loadData2
+  loadData2,
+  GetHistory,
+  getDistinctUserName
 } from './controller'
+
+import {
+  Authorize
+} from '../../../Auth/Authorization'
 
 export const router = express.Router()
 
-router.post('/updateDescription', async(req, res) => {
+router.post('/getHistory', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 4,
+    role: 2
+  }])
+}, async(req, res) => {
   try {
     console.log(req.body)
-    const result = await UpdateInvoiceDescription(req.body)
+    const result = await GetHistory(req.body)
     res.status(200).json(result)
   } catch (err) {
 
@@ -32,10 +43,55 @@ router.post('/updateDescription', async(req, res) => {
     })
   }
 })
-router.post('/deleteInvoice', async(req, res) => {
+
+router.get('/getUsername', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 4,
+    role: 2
+  }])
+}, async(req, res) => {
   try {
     console.log(req.body)
-    const result = await DeleteInvoice(req.body)
+    const result = await getDistinctUserName(req.body)
+    res.status(200).json(result)
+  } catch (err) {
+
+    const message = err.message
+    console.log("error", message)
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
+router.post('/updateDescription', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 1,
+    role: 2
+  }])
+}, async(req, res) => {
+  try {
+    console.log(req.body)
+    const result = await UpdateInvoiceDescription(req.body, req.user.username)
+    res.status(200).json(result)
+  } catch (err) {
+
+    const message = err.message
+    console.log("error", message)
+    res.status(500).json({
+      status: false,
+      message
+    })
+  }
+})
+router.post('/deleteInvoice', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 1,
+    role: 3
+  }])
+}, async(req, res) => {
+  try {
+    const result = await DeleteInvoice(req.body, req.user.username)
     res.status(200).json(result)
   } catch (err) {
 
@@ -48,7 +104,12 @@ router.post('/deleteInvoice', async(req, res) => {
   }
 })
 
-router.post('/getIncomeDeferred', async(req, res) => {
+router.post('/getIncomeDeferred', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 1,
+    role: 4
+  }])
+}, async(req, res) => {
   try {
     console.log(req.body)
     const result = await GetIncomeDeferred(req.body)
@@ -64,15 +125,19 @@ router.post('/getIncomeDeferred', async(req, res) => {
   }
 })
 
-router.post('/modifyIncomeDeferred', async(req, res) => {
+router.post('/modifyIncomeDeferred', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 1,
+    role: 2
+  }])
+}, async(req, res) => {
   try {
     console.log(req.body)
-    const result = await ModifyIncomeDeferred(req.body)
+    const result = await ModifyIncomeDeferred(req.body, req.user.username)
     res.status(200).json(result)
   } catch (err) {
 
     const message = err.message
-    console.log("error", message)
     res.status(500).json({
       status: false,
       message
@@ -80,15 +145,18 @@ router.post('/modifyIncomeDeferred', async(req, res) => {
   }
 })
 
-router.post('/modifyInvoice', async(req, res) => {
+router.post('/modifyInvoice', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 1,
+    role: 2
+  }])
+}, async(req, res) => {
   try {
-    console.log(req.body)
-    const result = await ModifyInvoice(req.body)
+    const result = await ModifyInvoice(req.body, req.user.username)
     res.status(200).json(result)
   } catch (err) {
 
     const message = err.message
-    console.log("error", message)
     res.status(500).json({
       status: false,
       message
@@ -96,15 +164,17 @@ router.post('/modifyInvoice', async(req, res) => {
   }
 })
 
-router.post('/createInvoice', async(req, res) => {
+router.post('/createInvoice', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 1,
+    role: 1
+  }])
+}, async(req, res) => {
   try {
-    console.log(req.body)
-    const result = await CreateInvoice(req.body)
+    const result = await CreateInvoice(req.body, req.user.username)
     res.status(200).json(result)
   } catch (err) {
-
     const message = err.message
-    console.log("error", message)
     res.status(500).json({
       status: false,
       message
@@ -112,15 +182,30 @@ router.post('/createInvoice', async(req, res) => {
   }
 })
 
-router.get('/getCustomerName', async(req, res) => {
+router.get('/getCustomerName', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 1,
+    role: 1
+  }, {
+    type: 1,
+    role: 2
+  }, {
+    type: 1,
+    role: 4
+  }, {
+    type: 3,
+    role: 1
+  }, {
+    type: 5,
+    role: 1
+  }])
+}, async(req, res) => {
   try {
-    console.log(req.body)
     const result = await getDistinctCustomerName(req.body)
     res.status(200).json(result)
   } catch (err) {
 
     const message = err.message
-    console.log("error", message)
     res.status(500).json({
       status: false,
       message
@@ -128,15 +213,30 @@ router.get('/getCustomerName', async(req, res) => {
   }
 })
 
-router.get('/getInvoiceNumber', async(req, res) => {
+router.get('/getInvoiceNumber', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 1,
+    role: 1
+  }, {
+    type: 1,
+    role: 2
+  }, {
+    type: 1,
+    role: 4
+  }, {
+    type: 3,
+    role: 1
+  }, {
+    type: 5,
+    role: 1
+  }])
+}, async(req, res) => {
   try {
-    console.log(req.body)
     const result = await getDistinctInvoiceNumber(req.body)
     res.status(200).json(result)
   } catch (err) {
 
     const message = err.message
-    console.log("error", message)
     res.status(500).json({
       status: false,
       message
@@ -144,14 +244,21 @@ router.get('/getInvoiceNumber', async(req, res) => {
   }
 })
 
-router.post('/getInvoice', async(req, res) => {
+router.post('/getInvoice', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 1,
+    role: 4
+  }, {
+    type: 5,
+    role: 1
+  }])
+}, async(req, res) => {
   try {
     const result = await GetInvoice(req.body)
 
     res.status(200).json(result)
   } catch (err) {
     const message = err.message
-    console.log(message)
     res.status(500).json({
       status: false,
       message
@@ -159,11 +266,14 @@ router.post('/getInvoice', async(req, res) => {
   }
 })
 
-router.post('/getProductTable', async(req, res) => {
+router.post('/getProductTable', (req, res, next) => {
+  Authorize(req, res, next, {
+    type: 5,
+    role: 1
+  })
+}, async(req, res) => {
   try {
-    console.log("req body", req.body)
     const result = await getProductTable(req.body)
-
     res.status(200).json(result)
   } catch (err) {
     const message = err.message
@@ -175,7 +285,12 @@ router.post('/getProductTable', async(req, res) => {
   }
 })
 
-router.post('/getClassTable', async(req, res) => {
+router.post('/getClassTable', (req, res, next) => {
+  Authorize(req, res, next, {
+    type: 5,
+    role: 1
+  })
+}, async(req, res) => {
   try {
     const result = await getClassTable(req.body)
 

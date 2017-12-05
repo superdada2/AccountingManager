@@ -1,5 +1,6 @@
 <template>
   <div class="customerReport">
+    <Help :message="helpMessage"/>
     <a class="inputRow">
       <el-autocomplete placeholder="Customer" v-model="input.customerSearchValue" :fetch-suggestions="querySearchCustName"></el-autocomplete>
       <el-date-picker v-model="input.customerQueryDate" type="month" placeholder="Month">
@@ -16,18 +17,18 @@
     </a>
     <div class="dataTable">
       <el-table v-for="detail in customerDetails" :key="detail.id" @row-click="ToDetail" v-loading="customerLoading" :data="detail"
-        style="width: 100%" show-summary>
+        style="width: 100%" show-summary :summary-method="GetSummaries">
         <el-table-column prop="customerName" label="Customer Name" sortable />
         <el-table-column prop="invoiceNumber" label="Invoice Number" sortable />
         <el-table-column prop="product_enum.data" label="Product" sortable/>
         <el-table-column prop="income" label="Income" align="right" sortable>
           <template slot-scope="scope">
-            {{(scope.row.income * 1).toLocaleString()}}
+            {{(scope.row.income * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
           </template>
         </el-table-column>
         <el-table-column prop="deferred" label="Deferred" align="right" sortable>
           <template slot-scope="scope">
-            {{(scope.row.deferred * 1).toLocaleString()}}
+            {{(scope.row.deferred * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
           </template>
         </el-table-column>
         <el-table-column prop="month" label="Month" />
@@ -42,13 +43,17 @@ import * as jsonexport from "jsonexport/dist";
 import _ from "lodash";
 import SaveButton from "../SubComponents/SaveButton";
 import { urlBase } from "../../settings.js";
+import UserMixin from "../../functions/Authentication";
+import Help from "../SubComponents/Help";
 export default {
   name: "customerReport",
   components: {
-    SaveButton
+    SaveButton,
+    Help
   },
   data() {
     return {
+      helpMessage: "Left Click on invoice to show detail",
       input: {
         productFilter: "",
         customerQueryDate: "",
@@ -63,6 +68,7 @@ export default {
       customerNameList: []
     };
   },
+  mixins: [UserMixin],
   methods: {
     ResetInput() {
       this.input = {
@@ -77,7 +83,7 @@ export default {
     },
     GetProductEnum() {
       const url = urlBase + "/api/v1/enum/product";
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.productEnum = res.data;
       });
     },
@@ -91,7 +97,7 @@ export default {
     },
     getCustomerName() {
       const url = urlBase + "/api/v1/reports/getCustomerName";
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.customerNameList = res.data;
       });
     },
@@ -129,66 +135,64 @@ export default {
         ? (where["product"] = this.input.productFilter)
         : null;
       try {
-        axios
-          .post(url, {
-            where: where
-          })
-          .then(res => {
-            try {
-              const month = this.input.customerQueryDate.getMonth() + 1;
-              const year = this.input.customerQueryDate.getFullYear();
-              var temp = [...res.data];
-              var customerDetails = temp.filter(i => {
-                const income = i.incomes.find(j => {
-                  return j.month == month && j.year == year;
-                });
-                const deferred = i.deferred_balances.find(j => {
-                  return j.month == month && j.year == year;
-                });
-                if (income != undefined || deferred != undefined) {
-                  return true;
-                } else {
-                  return false;
-                }
+        this.Post(url, {
+          where: where
+        }).then(res => {
+          try {
+            const month = this.input.customerQueryDate.getMonth() + 1;
+            const year = this.input.customerQueryDate.getFullYear();
+            var temp = [...res.data];
+            var customerDetails = temp.filter(i => {
+              const income = i.incomes.find(j => {
+                return j.month == month && j.year == year;
               });
-              customerDetails.forEach((k, index) => {
-                var temp2 = {
-                  ...k
-                };
-                temp2["month"] = month;
-                temp2["year"] = year;
-                const holder = temp2.incomes.find(j => {
-                  return j.month == month && j.year == year;
-                });
-                temp2["income"] = holder != undefined ? holder.amount : 0;
-                const holder2 = temp2.deferred_balances.find(j => {
-                  return j.month == month && j.year == year;
-                });
-                temp2["deferred"] = holder2 != undefined ? holder2.amount : 0;
-                customerDetails[index] = temp2;
+              const deferred = i.deferred_balances.find(j => {
+                return j.month == month && j.year == year;
               });
+              if (income != undefined || deferred != undefined) {
+                return true;
+              } else {
+                return false;
+              }
+            });
+            customerDetails.forEach((k, index) => {
+              var temp2 = {
+                ...k
+              };
+              temp2["month"] = month;
+              temp2["year"] = year;
+              const holder = temp2.incomes.find(j => {
+                return j.month == month && j.year == year;
+              });
+              temp2["income"] = holder != undefined ? holder.amount : 0;
+              const holder2 = temp2.deferred_balances.find(j => {
+                return j.month == month && j.year == year;
+              });
+              temp2["deferred"] = holder2 != undefined ? holder2.amount : 0;
+              customerDetails[index] = temp2;
+            });
 
-              //split detail into smaller tables
-              const customerDetails2 = this.productEnum.map(l => {
-                const detail = customerDetails.filter(f => {
-                  return f.product == l.id;
-                });
-                if (detail.length == 0) {
-                  return undefined;
-                }
-                return detail;
+            //split detail into smaller tables
+            const customerDetails2 = this.productEnum.map(l => {
+              const detail = customerDetails.filter(f => {
+                return f.product == l.id;
               });
-              this.customerDetails = _.compact(customerDetails2);
-              this.customerLoading = false;
-              this.$message({
-                type: "success",
-                message: "Success"
-              });
-              loading.close();
-            } catch (err) {
-              this.customerLoading = false;
-            }
-          });
+              if (detail.length == 0) {
+                return undefined;
+              }
+              return detail;
+            });
+            this.customerDetails = _.compact(customerDetails2);
+            this.customerLoading = false;
+            this.$message({
+              type: "success",
+              message: "Success"
+            });
+            loading.close();
+          } catch (err) {
+            this.customerLoading = false;
+          }
+        });
       } catch (err) {
         console.log(err);
         this.customerLoading = false;
@@ -197,6 +201,38 @@ export default {
           message: err.message
         });
       }
+    },
+    GetSummaries(param) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "Total";
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]));
+        if (index === 3 || index === 4) {
+          sums[index] =
+            "$ " +
+            values
+              .reduce((prev, curr) => {
+                const value = Number(curr);
+                if (!isNaN(value)) {
+                  return prev + curr;
+                } else {
+                  return prev;
+                }
+              }, 0)
+              .toLocaleString(undefined, {
+                style: "currency",
+                currency: "USD"
+              });
+        } else {
+          sums[index] = "";
+        }
+      });
+
+      return sums;
     },
     handleExport(data) {
       jsonexport(data, (err, csv) => {

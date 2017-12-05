@@ -12,8 +12,18 @@ import {
   BillByStatus
 } from './controller'
 
+import {
+  Authorize
+} from '../../../Auth/Authorization'
+
+
 export const router = express.Router()
-router.post('/billByCustomer', async(req, res) => {
+router.post('/billByCustomer', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 3,
+    role: 1
+  }])
+}, async(req, res) => {
   try {
     console.log(req.body)
     const result = await BillByCustomer(req.body)
@@ -27,7 +37,12 @@ router.post('/billByCustomer', async(req, res) => {
   }
 })
 
-router.post('/billByRevenueType', async(req, res) => {
+router.post('/billByRevenueType', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 3,
+    role: 1
+  }])
+}, async(req, res) => {
   try {
     console.log(req.body)
     const result = await BillByRevenueType(req.body)
@@ -41,7 +56,12 @@ router.post('/billByRevenueType', async(req, res) => {
   }
 })
 
-router.post('/billByType', async(req, res) => {
+router.post('/billByType', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 3,
+    role: 1
+  }])
+}, async(req, res) => {
   try {
     console.log(req.body)
     const result = await BillByType(req.body)
@@ -55,7 +75,12 @@ router.post('/billByType', async(req, res) => {
   }
 })
 
-router.post('/billByStatus', async(req, res) => {
+router.post('/billByStatus', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 3,
+    role: 1
+  }])
+}, async(req, res) => {
   try {
     console.log(req.body)
     const result = await BillByStatus(req.body)
@@ -68,7 +93,12 @@ router.post('/billByStatus', async(req, res) => {
     })
   }
 })
-router.post('/billByProduct', async(req, res) => {
+router.post('/billByProduct', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 3,
+    role: 1
+  }])
+}, async(req, res) => {
   try {
     console.log(req.body)
     const result = await BillByProduct(req.body)
@@ -82,7 +112,12 @@ router.post('/billByProduct', async(req, res) => {
   }
 })
 
-router.post('/billByCountry', async(req, res) => {
+router.post('/billByCountry', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 3,
+    role: 1
+  }])
+}, async(req, res) => {
   try {
     console.log(req.body)
     const result = await BillByCountry(req.body)
@@ -95,7 +130,12 @@ router.post('/billByCountry', async(req, res) => {
     })
   }
 })
-router.post('/billByCurrency', async(req, res) => {
+router.post('/billByCurrency', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 3,
+    role: 1
+  }])
+}, async(req, res) => {
   try {
     console.log(req.body)
     const result = await BillByCurrency(req.body)
@@ -108,7 +148,12 @@ router.post('/billByCurrency', async(req, res) => {
     })
   }
 })
-router.post('/billByClass', async(req, res) => {
+router.post('/billByClass', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 3,
+    role: 1
+  }])
+}, async(req, res) => {
   try {
     console.log(req.body)
     const result = await BillByClass(req.body)
@@ -122,7 +167,12 @@ router.post('/billByClass', async(req, res) => {
   }
 })
 
-router.post('/billByBillingMonth', async(req, res) => {
+router.post('/billByBillingMonth', (req, res, next) => {
+  Authorize(req, res, next, [{
+    type: 3,
+    role: 1
+  }])
+}, async(req, res) => {
   try {
     console.log(req.body)
     const result = await BillByBillingMonth(req.body)

@@ -102,6 +102,10 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item prop="startDate" label='Start Date'>
+            <el-date-picker v-model="formValue.startDate" type="date" placeholder="Start Date">
+            </el-date-picker>
+          </el-form-item>
           <el-form-item prop="revenueType" label='Revenue Type'>
             <el-select v-model="formValue.revenueType" placeholder="Revenue Type">
               <el-option v-for="item in revenueEnum" :key="item.id" :label="item.data" :value="item.id">
@@ -128,9 +132,33 @@
 <script>
 import axios from "Axios";
 import { urlBase } from "../settings.js";
+import UserMixin from "../functions/Authentication";
+import EnumApi from "../functions/EnumApi";
 export default {
   name: "add",
   data() {
+    var checkInvoiceDate = (rule, value, callback) => {
+      try {
+        const month = value.getMonth();
+        const year = value.getFullYear();
+        if (month < new Date().getMonth() || year < new Date().getFullYear()) {
+          if (
+            !this.Authorize({
+              type: 1,
+              role: 5
+            })
+          ) {
+            callback(new Error("Cant Input Past Invoice"));
+          } else {
+            callback();
+          }
+        } else {
+          callback();
+        }
+      } catch (err) {
+        callback(new Error("Cant Be Empty"));
+      }
+    };
     return {
       classEnum: [],
       productEnum: [],
@@ -167,7 +195,8 @@ export default {
         invoiceAmountUsd: "",
         annualIncreaseBool: true,
         subscription: "",
-        country: ""
+        country: "",
+        startDate: ""
       },
       rules: {
         country: [
@@ -182,7 +211,7 @@ export default {
           {
             required: true,
             message: "Please input Company Name",
-            trigger: "blur"
+            trigger: "change"
           }
         ],
         product: [
@@ -217,10 +246,9 @@ export default {
         ],
         invoiceDate: [
           {
-            required: true,
-            type: "date",
-            message: "Please select an invoice date",
-            trigger: "change"
+            validator: checkInvoiceDate,
+            trigger: "blur",
+            required: true
           }
         ],
         type: [
@@ -244,6 +272,14 @@ export default {
             required: true,
             type: "date",
             message: "Please select a billingMonth",
+            trigger: "change"
+          }
+        ],
+        startDate: [
+          {
+            required: true,
+            type: "date",
+            message: "Please select a start date",
             trigger: "change"
           }
         ],
@@ -301,12 +337,13 @@ export default {
       }
     };
   },
+  mixins: [UserMixin],
+
   methods: {
     //TODO: auto fill fx rate, and usd fields
     loadData() {
-      const url = urlBase + "/api/v1/enum/all";
       this.getCustomerName();
-      axios.get(url).then(res => {
+      EnumApi.GetAllEnum(this.auth.token).then(res => {
         this.classEnum = res.data.Class;
         this.productEnum = res.data.product;
         this.typeEnum = res.data.type;
@@ -327,6 +364,7 @@ export default {
       const result = JSON.parse(this.$cookie.get("blankForm"));
       this.formValue = result;
       this.$refs[formName].resetFields();
+      this.$refs[formName].validateField("subscription");
       this.$cookie.delete("form");
     },
     querySearchCustName(queryString, cb) {
@@ -356,13 +394,22 @@ export default {
             ...formValues
           };
           try {
-            const data = axios.post(url, message).then(i => {
-              this.$message({
-                type: "success",
-                message: "Success!"
+            const data = this.Post(url, message)
+              .then(i => {
+                console.log("succes", i);
+                this.$message({
+                  type: "success",
+                  message: "Success!"
+                });
+                // this.resetForm(formName);
+              })
+              .catch(err => {
+                console.log("error", err);
+                this.$message({
+                  message: err.response.data.message,
+                  type: "error"
+                });
               });
-              // this.resetForm(formName);
-            });
           } catch (err) {
             this.$message({
               message: err.message,
@@ -430,7 +477,7 @@ export default {
     },
     getCustomerName() {
       const url = urlBase + "/api/v1/reports/getCustomerName";
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.customerNameList = res.data;
       });
     }

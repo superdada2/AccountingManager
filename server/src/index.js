@@ -8,10 +8,15 @@ import expressPartils from 'express-partials';
 import {
   sequelize
 } from './models'
-import mysql from 'mysql'
+import mysql from 'mysql';
+import passport from 'passport';
+import strategy from './Auth'
+import initialize from './initialize'
+
 
 
 const app = express();
+passport.use("auth", strategy)
 app.set("view engine", 'ejs')
   .set('views', __dirname + '/views')
   .use(expressPartils())
@@ -21,6 +26,7 @@ app.set("view engine", 'ejs')
   .use(bodyParser.urlencoded({
     extended: true
   }))
+  .use(passport.initialize())
   .use('/', router)
 
 export default app;
@@ -30,7 +36,9 @@ const port = process.env.PORT || 3030;
 
 sequelize.sync()
   .then(() => {
+    initialize()
     server.listen(port, function () {
+
       console.log('Server listening at port %d', port);
     })
   })

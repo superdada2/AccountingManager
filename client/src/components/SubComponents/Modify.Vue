@@ -107,6 +107,10 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item prop="startDate" label='Start Date'>
+            <el-date-picker v-model="formValue.startDate" type="date" placeholder="Start Date">
+            </el-date-picker>
+          </el-form-item>
           <el-form-item prop="comments" label='Comments'>
             <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" placeholder="Comments" v-model="formValue.comments">
             </el-input>
@@ -132,6 +136,8 @@
 <script>
 import axios from "Axios";
 import { urlBase } from "../../settings.js";
+import UserMixin from "../../functions/Authentication";
+import EnumApi from "../../functions/EnumApi";
 export default {
   name: "modify",
   props: ["invoiceData", "close", "refresh"],
@@ -171,7 +177,8 @@ export default {
         invoiceAmountUsd: "",
         annualIncreaseBool: true,
         subscription: "",
-        country: ""
+        country: "",
+        startDate: ""
       },
       rules: {
         country: [
@@ -187,6 +194,14 @@ export default {
             required: true,
             message: "Please input Company Name",
             trigger: "blur"
+          }
+        ],
+        startDate: [
+          {
+            required: true,
+            type: "date",
+            message: "Please select a start date",
+            trigger: "change"
           }
         ],
         product: [
@@ -306,6 +321,7 @@ export default {
       }
     };
   },
+  mixins: [UserMixin],
   methods: {
     ToDetail() {
       this.$router.push({
@@ -314,9 +330,7 @@ export default {
       });
     },
     loadData() {
-      const url = urlBase + "/api/v1/enum/all";
-
-      axios.get(url).then(res => {
+      EnumApi.GetAllEnum(this.auth.token).then(res => {
         this.classEnum = res.data.Class;
         this.productEnum = res.data.product;
         this.typeEnum = res.data.type;
@@ -338,21 +352,26 @@ export default {
     },
 
     deleteInvoice() {
+      if (!this.Authorize({ type: 1, role: 3 })) {
+        this.$message({
+          type: "error",
+          message: "No Permission!"
+        });
+        return;
+      }
       const url = urlBase + "/api/v1/reports/deleteInvoice";
       this.$confirm("Are you sure to Delete this Invoice?").then(_ => {
         try {
-          axios
-            .post(url, {
-              id: this.invoiceData.id
-            })
-            .then(res => {
-              this.$message({
-                type: "success",
-                message: "Success!"
-              });
-              this.refresh();
-              this.close();
+          this.Post(url, {
+            id: this.invoiceData.id
+          }).then(res => {
+            this.$message({
+              type: "success",
+              message: "Success!"
             });
+            this.refresh();
+            this.close();
+          });
         } catch (err) {
           this.$message({
             type: "error",
@@ -366,13 +385,38 @@ export default {
       this.close();
     },
     async submit(formName) {
+      if (!this.Authorize({ type: 1, role: 2 })) {
+        this.$message({
+          type: "error",
+          message: "No Permission!"
+        });
+        return;
+      }
+      const date = new Date(this.invoiceData.invoiceDate);
+      if (
+        date.getMonth() < new Date().getMonth() ||
+        date.getFullYear() < new Date().getFullYear()
+      ) {
+        this.$message({ type: "error", message: "Cannot modify past invoice" });
+        return false;
+      }
+
+      const date2 = new Date(this.formValue.invoiceDate);
+      if (
+        date2.getMonth() < new Date().getMonth() ||
+        date2.getFullYear() < new Date().getFullYear()
+      ) {
+        this.$message({ type: "error", message: "Cannot modify past invoice" });
+        return false;
+      }
+
       const url = urlBase + "/api/v1/reports/modifyInvoice";
       this.$refs[formName].validate(valid => {
         if (valid) {
           const formValues = this.formValue;
           const message = { id: this.invoiceData.id, ...formValues };
           try {
-            const data = axios.post(url, message).then(i => {
+            const data = this.Post(url, message).then(i => {
               this.$message({
                 type: "success",
                 message: "Success!"
@@ -413,7 +457,7 @@ export default {
         "http://apilayer.net/api/live?access_key=a85aa84971650d26dc61c8932a548e31&currencies=AUD";
       const currency = this.currencyEnum.find(i => i.id == value).data;
       url = url.replace("AUD", currency);
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.formValue.fxRate = 1 / res.data.quotes["USD" + currency];
 
         if (this.formValue.invoiceAmount != "") {

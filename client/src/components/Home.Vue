@@ -1,5 +1,6 @@
 <template>
   <div class='Default'>
+    <Help :message="helpMessage"/>
     <el-row>
       <div class='header'>
         <h1>Home</h1>
@@ -84,6 +85,8 @@ import chartjs from "chart.piecelabel.js";
 import { urlBase } from "../settings.js";
 import SaveButton from "./SubComponents/SaveButton";
 import colors from "../assets/colors";
+import UserMixin from "../functions/Authentication";
+import Help from "./SubComponents/Help";
 
 export default {
   name: "home",
@@ -93,8 +96,10 @@ export default {
     DoughnutChart,
     BarChart,
     GeoChart,
-    SaveButton
+    SaveButton,
+    Help
   },
+  mixins: [UserMixin],
   data() {
     return {
       form1: {
@@ -102,6 +107,7 @@ export default {
         startMonth: new Date(2015, 1),
         endMonth: new Date()
       },
+      helpMessage: "Left click on chart label to filter",
       startDate: "",
       endDate: "",
       billByCountry: [],
@@ -302,224 +308,208 @@ export default {
     },
     GetBillByCustomer() {
       const url = urlBase + "/api/v1/graph/billByCustomer";
-      axios
-        .post(url, {
-          ...this.form1
-        })
-        .then(res => {
-          const result = res.data;
-          var temp = {};
-          temp["labels"] = result.map(i => i.customerName);
-          const countData = {
-            label: "Number of Invoice By Customer",
-            data: result.map(i => i.numberInvoice),
-            backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length),
-            yAxisID: "2",
-            borderWidth: 1
-          };
-          const sumData = {
-            label: "Total Invoice By Customer",
-            data: result.map(i => i.totalInvoice),
-            backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length),
-            yAxisID: "1",
-            borderWidth: 1
-          };
-          temp["datasets"] = [sumData, countData];
+      this.Post(url, {
+        ...this.form1
+      }).then(res => {
+        const result = res.data;
+        var temp = {};
+        temp["labels"] = result.map(i => i.customerName);
+        const countData = {
+          label: "Number of Invoice By Customer",
+          data: result.map(i => i.numberInvoice),
+          backgroundColor: colors.backgroundColor.slice(0, result.length),
+          borderColor: colors.borderColor.slice(0, result.length),
+          yAxisID: "2",
+          borderWidth: 1
+        };
+        const sumData = {
+          label: "Total Invoice By Customer",
+          data: result.map(i => i.totalInvoice),
+          backgroundColor: colors.backgroundColor.slice(0, result.length),
+          borderColor: colors.borderColor.slice(0, result.length),
+          yAxisID: "1",
+          borderWidth: 1
+        };
+        temp["datasets"] = [sumData, countData];
 
-          this.billByCustomer = temp;
-        });
+        this.billByCustomer = temp;
+      });
     },
     GetBillByCurrency() {
       const url = urlBase + "/api/v1/graph/billByCurrency";
 
-      axios
-        .post(url, {
-          ...this.form1
-        })
-        .then(res => {
-          const result = res.data;
-          var temp = {};
-          temp["labels"] = result.map(i => i.currency_enum.data);
-          const countData = {
-            label: "Number of Invoice By Customer",
-            data: result.map(i => i.numberInvoice),
-            borderWidth: 1,
-            backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length)
-          };
-          const sumData = {
-            label: "Total Invoice By Customer",
-            data: result.map(i => i.totalInvoice),
-            borderWidth: 1,
-            backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length)
-          };
-          temp["datasets"] = [sumData, countData];
+      this.Post(url, {
+        ...this.form1
+      }).then(res => {
+        const result = res.data;
+        var temp = {};
+        temp["labels"] = result.map(i => i.currency_enum.data);
+        const countData = {
+          label: "Number of Invoice By Customer",
+          data: result.map(i => i.numberInvoice),
+          borderWidth: 1,
+          backgroundColor: colors.backgroundColor.slice(0, result.length),
+          borderColor: colors.borderColor.slice(0, result.length)
+        };
+        const sumData = {
+          label: "Total Invoice By Customer",
+          data: result.map(i => i.totalInvoice),
+          borderWidth: 1,
+          backgroundColor: colors.backgroundColor.slice(0, result.length),
+          borderColor: colors.borderColor.slice(0, result.length)
+        };
+        temp["datasets"] = [sumData, countData];
 
-          this.billByCurrency = temp;
-        });
+        this.billByCurrency = temp;
+      });
     },
     GetBillByCountry() {
       const url = urlBase + "/api/v1/graph/billByCountry";
 
-      axios
-        .post(url, {
-          ...this.form1
-        })
-        .then(res => {
-          this.billByCountry = res.data;
-        });
+      this.Post(url, {
+        ...this.form1
+      }).then(res => {
+        this.billByCountry = res.data;
+      });
     },
     GetBillByStatus() {
       const url = urlBase + "/api/v1/graph/billByStatus";
 
-      axios
-        .post(url, {
-          ...this.form1
-        })
-        .then(res => {
-          const result = res.data;
-          var temp = {};
-          temp["labels"] = result.map(i => i.status_enum.data);
-          const countData = {
-            label: "Number of Invoice By Status",
-            data: result.map(i => i.numberInvoice),
-            borderWidth: 1,
-            backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length)
-          };
-          const sumData = {
-            label: "Total Invoice By Status",
-            data: result.map(i => i.totalInvoice),
-            borderWidth: 1,
-            backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length)
-          };
-          temp["datasets"] = [sumData, countData];
+      this.Post(url, {
+        ...this.form1
+      }).then(res => {
+        const result = res.data;
+        var temp = {};
+        temp["labels"] = result.map(i => i.status_enum.data);
+        const countData = {
+          label: "Number of Invoice By Status",
+          data: result.map(i => i.numberInvoice),
+          borderWidth: 1,
+          backgroundColor: colors.backgroundColor.slice(0, result.length),
+          borderColor: colors.borderColor.slice(0, result.length)
+        };
+        const sumData = {
+          label: "Total Invoice By Status",
+          data: result.map(i => i.totalInvoice),
+          borderWidth: 1,
+          backgroundColor: colors.backgroundColor.slice(0, result.length),
+          borderColor: colors.borderColor.slice(0, result.length)
+        };
+        temp["datasets"] = [sumData, countData];
 
-          this.billByStatus = temp;
-        });
+        this.billByStatus = temp;
+      });
     },
     GetBillByType() {
       const url = urlBase + "/api/v1/graph/billByType";
 
-      axios
-        .post(url, {
-          ...this.form1
-        })
-        .then(res => {
-          const result = res.data;
-          var temp = {};
-          temp["labels"] = result.map(i => i.type_enum.data);
-          const countData = {
-            label: "Number of Invoice By Type",
-            data: result.map(i => i.numberInvoice),
-            borderWidth: 1,
-            backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length)
-          };
-          const sumData = {
-            label: "Total Invoice By Type",
-            data: result.map(i => i.totalInvoice),
-            borderWidth: 1,
-            backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length)
-          };
-          temp["datasets"] = [sumData, countData];
+      this.Post(url, {
+        ...this.form1
+      }).then(res => {
+        const result = res.data;
+        var temp = {};
+        temp["labels"] = result.map(i => i.type_enum.data);
+        const countData = {
+          label: "Number of Invoice By Type",
+          data: result.map(i => i.numberInvoice),
+          borderWidth: 1,
+          backgroundColor: colors.backgroundColor.slice(0, result.length),
+          borderColor: colors.borderColor.slice(0, result.length)
+        };
+        const sumData = {
+          label: "Total Invoice By Type",
+          data: result.map(i => i.totalInvoice),
+          borderWidth: 1,
+          backgroundColor: colors.backgroundColor.slice(0, result.length),
+          borderColor: colors.borderColor.slice(0, result.length)
+        };
+        temp["datasets"] = [sumData, countData];
 
-          this.billByType = temp;
-        });
+        this.billByType = temp;
+      });
     },
     GetBillByRevenueType() {
       const url = urlBase + "/api/v1/graph/billByRevenueType";
 
-      axios
-        .post(url, {
-          ...this.form1
-        })
-        .then(res => {
-          const result = res.data;
-          var temp = {};
-          temp["labels"] = result.map(i => i.revenue_type_enum.data);
-          const countData = {
-            label: "Number of Invoice By Revenue Type",
-            data: result.map(i => i.numberInvoice),
-            borderWidth: 1,
-            backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length)
-          };
-          const sumData = {
-            label: "Total Invoice By Revenue Type",
-            data: result.map(i => i.totalInvoice),
-            borderWidth: 1,
-            backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length)
-          };
-          temp["datasets"] = [sumData, countData];
+      this.Post(url, {
+        ...this.form1
+      }).then(res => {
+        const result = res.data;
+        var temp = {};
+        temp["labels"] = result.map(i => i.revenue_type_enum.data);
+        const countData = {
+          label: "Number of Invoice By Revenue Type",
+          data: result.map(i => i.numberInvoice),
+          borderWidth: 1,
+          backgroundColor: colors.backgroundColor.slice(0, result.length),
+          borderColor: colors.borderColor.slice(0, result.length)
+        };
+        const sumData = {
+          label: "Total Invoice By Revenue Type",
+          data: result.map(i => i.totalInvoice),
+          borderWidth: 1,
+          backgroundColor: colors.backgroundColor.slice(0, result.length),
+          borderColor: colors.borderColor.slice(0, result.length)
+        };
+        temp["datasets"] = [sumData, countData];
 
-          this.billByRevenueType = temp;
-        });
+        this.billByRevenueType = temp;
+      });
     },
     GetBillByClass() {
       const url = urlBase + "/api/v1/graph/billByClass";
 
-      axios
-        .post(url, {
-          ...this.form1
-        })
-        .then(res => {
-          const result = res.data;
-          var temp = {};
-          temp["labels"] = result.map(i => i.class_enum.data);
-          const countData = {
-            label: "Number of Invoice By Customer",
-            data: result.map(i => i.numberInvoice),
-            borderWidth: 1,
-            backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length)
-          };
-          const sumData = {
-            label: "Total Invoice By Customer",
-            data: result.map(i => i.totalInvoice),
-            borderWidth: 1,
-            backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length)
-          };
-          temp["datasets"] = [sumData, countData];
+      this.Post(url, {
+        ...this.form1
+      }).then(res => {
+        const result = res.data;
+        var temp = {};
+        temp["labels"] = result.map(i => i.class_enum.data);
+        const countData = {
+          label: "Number of Invoice By Customer",
+          data: result.map(i => i.numberInvoice),
+          borderWidth: 1,
+          backgroundColor: colors.backgroundColor.slice(0, result.length),
+          borderColor: colors.borderColor.slice(0, result.length)
+        };
+        const sumData = {
+          label: "Total Invoice By Customer",
+          data: result.map(i => i.totalInvoice),
+          borderWidth: 1,
+          backgroundColor: colors.backgroundColor.slice(0, result.length),
+          borderColor: colors.borderColor.slice(0, result.length)
+        };
+        temp["datasets"] = [sumData, countData];
 
-          this.billByClass = temp;
-        });
+        this.billByClass = temp;
+      });
     },
     GetBillByProduct() {
       const url = urlBase + "/api/v1/graph/billByProduct";
-      axios
-        .post(url, {
-          ...this.form1
-        })
-        .then(res => {
-          const result = res.data;
-          var temp = {};
-          temp["labels"] = result.map(i => i.product_enum.data);
-          const countData = {
-            label: "Number of Invoice By Customer",
-            data: result.map(i => i.numberInvoice),
-            borderWidth: 1,
-            backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length)
-          };
-          const sumData = {
-            label: "Total Invoice By Customer",
-            data: result.map(i => i.totalInvoice),
-            borderWidth: 1,
-            backgroundColor: colors.backgroundColor.slice(0, result.length),
-            borderColor: colors.borderColor.slice(0, result.length)
-          };
-          temp["datasets"] = [sumData, countData];
+      this.Post(url, {
+        ...this.form1
+      }).then(res => {
+        const result = res.data;
+        var temp = {};
+        temp["labels"] = result.map(i => i.product_enum.data);
+        const countData = {
+          label: "Number of Invoice By Customer",
+          data: result.map(i => i.numberInvoice),
+          borderWidth: 1,
+          backgroundColor: colors.backgroundColor.slice(0, result.length),
+          borderColor: colors.borderColor.slice(0, result.length)
+        };
+        const sumData = {
+          label: "Total Invoice By Customer",
+          data: result.map(i => i.totalInvoice),
+          borderWidth: 1,
+          backgroundColor: colors.backgroundColor.slice(0, result.length),
+          borderColor: colors.borderColor.slice(0, result.length)
+        };
+        temp["datasets"] = [sumData, countData];
 
-          this.billByProduct = temp;
-        });
+        this.billByProduct = temp;
+      });
     },
     GetBillByBillingMonth() {
       const url = urlBase + "/api/v1/graph/billByBillingMonth";
@@ -529,7 +519,7 @@ export default {
           startM: new Date(this.startDate),
           endM: new Date(this.endDate)
         };
-      axios.post(url, payload).then(res => {
+      this.Post(url, payload).then(res => {
         const sumSet = res.data.map(i => {
           return {
             x: new Date(i.billingMonth + "1"),

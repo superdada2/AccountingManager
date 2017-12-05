@@ -3,24 +3,9 @@
     <div class='header'>
       <h1>Details </h1>
     </div>
+    <Help :message="helpMessage"/>
     <el-dialog title='Comments and Description' :visible.sync='commentDialogVisibility' width='50%'>
-      <el-row>
-        <el-col :span='11' class='input'>
-          <span> Comments </span>
-          <el-input type='textarea' :rows='5' v-model='currentComment'>
-          </el-input>
-
-        </el-col>
-        <el-col :span='11' class='input'>
-          <span> Description </span>
-          <el-input type='textarea' :rows='5' v-model='currentDescription'>
-          </el-input>
-        </el-col>
-      </el-row>
-      <span slot='footer' class='dialog-footer'>
-        <el-button @click='commentDialogVisibility = false'>Cancel</el-button>
-        <el-button type='primary' @click='updateComments'>Save</el-button>
-      </span>
+      <ModifyComments :close="()=>{this.commentDialogVisibility = false}" :currentRow="currentRow" :refresh="refreshData"/>
     </el-dialog>
     <el-dialog title='Modify' :visible.sync='modifyDialogVisibility' width='80%'>
       <Modify :invoice-data='currentRow' :close='closeModify' :refresh='refreshData' />
@@ -72,7 +57,7 @@
           </el-table-column>
           <el-table-column align="right" prop='invoiceAmountUSD' label='amountUSD'>
             <template slot-scope="scope">
-              {{(scope.row.invoiceAmountUSD * 1).toLocaleString()}}
+              {{(scope.row.invoiceAmountUSD * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
             </template>
           </el-table-column>
         </el-table>
@@ -80,7 +65,7 @@
     </el-row>
     <el-row>
 
-      <el-col :span='6' v-for='detail in details' :key='detail.id'>
+      <el-col :span='8' v-for='detail in details' :key='detail.id'>
         <el-table :data='detail' @header-click="()=>handleHeaderClick(detail)" max-height="780" style='width: 95%; height:780px;'
           class='detailTable' border>
           <el-table-column :label="detail.customerName + ': '+ detail.product + ': '+detail.invoiceNumber">
@@ -90,12 +75,12 @@
             </el-table-column>
             <el-table-column align="right" prop='income' label='Income'>
               <template slot-scope="scope">
-                {{(scope.row.income * 1).toLocaleString()}}
+                {{(scope.row.income * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
               </template>
             </el-table-column>
             <el-table-column align="right" prop='deferred' label='Deferred'>
               <template slot-scope="scope">
-                {{(scope.row.deferred * 1).toLocaleString()}}
+                {{(scope.row.deferred * 1).toLocaleString(undefined, {style:'currency', currency:'USD'})}}
               </template>
             </el-table-column>
           </el-table-column>
@@ -110,21 +95,25 @@ import axios from "Axios";
 import _ from "lodash";
 import Modify from "./SubComponents/Modify";
 import ModifyDetail from "./SubComponents/ModifyDetail";
-
+import ModifyComments from "./SubComponents/ModifyComments";
 import * as jsonexport from "jsonexport/dist";
 import { urlBase } from "../settings.js";
+import UserMixin from "../functions/Authentication";
+import Help from "./SubComponents/Help";
 export default {
   name: "details",
   components: {
     Modify,
-    ModifyDetail
+    ModifyDetail,
+    ModifyComments,
+    Help
   },
   props: ["test"],
   data() {
     return {
+      helpMessage:
+        "Left Click on a invoice view/modify comments and description. Right click to view invoice in detail. Left click on a deferred/income table to  modify",
       currentRow: {},
-      currentDescription: "",
-      currentComment: "",
       commentDialogVisibility: false,
       modifyDialogVisibility: false,
       invoices: [],
@@ -146,6 +135,7 @@ export default {
       detailVisibility: false
     };
   },
+  mixins: [UserMixin],
   methods: {
     handleHeaderClick(data) {
       this.currentDetail["data"] = data;
@@ -189,10 +179,10 @@ export default {
         spinner: "el-icon-loading"
       });
       try {
-        axios.post(url, param).then(res => {
+        this.Post(url, param).then(res => {
           this.invoices = res.data;
         });
-        axios.post(url2, param).then(res => {
+        this.Post(url2, param).then(res => {
           var details = [];
           res.data.forEach(entry => {
             var temp = this.merge(entry.incomes, entry.deferred_balances);
@@ -327,39 +317,23 @@ export default {
     },
     getCustomerName() {
       const url = urlBase + "/api/v1/reports/getCustomerName";
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.customerNameList = res.data;
       });
     },
     getInvoiceNumber() {
       const url = urlBase + "/api/v1/reports/getInvoiceNumber";
-      axios.get(url).then(res => {
+      this.Get(url).then(res => {
         this.invoiceNumberList = res.data;
       });
     },
     openComments(row) {
-      this.commentDialogVisibility = true;
-      this.currentDescription = row.description;
-      this.currentComment = row.comments;
       this.currentRow = row;
-    },
-    updateComments() {
-      if (
-        this.currentComment != this.currentRow.comments ||
-        this.currentDescription != this.currentRow.description
-      ) {
-        const url = urlBase + "/api/v1/reports/updateDescription";
-
-        axios.post(url, {
-          description: this.currentDescription,
-          comments: this.currentComment,
-          id: this.currentRow.id
-        });
-      }
-      this.commentDialogVisibility = false;
-      this.refreshData();
+      this.commentDialogVisibility = true;
     },
     modifyInvoice(row, e) {
+      const date = new Date(row.invoiceDate);
+
       this.modifyDialogVisibility = true;
       this.currentRow = row;
       e.stopPropagation();

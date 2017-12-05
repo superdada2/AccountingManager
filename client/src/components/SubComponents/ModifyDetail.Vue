@@ -39,6 +39,7 @@
 <script>
 import axios from "Axios";
 import { urlBase } from "../../settings.js";
+import UserMixin from "../../functions/Authentication";
 export default {
   name: "ModifyDetail",
   props: ["detailData", "close", "refresh"],
@@ -47,6 +48,7 @@ export default {
       detail: {}
     };
   },
+  mixins: [UserMixin],
   methods: {
     AddTop() {
       var temp = [...this.detail.data];
@@ -75,21 +77,26 @@ export default {
       this.detail.data = temp;
     },
     Save() {
+      if (!this.Authorize({ type: 1, role: 2 })) {
+        this.$message({
+          type: "error",
+          message: "No Permission!"
+        });
+        return;
+      }
       const url = urlBase + "/api/v1/reports/modifyIncomeDeferred";
       try {
-        axios
-          .post(url, {
-            invoiceId: this.detail.id,
-            data: this.detail.data
-          })
-          .then(res => {
-            this.$message({
-              type: "success",
-              message: "Saved!"
-            });
-            this.refresh();
-            this.close();
+        this.Post(url, {
+          invoiceId: this.detail.id,
+          data: this.detail.data
+        }).then(res => {
+          this.$message({
+            type: "success",
+            message: "Saved!"
           });
+          this.refresh();
+          this.close();
+        });
       } catch (err) {
         this.$message({
           type: "error",

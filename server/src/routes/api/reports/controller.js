@@ -11,7 +11,10 @@ import {
   type_enum,
   month_enum,
   sequelize,
+  change_history,
 } from '../../../models';
+
+import logger from '../../../logger'
 import Promise from 'bluebird';
 
 const companies = [
@@ -38,6 +41,68 @@ export async function loadData() {
   }
 }
 
+export function trackChanges({
+  username = "",
+  operationType = "",
+  invoiceId = "",
+  operation = "",
+  original = {}
+}) {
+  return new Promise(async(res, rej) => {
+    var payload = {}
+    switch (operationType) {
+      case 'Create':
+        payload = {
+          user: username,
+          invoiceId: invoiceId,
+          operationType: operationType,
+          operation: operation
+        }
+      case 'Modify':
+        payload = {
+          user: username,
+          invoiceId: invoiceId,
+          operationType: operationType,
+          operation: JSON.stringify({
+            original: original,
+            updated: operation
+          })
+        }
+      case 'Delete':
+        payload = {
+          user: username,
+          invoiceId: invoiceId,
+          operationType: operationType,
+          operation: JSON.stringify(original)
+        }
+      case 'ModifyIncomeDeferred':
+        const originalIncome = await income.find({
+          invoiceId: invoiceId
+        })
+        const originalDeferred = await deferred_balance.find({
+          invoiceId: invoiceId
+        })
+        payload = {
+          user: username,
+          invoiceId: invoiceId,
+          operationType: operationType,
+          operation: JSON.stringify({
+            original: original,
+            updated: operation
+          })
+        }
+    }
+    change_history.create(payload)
+      .then(result => {
+        res(result)
+      })
+      .catch(err => {
+        rej(err)
+        console.log(err)
+      })
+  })
+}
+
 export function loadData2() {
   return new Promise(async(res, rej) => {
     var month = random(1, 12)
@@ -54,7 +119,7 @@ export function loadData2() {
       companyName: companies[random(1, companies.length)],
       invoiceNumber: random(1, 90000),
       invoiceDate: randomDate(new Date(2014, 1), new Date(2017, 11)),
-      invoiceAmount: random(0, 100000),
+      invoiceAmount: random(0, 10000),
       billMonth: billingMonth,
       recognitionStrMonth: recStartMonth,
       lengthRec: random(10, 12),
@@ -66,18 +131,37 @@ export function loadData2() {
       invoiceAmountUsd: random(1, 50000),
       annualIncreaseBool: true,
       subscription: random(1, 2),
-      country: random(1, 40)
+      country: random(1, 243)
     })
     res(result)
+  })
+}
+
+export function GetHistory({
+  where
+}) {
+  return change_history.findAll({
+    where,
+    limit: 100,
+    order: [
+      ['timestamp', 'DESC']
+    ]
   })
 }
 
 export function ModifyIncomeDeferred({
   data = [],
   invoiceId = 0
-}) {
+}, username = "") {
   return new Promise(async(res, rej) => {
     try {
+      var originalIncome = await income.find({
+        invoiceId: invoiceId
+      })
+      var originalDeferred = await deferred_balance.find({
+        invoiceId: invoiceId
+      })
+
       await DeleteIncome({
         id: invoiceId
       })
@@ -102,6 +186,16 @@ export function ModifyIncomeDeferred({
             year: value.year,
             month: value.month
           })
+        }
+      })
+      await trackChanges({
+        username: username,
+        operationType: 'ModifyIncomeDeferred',
+        invoiceId: invoiceId,
+        operation: data,
+        original: {
+          income: originalIncome,
+          deferred: originalDeferred
         }
       })
       res("success")
@@ -131,11 +225,15 @@ export function DeleteDeferred({
   })
 }
 
-export function DeleteInvoice({
+export async function DeleteInvoice({
   id = 0
-}) {
-  return new Promise((res, rej) => {
+}, username = "") {
+  return new Promise(async(res, rej) => {
     try {
+      var original = await invoice.find({
+        id: id
+      })
+
       income.destroy({
         where: {
           invoiceId: id
@@ -150,8 +248,16 @@ export function DeleteInvoice({
             where: {
               id: id
             }
-          }).then(() => {
+          }).then(async() => {
+            await trackChanges({
+              username: username,
+              invoiceId: id,
+              operationType: 'Delete',
+              operation: null,
+              original: original
+            })
             res("success")
+
           })
         })
       })
@@ -162,13 +268,26 @@ export function DeleteInvoice({
 
 }
 
-export function ModifyInvoice(body) {
+export function ModifyInvoice(body, username) {
   return new Promise(async(res, rej) => {
     try {
-      await DeleteInvoice({
+      var original = await invoice.find({
         id: body.id
       })
-      await CreateInvoice(body)
+      await DeleteDeferred({
+        id: body.id
+      })
+      await DeleteIncome({
+        id: body.id
+      })
+      await UpdateInvoice(body)
+      await trackChanges({
+        username: username,
+        invoiceId: body.id,
+        operationType: 'Modify',
+        operation: body,
+        original: original
+      })
       res("success")
     } catch (err) {
       rej(err)
@@ -176,7 +295,8 @@ export function ModifyInvoice(body) {
   })
 }
 
-export function CreateInvoice({
+export function UpdateInvoice({
+  id = 0,
   type = 1,
   Class = 1,
   product = 1,
@@ -204,7 +324,7 @@ export function CreateInvoice({
 }) {
   return new Promise(async(res, rej) => {
     try {
-      var response = await invoice.create({
+      var response = await invoice.update({
         type: type,
         customerName: companyName,
         comments: comments,
@@ -229,13 +349,16 @@ export function CreateInvoice({
         invoiceAmountUSD: invoiceAmountUsd,
         MonthlyRecoginitionAmountUSD: monthlyRec,
         country: country
+      }, {
+        where: {
+          id: id
+        }
       })
 
       Date.prototype.addDays = function (days) {
         this.setDate(this.getDate() + parseInt(days));
         return this;
       };
-      const id = response.dataValues.id
       const billingStart = new Date(billMonth).addDays(2)
       const supportStart = new Date(recognitionStrMonth).addDays(2)
 
@@ -266,6 +389,138 @@ export function CreateInvoice({
     }
   })
 
+}
+
+export function CreateInvoice({
+  type = 1,
+  Class = 1,
+  product = 1,
+  currency = 1,
+  status = 1,
+  revenueType = 1,
+  companyName = 1,
+  invoiceNumber = 1,
+  invoiceAmount = 1,
+  invoiceDate = new Date(1990, 1, 1),
+  billMonth = 1,
+  description = 'N/A',
+  recognitionStrMonth = new Date(1990, 1, 1),
+  lengthRec = 12,
+  fxRate = 1,
+  monthlyRec = 1,
+  dateLastIncrease = new Date(1990, 1, 1),
+  increasePerc = 1,
+  cancelationDate = new Date(1990, 1, 1),
+  comments = 'N/A',
+  invoiceAmountUsd = 1,
+  annualIncreaseBool = true,
+  subscription = 1,
+  country = 1,
+  startDate = new Date(1990, 1, 1)
+}, username = "", checkDuplicate = true) {
+  return new Promise(async(res, rej) => {
+    try {
+      //check for duplicates
+      const exist = await invoice.findOne({
+        where: {
+          invoiceNumber: invoiceNumber,
+          product: product
+        }
+      })
+      if (exist && checkDuplicate) {
+        rej(new Error("Duplicate Entry"))
+        return
+      }
+      var currentId = 0
+      invoice.create({
+        type: type,
+        customerName: companyName,
+        comments: comments,
+        description: description,
+        product: product,
+        class: Class,
+        invoiceNumber: invoiceNumber,
+        invoiceAmount: invoiceAmount,
+        invoiceDate: invoiceDate,
+        subscriptionType: subscription,
+        billingMonth: billMonth,
+        status: status,
+        recognitionStartMonth: recognitionStrMonth,
+        lengthMonth: lengthRec,
+        currency: currency,
+        FXRate: fxRate,
+        revenueType: revenueType,
+        cancellationDate: null,
+        annualIncreaseEli: annualIncreaseBool,
+        dateLastIncrease: dateLastIncrease,
+        increasePercentage: increasePerc,
+        invoiceAmountUSD: invoiceAmountUsd,
+        MonthlyRecoginitionAmountUSD: monthlyRec,
+        country: country,
+        startDate: startDate
+      }).then(async response => {
+        Date.prototype.addDays = function (days) {
+          this.setDate(this.getDate() + parseInt(days));
+          return this;
+        };
+        const id = response.id
+        currentId = id
+        const billingStart = new Date(billMonth).addDays(2)
+        const supportStart = new Date(recognitionStrMonth).addDays(2)
+
+
+        const incomeList = createIncomeList({
+          id: id,
+          startMonth: supportStart.getMonth() + 1,
+          year: supportStart.getFullYear(),
+          length: lengthRec,
+          invoiceAmount: invoiceAmountUsd
+        })
+        await income.bulkCreate(incomeList)
+        const defferedList = createDeferred({
+          id: id,
+          startMonth: billingStart.getMonth() + 1,
+          year: billingStart.getFullYear(),
+          length: lengthRec,
+          invoiceAmount: invoiceAmountUsd
+        })
+        await deferred_balance.bulkCreate(defferedList)
+        trackChanges({
+          username: username,
+          invoiceId: id,
+          operationType: 'Create',
+          operation: response,
+          original: null
+        })
+      }).catch(async err => {
+        logger.error({
+          err: err,
+          invoiceNumber: invoiceNumber
+        })
+        await income.destroy({
+          where: {
+            invoiceId: currentId
+          }
+        })
+        await deferred_balance.destroy({
+          where: {
+            invoiceId: currentId
+          }
+        })
+        await invoice.destroy({
+          where: {
+            id: currentId
+          }
+        })
+      })
+
+      console.log('success')
+      res('Success')
+    } catch (err) {
+      console.log(err.message)
+      rej(err.message)
+    }
+  })
 }
 
 function createIncomeList({
@@ -338,14 +593,33 @@ export function UpdateInvoiceDescription({
   id = 0,
   description = "",
   comments = ""
-}) {
-  return invoice.update({
-    description: description,
-    comments: comments
-  }, {
-    where: {
+}, username = "") {
+  return new Promise(async(res, req) => {
+    const original = await invoice.find({
       id: id
-    }
+    })
+    invoice.update({
+      description: description,
+      comments: comments
+    }, {
+      where: {
+        id: id
+      }
+    }).then(result => {
+      trackChanges({
+        username: username,
+        invoiceId: id,
+        operationType: 'Modify',
+        operation: {
+          description: description,
+          comments: comments
+        },
+        original: original
+      })
+      res('success')
+    }).catch(err => {
+      rej(err)
+    })
   })
 }
 
@@ -414,6 +688,13 @@ export function getDistinctInvoiceNumber() {
 
 export function getDistinctCustomerName() {
   const query = "SELECT DISTINCT customerName AS value FROM invoice"
+  return sequelize.query(query, {
+    type: sequelize.QueryTypes.SELECT
+  })
+}
+
+export function getDistinctUserName() {
+  const query = "SELECT DISTINCT username AS value FROM user"
   return sequelize.query(query, {
     type: sequelize.QueryTypes.SELECT
   })

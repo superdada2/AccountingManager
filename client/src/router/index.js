@@ -6,10 +6,14 @@ import Invoice from '@/components/Invoice'
 import Report from '@/components/Report'
 import Setting from '@/components/Setting'
 import Details from '@/components/Details'
+import Register from '@/components/Register'
+import Historys from '@/components/History'
+import Welcome from '@/components/Welcome'
+import ForceReset from '@/components/ForceReset'
 
 Vue.use(Router)
 
-export default new Router({
+var router = new Router({
   routes: [{
     path: '/home',
     name: 'Home',
@@ -44,7 +48,28 @@ export default new Router({
     path: '/details',
     name: 'Details',
     component: Details
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
+  },
+  {
+    path: '/history',
+    name: 'History',
+    component: Historys
+  },
+  {
+    path: '/welcome',
+    name: 'Welcome',
+    component: Welcome
+  },
+  {
+    path: '/resetPassword',
+    name: 'ResetPassword',
+    component: ForceReset
   }
-
   ]
 })
+
+export default router

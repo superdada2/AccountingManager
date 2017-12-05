@@ -1,0 +1,140 @@
+{
+  "name": "logger",
+  "hostname": "DESKTOP-7QBFFNL",
+  "pid": 13240,
+  "level": 50,
+  "err": {
+    "name": "SequelizeDatabaseError",
+    "parent": {
+      "code": "ER_BAD_FIELD_ERROR",
+      "errno": 1054,
+      "sqlState": "42S22",
+      "sqlMessage": "Unknown column 'NaN' in 'field list'",
+      "sql": "INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"
+    },
+    "original": {
+      "code": "ER_BAD_FIELD_ERROR",
+      "errno": 1054,
+      "sqlState": "42S22",
+      "sqlMessage": "Unknown column 'NaN' in 'field list'",
+      "sql": "INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"
+    },
+    "sql": "INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"
+  },
+  "invoiceNumber": 1,
+  "msg": "Unknown column 'NaN' in 'field list'",
+  "time": "2017-12-05T17:11:21.751Z",
+  "v": 0
+} {
+  "name": "logger",
+  "hostname": "DESKTOP-7QBFFNL",
+  "pid": 13240,
+  "level": 50,
+  "err": {
+    "name": "SequelizeDatabaseError",
+    "parent": {
+      "code": "ER_BAD_FIELD_ERROR",
+      "errno": 1054,
+      "sqlState": "42S22",
+      "sqlMessage": "Unknown column 'NaN' in 'field list'",
+      "sql": "INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"
+    },
+    "original": {
+      "code": "ER_BAD_FIELD_ERROR",
+      "errno": 1054,
+      "sqlState": "42S22",
+      "sqlMessage": "Unknown column 'NaN' in 'field list'",
+      "sql": "INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"
+    },
+    "sql": "INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"
+  },
+  "invoiceNumber": 1,
+  "msg": "Unknown column 'NaN' in 'field list'",
+  "time": "2017-12-05T17:11:21.855Z",
+  "v": 0
+} {
+  "name": "logger",
+  "hostname": "DESKTOP-7QBFFNL",
+  "pid": 13240,
+  "level": 50,
+  "err": {
+    "name": "SequelizeDatabaseError",
+    "parent": {
+      "code": "ER_BAD_FIELD_ERROR",
+      "errno": 1054,
+      "sqlState": "42S22",
+      "sqlMessage": "Unknown column 'NaN' in 'field list'",
+      "sql": "INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"
+    },
+    "original": {
+      "code": "ER_BAD_FIELD_ERROR",
+      "errno": 1054,
+      "sqlState": "42S22",
+      "sqlMessage": "Unknown column 'NaN' in 'field list'",
+      "sql": "INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"
+    },
+    "sql": "INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"
+  },
+  "invoiceNumber": 1,
+  "msg": "Unknown column 'NaN' in 'field list'",
+  "time": "2017-12-05T17:11:21.879Z",
+  "v": 0
+} {
+  "name": "logger",
+  "hostname": "DESKTOP-7QBFFNL",
+  "pid": 13240,
+  "level": 50,
+  "err": {
+    "name": "SequelizeDatabaseError",
+    "parent": {
+      "code": "ER_BAD_FIELD_ERROR",
+      "errno": 1054,
+      "sqlState": "42S22",
+      "sqlMessage": "Unknown column 'NaN' in 'field list'",
+      "sql": "INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"
+    },
+    "original": {
+      "code": "ER_BAD_FIELD_ERROR",
+      "errno": 1054,
+      "sqlState": "42S22",
+      "sqlMessage": "Unknown column 'NaN' in 'field list'",
+      "sql": "INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"
+    },
+    "sql": "INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"
+  },
+  "invoiceNumber": 1,
+  "msg": "Unknown column 'NaN' in 'field list'",
+  "time": "2017-12-05T17:11:21.884Z",
+  "v": 0
+} {
+  "name": "logger",
+  "hostname": "DESKTOP-7QBFFNL",
+  "pid": 13240,
+  "level": 50,
+  "err": {
+    "name": "SequelizeDatabaseError",
+    "parent": {
+      "code": "ER_BAD_FIELD_ERROR",
+      "errno": 1054,
+      "sqlState": "42S22",
+      "sqlMessage": "Unknown column 'NaN' in 'field list'",
+      "sql": "INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"
+    },
+    "original": {
+      "code": "ER_BAD_FIELD_ERROR",
+      "errno": 1054,
+      "sqlState": "42S22",
+      "sqlMessage": "Unknown column 'NaN' in 'field list'",
+      "sql": "INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"
+    },
+    "sql": "INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"
+  },
+  "invoiceNumber": 1,
+  "msg": "Unknown column 'NaN' in 'field list'",
+  "time": "2017-12-05T17:11:21.888Z",
+  "v": 0
+}{"name":"logger","hostname":"DESKTOP-7QBFFNL","pid":4876,"level":50,"err":{"name":"SequelizeDatabaseError","parent":{"code":"ER_BAD_FIELD_ERROR","errno":1054,"sqlState":"42S22","sqlMessage":"Unknown column 'NaN' in 'field list'","sql":"INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"},"original":{"code":"ER_BAD_FIELD_ERROR","errno":1054,"sqlState":"42S22","sqlMessage":"Unknown column 'NaN' in 'field list'","sql":"INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"},"sql":"INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"},"invoiceNumber":1,"msg":"Unknown column 'NaN' in 'field list'","time":"2017-12-05T19:02:54.565Z","v":0}
+{"name":"logger","hostname":"DESKTOP-7QBFFNL","pid":4876,"level":50,"err":{"name":"SequelizeDatabaseError","parent":{"code":"ER_BAD_FIELD_ERROR","errno":1054,"sqlState":"42S22","sqlMessage":"Unknown column 'NaN' in 'field list'","sql":"INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"},"original":{"code":"ER_BAD_FIELD_ERROR","errno":1054,"sqlState":"42S22","sqlMessage":"Unknown column 'NaN' in 'field list'","sql":"INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"},"sql":"INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"},"invoiceNumber":1,"msg":"Unknown column 'NaN' in 'field list'","time":"2017-12-05T19:02:54.697Z","v":0}
+{"name":"logger","hostname":"DESKTOP-7QBFFNL","pid":4876,"level":50,"err":{"name":"SequelizeDatabaseError","parent":{"code":"ER_BAD_FIELD_ERROR","errno":1054,"sqlState":"42S22","sqlMessage":"Unknown column 'NaN' in 'field list'","sql":"INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"},"original":{"code":"ER_BAD_FIELD_ERROR","errno":1054,"sqlState":"42S22","sqlMessage":"Unknown column 'NaN' in 'field list'","sql":"INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"},"sql":"INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"},"invoiceNumber":1,"msg":"Unknown column 'NaN' in 'field list'","time":"2017-12-05T19:02:54.716Z","v":0}
+{"name":"logger","hostname":"DESKTOP-7QBFFNL","pid":4876,"level":50,"err":{"name":"SequelizeDatabaseError","parent":{"code":"ER_BAD_FIELD_ERROR","errno":1054,"sqlState":"42S22","sqlMessage":"Unknown column 'NaN' in 'field list'","sql":"INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"},"original":{"code":"ER_BAD_FIELD_ERROR","errno":1054,"sqlState":"42S22","sqlMessage":"Unknown column 'NaN' in 'field list'","sql":"INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"},"sql":"INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"},"invoiceNumber":1,"msg":"Unknown column 'NaN' in 'field list'","time":"2017-12-05T19:02:54.718Z","v":0}
+{"name":"logger","hostname":"DESKTOP-7QBFFNL","pid":4876,"level":50,"err":{"name":"SequelizeDatabaseError","parent":{"code":"ER_BAD_FIELD_ERROR","errno":1054,"sqlState":"42S22","sqlMessage":"Unknown column 'NaN' in 'field list'","sql":"INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"},"original":{"code":"ER_BAD_FIELD_ERROR","errno":1054,"sqlState":"42S22","sqlMessage":"Unknown column 'NaN' in 'field list'","sql":"INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"},"sql":"INSERT INTO `invoice` (`id`,`type`,`customerName`,`comments`,`country`,`description`,`product`,`class`,`invoiceNumber`,`invoiceAmount`,`invoiceDate`,`startDate`,`subscriptionType`,`billingMonth`,`status`,`recognitionStartMonth`,`lengthMonth`,`currency`,`FXRate`,`revenueType`,`cancellationDate`,`annualIncreaseEli`,`dateLastIncrease`,`increasePercentage`,`invoiceAmountUSD`,`MonthlyRecoginitionAmountUSD`) VALUES (DEFAULT,1,1,'N/A',1,'N/A',1,1,1,NaN,'1990-02-01','Invalid date',1,'Invalid date',1,'Invalid date',12,1,1,1,NULL,true,'1990-02-01',1,NaN,1);"},"invoiceNumber":1,"msg":"Unknown column 'NaN' in 'field list'","time":"2017-12-05T19:02:54.723Z","v":0}
