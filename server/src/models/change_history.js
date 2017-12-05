@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    timestamp: {
+    timestampss: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: sequelize.fn('NOW')
