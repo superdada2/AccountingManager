@@ -1,6 +1,6 @@
 export const config = {
   db:{
-    database:"viziya_invoices3",
+    database:"viziya_invoices",
     user:"viziya",
     pass:'viziya2',
     options:{
