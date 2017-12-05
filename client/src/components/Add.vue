@@ -404,9 +404,9 @@ export default {
                 // this.resetForm(formName);
               })
               .catch(err => {
-                console.log("error", err.message);
+                console.log("error", err);
                 this.$message({
-                  message: err.message,
+                  message: err.response.data.message,
                   type: "error"
                 });
               });

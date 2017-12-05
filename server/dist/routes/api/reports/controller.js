@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.DeleteInvoice = exports.loadData = undefined;
 
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -230,7 +234,7 @@ function trackChanges(_ref2) {
                 user: username,
                 invoiceId: invoiceId,
                 operationType: operationType,
-                operation: JSON.stringify({
+                operation: (0, _stringify2.default)({
                   original: original,
                   updated: operation
                 })
@@ -241,7 +245,7 @@ function trackChanges(_ref2) {
                 user: username,
                 invoiceId: invoiceId,
                 operationType: operationType,
-                operation: JSON.stringify(original)
+                operation: (0, _stringify2.default)(original)
               };
 
             case 7:
@@ -264,7 +268,7 @@ function trackChanges(_ref2) {
                 user: username,
                 invoiceId: invoiceId,
                 operationType: operationType,
-                operation: JSON.stringify({
+                operation: (0, _stringify2.default)({
                   original: original,
                   updated: operation
                 })

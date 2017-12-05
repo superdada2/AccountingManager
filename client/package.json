@@ -2,7 +2,7 @@
   "name": "client",
   "version": "1.0.0",
   "description": "Accounting Frontend",
-  "author": "Yingda.Wang <Yingda.Wang@YINGDA-WANG-10>",
+  "author": "Yingda.Wang",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",

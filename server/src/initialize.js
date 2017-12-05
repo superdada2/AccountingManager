@@ -17,13 +17,12 @@ import {
   CreateInvoice
 } from '../src/routes/api/reports/controller'
 const initialData = {
-  type: ['N/A', 'Invoice', 'General Journal', 'Credit Memo', ],
-  class: ['N/A', 'E-Bus', 'Informatica', 'JDE', 'Max', 'Mobile', 'SAP', ],
-  subscription: ['N/A', 'New', 'Renewel', ],
-  status: ['N/A', 'Open, Implemented', 'Cancelled', ],
-  currency: ['N/A', 'USD', 'CAD, AUD', 'GBP', ],
-  revenue_type: ['N/A', 'SAAS', 'Annaual Support', 'License', 'Consulting', 'Hosted', 'Others'],
-  product: ['N/A'],
+  type: ['Invoice', 'General Journal', 'Credit Memo', ],
+  class: ['E-Bus', 'Informatica', 'JDE', 'Max', 'Mobile', 'SAP', ],
+  subscription: ['New', 'Renewel', ],
+  status: ['Open, Implemented', 'Cancelled', ],
+  currency: ['USD', 'CAD', 'AUD', 'GBP', 'AED', 'CDN', 'ZAR', 'EUR'],
+  revenue_type: ['SAAS', 'Annaual Support', 'License', 'Consulting', 'Hosted', 'Others'],
   month: [{
     id: 1,
     data: 'Jan'
@@ -63,6 +62,10 @@ const initialData = {
   }]
 }
 
+Date.prototype.addDays = function (days) {
+  this.setDate(this.getDate() + parseInt(days));
+  return this;
+};
 
 export async function loadInvoice(req, res) {
   const path = 'C:/Users/admin/test.csv'
@@ -103,54 +106,48 @@ export async function loadInvoice(req, res) {
         return i.data.toLowerCase() == jsonObj.type.toLowerCase()
       }) ? type.find(i => {
         return i.data.toLowerCase() == jsonObj.type.toLowerCase()
-      }).id : type.find(i => {
-        return i.data == 'N/A'
-      }).id
+      }).id : 1
 
       tempObj.Class = Class.find(i => {
         return i.data.toLowerCase() == jsonObj.Class.toLowerCase()
       }) ? Class.find(i => {
         return i.data.toLowerCase() == jsonObj.Class.toLowerCase()
-      }).id : Class.find(i => {
-        return i.data == 'N/A'
-      }).id
+      }).id : 1
 
       tempObj.currency = currency.find(i => {
         return i.data.toLowerCase() == jsonObj.currency.toLowerCase()
       }) ? currency.find(i => {
         return i.data.toLowerCase() == jsonObj.currency.toLowerCase()
-      }).id : currency.find(i => {
-        return i.data == 'N/A'
-      }).id
+      }).id : 1
 
       tempObj.country = country.find(i => {
         return i.data.toLowerCase() == jsonObj.country.toLowerCase()
       }) ? country.find(i => {
         return i.data.toLowerCase() == jsonObj.country.toLowerCase()
-      }).id : country.find(i => {
-        return i.data == 'N/A'
-      }).id
+      }).id : 1
       tempObj.subscription = subscription.find(i => {
         return i.data.toLowerCase() == jsonObj.subscription.toLowerCase()
       }) ? subscription.find(i => {
         return i.data.toLowerCase() == jsonObj.subscription.toLowerCase()
-      }).id : subscription.find(i => {
-        return i.data == 'N/A'
-      }).id
-      tempObj.recognitionStrMonth = new Date(new Date(tempObj.startDate).getFullYear(), tempObj.recognitionStrMonth - 1)
+      }).id : 1
+      tempObj.recognitionStrMonth = new Date(tempObj.recognitionStrMonth > tempObj.billMonth ? new Date(tempObj.startDate).getFullYear() : new Date(tempObj.startDate).getFullYear() + 1, tempObj.recognitionStrMonth - 1)
       tempObj.billMonth = new Date(new Date(tempObj.startDate).getFullYear(), tempObj.billMonth - 1)
-      tempObj.invoiceDate = new Date(tempObj.invoiceDate)
       tempObj.invoiceAmount = parseFloat(tempObj.invoiceAmount.replace(/,/g, ''))
       tempObj.invoiceAmountUsd = parseFloat(tempObj.invoiceAmountUsd.replace(/,/g, ''))
+
+      tempObj.startDate = new Date(tempObj.startDate).addDays(2)
+      // tempObj.invoiceDate = new Date(tempObj.invoiceDate).setDate(new Date(tempObj.invoiceDate).getDate() + 1)
       for (var k in tempObj) {
         if (tempObj[k] == '') {
           delete tempObj[k]
+
         }
       }
-
-      console.log(tempObj)
-
-      await CreateInvoice(tempObj, 'admin', false)
+      try {
+        await CreateInvoice(tempObj, 'admin', false)
+      } catch (err) {
+        console.log(err)
+      }
     })
     .on('done', (error) => {
       console.log(error);
@@ -159,15 +156,39 @@ export async function loadInvoice(req, res) {
 }
 
 
-export default function initialize() {
-  console.log(class_enum)
+export default async function initialize() {
+  await class_enum.create({
+    data: 'N/A'
+  })
+  await currency_enum.create({
+    data: 'N/A'
+  })
+  await revenue_type_enum.create({
+    data: 'N/A'
+  })
+  await status_enum.create({
+    data: 'N/A'
+  })
+  await subscription_enum.create({
+    data: 'N/A'
+  })
+  await type_enum.create({
+    data: 'N/A'
+  })
+  await product_enum.create({
+    data: 'N/A'
+  })
+  await country_enum.create({
+    data: 'N/A',
+    code: 'N/A'
+  })
   loadIfNotExist(class_enum, initialData.class)
   loadIfNotExist(currency_enum, initialData.currency)
   loadIfNotExist(revenue_type_enum, initialData.revenue_type)
   loadIfNotExist(status_enum, initialData.status)
   loadIfNotExist(subscription_enum, initialData.subscription)
   loadIfNotExist(type_enum, initialData.type)
-  loadIfNotExist(product_enum, initialData.product)
+  //loadIfNotExist(product_enum, initialData.product)
   month_enum.bulkCreate(initialData.month)
   loadCountry()
 
@@ -1191,10 +1212,6 @@ export function loadCountry() {
     {
       name: 'Zimbabwe',
       code: 'ZW'
-    },
-    {
-      name: 'N/A',
-      code: 'N/A'
     }
   ]
   country.forEach(i => {
