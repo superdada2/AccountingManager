@@ -18,7 +18,7 @@ var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
 var loadInvoice = exports.loadInvoice = function () {
-  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(req, res) {
+  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/ _regenerator2.default.mark(function _callee2(req, res) {
     var _this = this;
 
     var path, Class, country, currency, product, revenue_type, status, subscription, type;
@@ -87,7 +87,7 @@ var loadInvoice = exports.loadInvoice = function () {
             type = _context2.sent;
 
             (0, _csvtojson2.default)().fromFile(path).on('json', function () {
-              var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(jsonObj) {
+              var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/ _regenerator2.default.mark(function _callee(jsonObj) {
                 var tempObj, k;
                 return _regenerator2.default.wrap(function _callee$(_context) {
                   while (1) {
@@ -147,7 +147,7 @@ var loadInvoice = exports.loadInvoice = function () {
                           }
                         }
 
-                        console.log(tempObj);
+                        // console.log(tempObj);
 
                         _context.next = 15;
                         return (0, _controller.CreateInvoice)(tempObj, 'admin', false);
@@ -182,7 +182,7 @@ var loadInvoice = exports.loadInvoice = function () {
 }();
 
 var loadAdmin = function () {
-  var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
+  var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/ _regenerator2.default.mark(function _callee3() {
     var exist, hashed;
     return _regenerator2.default.wrap(function _callee3$(_context3) {
       while (1) {
@@ -233,7 +233,7 @@ var loadAdmin = function () {
 }();
 
 var loadIfNotExist = function () {
-  var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5(sequelizeInterface, data) {
+  var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/ _regenerator2.default.mark(function _callee5(sequelizeInterface, data) {
     var _this2 = this;
 
     return _regenerator2.default.wrap(function _callee5$(_context5) {
@@ -241,7 +241,7 @@ var loadIfNotExist = function () {
         switch (_context5.prev = _context5.next) {
           case 0:
             data.forEach(function () {
-              var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(i) {
+              var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/ _regenerator2.default.mark(function _callee4(i) {
                 var exist;
                 return _regenerator2.default.wrap(function _callee4$(_context4) {
                   while (1) {
@@ -304,7 +304,11 @@ var _csvtojson2 = _interopRequireDefault(_csvtojson);
 
 var _controller = require('../src/routes/api/reports/controller');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : {
+    default: obj
+  };
+}
 
 var initialData = {
   type: ['N/A', 'Invoice', 'General Journal', 'Credit Memo'],
@@ -354,7 +358,7 @@ var initialData = {
 };
 
 function initialize() {
-  console.log(_models.class_enum);
+  // console.log(_models.class_enum);
   loadIfNotExist(_models.class_enum, initialData.class);
   loadIfNotExist(_models.currency_enum, initialData.currency);
   loadIfNotExist(_models.revenue_type_enum, initialData.revenue_type);

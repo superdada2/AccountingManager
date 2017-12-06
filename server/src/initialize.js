@@ -13,9 +13,9 @@ import {
 } from './models'
 import bcrypt from 'bcrypt'
 import csv from 'csvtojson'
-import {
-  CreateInvoice
-} from '../src/routes/api/reports/controller'
+// import {
+//   CreateInvoice
+// } from '../src/routes/api/reports/controller'
 const initialData = {
   type: ['Invoice', 'General Journal', 'Credit Memo', ],
   class: ['E-Bus', 'Informatica', 'JDE', 'Max', 'Mobile', 'SAP', ],
@@ -144,7 +144,7 @@ export async function loadInvoice(req, res) {
         }
       }
       try {
-        await CreateInvoice(tempObj, 'admin', false)
+        // await CreateInvoice(tempObj, 'admin', false)
       } catch (err) {
         console.log(err)
       }

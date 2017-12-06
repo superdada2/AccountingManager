@@ -23,7 +23,9 @@ var _config2 = _interopRequireDefault(_config);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var sequelize = exports.sequelize = new _sequelize2.default(_config2.default.db.database, _config2.default.db.user, _config2.default.db.pass, _config2.default.db.options);
+var sequelize = exports.sequelize = new _sequelize2.default(_config2.default.db.database, _config2.default.db.user,
+// config.db.pass,
+'', _config2.default.db.options);
 
 var db = {};
 

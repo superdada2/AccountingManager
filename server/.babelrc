@@ -10,8 +10,7 @@
     "syntax-async-functions", [
       "transform-runtime",
       {
-        "polyfill": true,
-        "regenerator": true
+        "polyfill": false
       }
     ]
   ]

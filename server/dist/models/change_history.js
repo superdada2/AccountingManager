@@ -13,7 +13,7 @@ module.exports = function (sequelize, DataTypes) {
     timestamp: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('now')
+      defaultValue: sequelize.fn('NOW')
     },
     user: {
       type: DataTypes.STRING,
