@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { GoogleCharts } from "google-charts";
+import {GoogleCharts} from "google-charts";
 export default {
   name: "GeoChart",
   components: {},
