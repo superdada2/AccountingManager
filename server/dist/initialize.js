@@ -18,7 +18,7 @@ var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
 var loadInvoice = exports.loadInvoice = function () {
-  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/ _regenerator2.default.mark(function _callee2(req, res) {
+  var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(req, res) {
     var _this = this;
 
     var path, Class, country, currency, product, revenue_type, status, subscription, type;
@@ -87,7 +87,7 @@ var loadInvoice = exports.loadInvoice = function () {
             type = _context2.sent;
 
             (0, _csvtojson2.default)().fromFile(path).on('json', function () {
-              var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/ _regenerator2.default.mark(function _callee(jsonObj) {
+              var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(jsonObj) {
                 var tempObj, k;
                 return _regenerator2.default.wrap(function _callee$(_context) {
                   while (1) {
@@ -102,57 +102,49 @@ var loadInvoice = exports.loadInvoice = function () {
                           return i.data.toLowerCase() == jsonObj.type.toLowerCase();
                         }) ? type.find(function (i) {
                           return i.data.toLowerCase() == jsonObj.type.toLowerCase();
-                        }).id : type.find(function (i) {
-                          return i.data == 'N/A';
-                        }).id;
+                        }).id : 1;
 
                         tempObj.Class = Class.find(function (i) {
                           return i.data.toLowerCase() == jsonObj.Class.toLowerCase();
                         }) ? Class.find(function (i) {
                           return i.data.toLowerCase() == jsonObj.Class.toLowerCase();
-                        }).id : Class.find(function (i) {
-                          return i.data == 'N/A';
-                        }).id;
+                        }).id : 1;
 
                         tempObj.currency = currency.find(function (i) {
                           return i.data.toLowerCase() == jsonObj.currency.toLowerCase();
                         }) ? currency.find(function (i) {
                           return i.data.toLowerCase() == jsonObj.currency.toLowerCase();
-                        }).id : currency.find(function (i) {
-                          return i.data == 'N/A';
-                        }).id;
+                        }).id : 1;
 
                         tempObj.country = country.find(function (i) {
                           return i.data.toLowerCase() == jsonObj.country.toLowerCase();
                         }) ? country.find(function (i) {
                           return i.data.toLowerCase() == jsonObj.country.toLowerCase();
-                        }).id : country.find(function (i) {
-                          return i.data == 'N/A';
-                        }).id;
+                        }).id : 1;
                         tempObj.subscription = subscription.find(function (i) {
                           return i.data.toLowerCase() == jsonObj.subscription.toLowerCase();
                         }) ? subscription.find(function (i) {
                           return i.data.toLowerCase() == jsonObj.subscription.toLowerCase();
-                        }).id : subscription.find(function (i) {
-                          return i.data == 'N/A';
-                        }).id;
-                        tempObj.recognitionStrMonth = new Date(new Date(tempObj.startDate).getFullYear(), tempObj.recognitionStrMonth - 1);
+                        }).id : 1;
+                        tempObj.recognitionStrMonth = new Date(tempObj.recognitionStrMonth > tempObj.billMonth ? new Date(tempObj.startDate).getFullYear() : new Date(tempObj.startDate).getFullYear() + 1, tempObj.recognitionStrMonth - 1);
                         tempObj.billMonth = new Date(new Date(tempObj.startDate).getFullYear(), tempObj.billMonth - 1);
-                        tempObj.invoiceDate = new Date(tempObj.invoiceDate);
                         tempObj.invoiceAmount = parseFloat(tempObj.invoiceAmount.replace(/,/g, ''));
                         tempObj.invoiceAmountUsd = parseFloat(tempObj.invoiceAmountUsd.replace(/,/g, ''));
+
+                        tempObj.startDate = new Date(tempObj.startDate).addDays(2);
+                        // tempObj.invoiceDate = new Date(tempObj.invoiceDate).setDate(new Date(tempObj.invoiceDate).getDate() + 1)
                         for (k in tempObj) {
                           if (tempObj[k] == '') {
                             delete tempObj[k];
                           }
                         }
+                        try {
+                          // await CreateInvoice(tempObj, 'admin', false)
+                        } catch (err) {
+                          console.log(err);
+                        }
 
-                        // console.log(tempObj);
-
-                        _context.next = 15;
-                        return (0, _controller.CreateInvoice)(tempObj, 'admin', false);
-
-                      case 15:
+                      case 13:
                       case 'end':
                         return _context.stop();
                     }
@@ -182,13 +174,13 @@ var loadInvoice = exports.loadInvoice = function () {
 }();
 
 var loadAdmin = function () {
-  var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/ _regenerator2.default.mark(function _callee3() {
+  var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4() {
     var exist, hashed;
-    return _regenerator2.default.wrap(function _callee3$(_context3) {
+    return _regenerator2.default.wrap(function _callee4$(_context4) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
-            _context3.next = 2;
+            _context4.next = 2;
             return _models.user.findOne({
               where: {
                 username: 'admin'
@@ -196,7 +188,7 @@ var loadAdmin = function () {
             });
 
           case 2:
-            exist = _context3.sent;
+            exist = _context4.sent;
 
             if (!exist) {
               hashed = _bcrypt2.default.hashSync('admin', 10);
@@ -221,33 +213,33 @@ var loadAdmin = function () {
 
           case 4:
           case 'end':
-            return _context3.stop();
+            return _context4.stop();
         }
       }
-    }, _callee3, this);
+    }, _callee4, this);
   }));
 
   return function loadAdmin() {
-    return _ref3.apply(this, arguments);
+    return _ref4.apply(this, arguments);
   };
 }();
 
 var loadIfNotExist = function () {
-  var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/ _regenerator2.default.mark(function _callee5(sequelizeInterface, data) {
+  var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(sequelizeInterface, data) {
     var _this2 = this;
 
-    return _regenerator2.default.wrap(function _callee5$(_context5) {
+    return _regenerator2.default.wrap(function _callee6$(_context6) {
       while (1) {
-        switch (_context5.prev = _context5.next) {
+        switch (_context6.prev = _context6.next) {
           case 0:
             data.forEach(function () {
-              var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/ _regenerator2.default.mark(function _callee4(i) {
+              var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5(i) {
                 var exist;
-                return _regenerator2.default.wrap(function _callee4$(_context4) {
+                return _regenerator2.default.wrap(function _callee5$(_context5) {
                   while (1) {
-                    switch (_context4.prev = _context4.next) {
+                    switch (_context5.prev = _context5.next) {
                       case 0:
-                        _context4.next = 2;
+                        _context5.next = 2;
                         return sequelizeInterface.findOne({
                           where: {
                             data: i
@@ -255,7 +247,7 @@ var loadIfNotExist = function () {
                         });
 
                       case 2:
-                        exist = _context4.sent;
+                        exist = _context5.sent;
 
                         if (!exist) {
                           sequelizeInterface.create({
@@ -265,31 +257,30 @@ var loadIfNotExist = function () {
 
                       case 4:
                       case 'end':
-                        return _context4.stop();
+                        return _context5.stop();
                     }
                   }
-                }, _callee4, _this2);
+                }, _callee5, _this2);
               }));
 
               return function (_x6) {
-                return _ref5.apply(this, arguments);
+                return _ref6.apply(this, arguments);
               };
             }());
 
           case 1:
           case 'end':
-            return _context5.stop();
+            return _context6.stop();
         }
       }
-    }, _callee5, this);
+    }, _callee6, this);
   }));
 
   return function loadIfNotExist(_x4, _x5) {
-    return _ref4.apply(this, arguments);
+    return _ref5.apply(this, arguments);
   };
 }();
 
-exports.default = initialize;
 exports.loadCountry = loadCountry;
 
 var _models = require('./models');
@@ -302,22 +293,18 @@ var _csvtojson = require('csvtojson');
 
 var _csvtojson2 = _interopRequireDefault(_csvtojson);
 
-var _controller = require('../src/routes/api/reports/controller');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : {
-    default: obj
-  };
-}
-
+// import {
+//   CreateInvoice
+// } from '../src/routes/api/reports/controller'
 var initialData = {
-  type: ['N/A', 'Invoice', 'General Journal', 'Credit Memo'],
-  class: ['N/A', 'E-Bus', 'Informatica', 'JDE', 'Max', 'Mobile', 'SAP'],
-  subscription: ['N/A', 'New', 'Renewel'],
-  status: ['N/A', 'Open, Implemented', 'Cancelled'],
-  currency: ['N/A', 'USD', 'CAD, AUD', 'GBP'],
-  revenue_type: ['N/A', 'SAAS', 'Annaual Support', 'License', 'Consulting', 'Hosted', 'Others'],
-  product: ['N/A'],
+  type: ['Invoice', 'General Journal', 'Credit Memo'],
+  class: ['E-Bus', 'Informatica', 'JDE', 'Max', 'Mobile', 'SAP'],
+  subscription: ['New', 'Renewel'],
+  status: ['Open, Implemented', 'Cancelled'],
+  currency: ['USD', 'CAD', 'AUD', 'GBP', 'AED', 'CDN', 'ZAR', 'EUR'],
+  revenue_type: ['SAAS', 'Annaual Support', 'License', 'Consulting', 'Hosted', 'Others'],
   month: [{
     id: 1,
     data: 'Jan'
@@ -357,20 +344,92 @@ var initialData = {
   }]
 };
 
-function initialize() {
-  // console.log(_models.class_enum);
-  loadIfNotExist(_models.class_enum, initialData.class);
-  loadIfNotExist(_models.currency_enum, initialData.currency);
-  loadIfNotExist(_models.revenue_type_enum, initialData.revenue_type);
-  loadIfNotExist(_models.status_enum, initialData.status);
-  loadIfNotExist(_models.subscription_enum, initialData.subscription);
-  loadIfNotExist(_models.type_enum, initialData.type);
-  loadIfNotExist(_models.product_enum, initialData.product);
-  _models.month_enum.bulkCreate(initialData.month);
-  loadCountry();
+Date.prototype.addDays = function (days) {
+  this.setDate(this.getDate() + parseInt(days));
+  return this;
+};
 
-  loadAdmin();
-}
+exports.default = function () {
+  var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
+    return _regenerator2.default.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.next = 2;
+            return _models.class_enum.create({
+              data: 'N/A'
+            });
+
+          case 2:
+            _context3.next = 4;
+            return _models.currency_enum.create({
+              data: 'N/A'
+            });
+
+          case 4:
+            _context3.next = 6;
+            return _models.revenue_type_enum.create({
+              data: 'N/A'
+            });
+
+          case 6:
+            _context3.next = 8;
+            return _models.status_enum.create({
+              data: 'N/A'
+            });
+
+          case 8:
+            _context3.next = 10;
+            return _models.subscription_enum.create({
+              data: 'N/A'
+            });
+
+          case 10:
+            _context3.next = 12;
+            return _models.type_enum.create({
+              data: 'N/A'
+            });
+
+          case 12:
+            _context3.next = 14;
+            return _models.product_enum.create({
+              data: 'N/A'
+            });
+
+          case 14:
+            _context3.next = 16;
+            return _models.country_enum.create({
+              data: 'N/A',
+              code: 'N/A'
+            });
+
+          case 16:
+            loadIfNotExist(_models.class_enum, initialData.class);
+            loadIfNotExist(_models.currency_enum, initialData.currency);
+            loadIfNotExist(_models.revenue_type_enum, initialData.revenue_type);
+            loadIfNotExist(_models.status_enum, initialData.status);
+            loadIfNotExist(_models.subscription_enum, initialData.subscription);
+            loadIfNotExist(_models.type_enum, initialData.type);
+            //loadIfNotExist(product_enum, initialData.product)
+            _models.month_enum.bulkCreate(initialData.month);
+            loadCountry();
+
+            loadAdmin();
+
+          case 25:
+          case 'end':
+            return _context3.stop();
+        }
+      }
+    }, _callee3, this);
+  }));
+
+  function initialize() {
+    return _ref3.apply(this, arguments);
+  }
+
+  return initialize;
+}();
 
 function loadCountry() {
   var country = [{
@@ -1102,9 +1161,6 @@ function loadCountry() {
   }, {
     name: 'Zimbabwe',
     code: 'ZW'
-  }, {
-    name: 'N/A',
-    code: 'N/A'
   }];
   country.forEach(function (i) {
     _models.country_enum.create({

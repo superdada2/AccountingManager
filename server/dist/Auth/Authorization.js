@@ -23,7 +23,7 @@ function Authorize(req, res, next, requredPermissions) {
       if (authorize) {
         break;
       }
-    } 
+    }
     if (authorize) {
       console.log("authorized");
       next();
