@@ -6,8 +6,7 @@ import config from '../config';
 export const sequelize = new Sequelize(
   config.db.database,
   config.db.user,
-  // config.db.pass,
-  '',
+  config.db.pass,
   config.db.options
 )
 
