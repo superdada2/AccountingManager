@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import axios from "Axios";
+import axios from "axios";
 import BillingReport from "./Report/BillingReport";
 import CustomerReport from "./Report/CustomerReport";
 import LineChart from "../charts/LineChart.js";

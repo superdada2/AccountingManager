@@ -1,11 +1,11 @@
-import axios from 'Axios'
+import axios from 'axios'
 import {
   urlBase
 } from '../settings'
 import Promise from 'bluebird'
 
 var userMixin = {
-  data() {
+  data () {
     return {
       auth: {
         user: {},
@@ -14,7 +14,7 @@ var userMixin = {
     }
   },
   methods: {
-    async GetUser() {
+    async GetUser () {
       const auth = JSON.parse(this.$cookie.get('auth'))
       if (auth === null) {
         this.$router.push({
@@ -24,11 +24,11 @@ var userMixin = {
         this.auth = auth
       }
     },
-    SetUser(auth) {
+    SetUser (auth) {
       this.$cookie.set('auth', JSON.stringify({ ...auth
       }))
     },
-    async TestUser(token) {
+    async TestUser (token) {
       const url = urlBase + '/auth/test'
 
       var result = await this.Post(url, null)
@@ -37,13 +37,13 @@ var userMixin = {
       }
       return true
     },
-    Post(url, payload) {
+    Post (url, payload) {
       return new Promise((res, rej) => {
         axios.post(url, payload, {
-            headers: {
+          headers: {
               Authorization: 'JWT ' + this.auth.token
             }
-          })
+        })
           .then(response => {
             res(response)
           })
@@ -58,14 +58,14 @@ var userMixin = {
           })
       })
     },
-    Get(url) {
+    Get (url) {
       return axios.get(url, {
         headers: {
           Authorization: 'JWT ' + this.auth.token
         }
       })
     },
-    Authorize(requredPermissions) {
+    Authorize (requredPermissions) {
       const permissions = [...this.auth.user.user_permissions]
       if (requredPermissions.constructor === Array) {
         var authorize
@@ -98,7 +98,7 @@ var userMixin = {
       }
     }
   },
-  created() {
+  created () {
     this.GetUser()
   }
 }

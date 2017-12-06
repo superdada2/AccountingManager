@@ -79,7 +79,7 @@ import LineChart from "../charts/LineChart.js";
 import DoughnutChart from "../charts/DoughnutChart.js";
 import GeoChart from "../charts/GeoChart";
 import BarChart from "../charts/BarChart.js";
-import axios from "Axios";
+import axios from "axios";
 import _ from "lodash";
 import chartjs from "chart.piecelabel.js";
 import { urlBase } from "../settings.js";

@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import axios from "Axios";
+import axios from "axios";
 import _ from "lodash";
 import Modify from "./SubComponents/Modify";
 import ModifyDetail from "./SubComponents/ModifyDetail";

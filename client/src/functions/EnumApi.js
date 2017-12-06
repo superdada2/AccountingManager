@@ -2,7 +2,7 @@ import {
   urlBase
 } from '../settings'
 
-import axios from 'Axios'
+import axios from 'axios'
 
 function Post (url, payload) {
   return new Promise((res, rej) => {

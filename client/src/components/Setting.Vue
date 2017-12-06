@@ -166,7 +166,7 @@
 </template>
 
 <script>
-import axios from "Axios";
+import axios from "axios";
 import { urlBase, version } from "../settings.js";
 import UserMixin from "../functions/Authentication";
 import EnumApi from "../functions/EnumApi";

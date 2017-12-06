@@ -14,7 +14,7 @@
   </a>
 </template>
 <script>
-import axios from "Axios";
+import axios from "axios";
 import { urlBase } from "../../settings.js";
 import UserMixin from "../../functions/Authentication";
 export default {

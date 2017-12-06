@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import axios from "Axios";
+import axios from "axios";
 import * as jsonexport from "jsonexport/dist";
 import _ from "lodash";
 import Modify from "../SubComponents/Modify";

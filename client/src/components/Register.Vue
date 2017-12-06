@@ -20,7 +20,7 @@
   </div>
 </template>
 <script>
-import axios from "Axios";
+import axios from "axios";
 import { urlBase } from "../settings.js";
 export default {
   name: "register",
